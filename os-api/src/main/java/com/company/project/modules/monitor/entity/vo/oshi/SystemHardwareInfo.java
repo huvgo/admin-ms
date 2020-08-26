@@ -1,6 +1,6 @@
 package com.company.project.modules.monitor.entity.vo.oshi;
 
-import cn.hutool.core.util.NetUtil;
+import cn.hutool.core.net.NetUtil;
 import cn.hutool.core.util.NumberUtil;
 import com.company.project.modules.monitor.util.IpInfoUtils;
 import lombok.Data;

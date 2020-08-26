@@ -52,10 +52,6 @@ public class Menu extends Entity {
      */
     private Integer type;
 
-    /**
-     * 菜单图标
-     */
-    private String icon;
 
     /**
      * 排序

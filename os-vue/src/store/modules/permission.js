@@ -1,4 +1,6 @@
 import { asyncRoutes, constantRoutes } from '@/router'
+import Layout from '@/layout'
+import { tree } from "@/api/menu"
 
 /**
  * Use meta.role to determine if the current user has permission
@@ -12,6 +14,22 @@ function hasPermission(roles, route) {
     return true
   }
 }
+
+// 将本地routerMap映射到ajax获取到的serverRouterMap;
+function generateAsyncRouter(serverRouterMap) {
+  serverRouterMap.forEach(function (item, index) {
+    if (item.type === 0) {
+      item.component = Layout
+    } else {
+      item.component = require('@/views' + item.path).default
+    }
+    if (item.children && item.children.length > 0) {
+      generateAsyncRouter(item.children)
+    }
+  })
+  return serverRouterMap;
+}
+
 
 /**
  * Filter asynchronous routing tables by recursion
@@ -48,15 +66,24 @@ const mutations = {
 
 const actions = {
   generateRoutes({ commit }, roles) {
+
     return new Promise(resolve => {
-      let accessedRoutes
-      if (roles.includes('admin')) {
-        accessedRoutes = asyncRoutes || []
-      } else {
-        accessedRoutes = filterAsyncRoutes(asyncRoutes, roles)
-      }
-      commit('SET_ROUTES', accessedRoutes)
-      resolve(accessedRoutes)
+
+      tree().then(response => {
+        let asyncRouterMap = generateAsyncRouter(response.data)
+        commit('SET_ROUTES', asyncRouterMap)
+        resolve(asyncRouterMap)
+      })
+
+      /* let accessedRoutes
+     if (roles.includes('admin')) {
+       accessedRoutes = asyncRoutes || []
+     } else {
+       accessedRoutes = filterAsyncRoutes(asyncRoutes, roles)
+     }
+     commit('SET_ROUTES', accessedRoutes)
+     resolve(accessedRoutes)  */
+
     })
   }
 }

@@ -1,18 +1,16 @@
 package com.company.project.modules.sys.controller;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Dict;
+import cn.hutool.core.lang.tree.Tree;
+import cn.hutool.core.lang.tree.TreeNode;
+import cn.hutool.core.lang.tree.TreeUtil;
 import com.company.project.core.Result;
-import org.springframework.web.bind.annotation.*;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.company.project.modules.sys.service.MenuService;
 import com.company.project.modules.sys.entity.Menu;
+import com.company.project.modules.sys.service.MenuService;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-
-import org.springframework.web.bind.annotation.RestController;
 
 /**
  * <p>
@@ -74,15 +72,18 @@ public class MenuController {
     }
 
 
-    @GetMapping("/test")
-    public String test() {
-        String s = "[\n" +
-                "      {\n" +
-                "        path: 'index',\n" +
-                "        component: 'table',\n" +
-                "        name: 'Profile',\n" +
-                "      }\n" +
-                "    ]";
-        return s;
+    @GetMapping("/tree")
+    public Result<List<Tree<String>>> tree() {
+        List<Menu> menuList = menuService.list();
+        // 构建node列表
+        List<TreeNode<String>> nodeList = CollUtil.newArrayList();
+        for (Menu menu : menuList) {
+            TreeNode<String> treeNode = new TreeNode<>(menu.getId().toString(), menu.getParentId().toString(), menu.getName(), menu.getOrderNum());
+            Dict extra = Dict.create().set("type", menu.getType()).set("path", menu.getPath()).set("meta", menu.getMeta());
+            treeNode.setExtra(extra);
+            nodeList.add(treeNode);
+        }
+        List<Tree<String>> tree = TreeUtil.build(nodeList, "0");
+        return Result.success(tree);
     }
 }

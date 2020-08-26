@@ -42,3 +42,11 @@ export function update(data) {
     data: JSON.stringify(data)
   })
 }
+
+export function tree(data) {
+  return request({
+    url: url + "/tree",
+    method: 'get',
+    params: data
+  })
+}

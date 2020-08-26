@@ -20,6 +20,8 @@ import Layout from '@/layout'
     roles: ['admin','editor']    control the page roles (you can set multiple roles)
     title: 'title'               the name show in sidebar and breadcrumb (recommend set)
     icon: 'svg-name'/'el-icon-x' the icon show in the sidebar
+    noCache: true                if set true, the page will no be cached(default is false)
+    affix: true                  if set true, the tag will affix in the tags-view
     breadcrumb: false            if set false, the item will hidden in breadcrumb(default is true)
     activeMenu: '/example/list'  if set path, the sidebar will highlight the path you set
   }
@@ -33,28 +35,59 @@ import Layout from '@/layout'
 export const constantRoutes = [
   {
     path: '/login',
-    component: () => import('@/views/login/index'),
+    component: () => import('@/views/common/login/index'),
     hidden: true
   },
-
   {
     path: '/404',
-    component: () => import('@/views/404'),
+    component: () => import('@/views/common/error-page/404'),
     hidden: true
   },
-
+  {
+    path: '/401',
+    component: () => import('@/views/common/error-page/401'),
+    hidden: true
+  },
   {
     path: '/',
     component: Layout,
-    name: '主控面板',
-    meta: { title: '主控面板', icon: 'dashboard' },
+    redirect: '/home',
     children: [
       {
         path: 'home',
-        name: 'Home',
-        component: () => import('@/views/dashboard/index'),
-        meta: { title: 'Home', icon: 'dashboard' }
-      },
+        component: () => import('@/views/common/home'),
+        name: '主页',
+        meta: { title: '主页', icon: 'home' }
+      }
+    ]
+  },
+  {
+    path: '/profile',
+    component: Layout,
+    redirect: '/profile/index',
+    hidden: true,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/common/profile/index'),
+        name: '我的信息',
+        meta: { title: '我的信息', icon: 'user', noCache: true }
+      }
+    ]
+  }
+]
+
+/**
+ * asyncRoutes
+ * the routes that need to be dynamically loaded based on user roles
+ */
+export const asyncRoutes = [
+  {
+    path: '/oshi',
+    component: Layout,
+    name: '系统监控',
+    meta: { title: '系统监控', icon: 'dashboard' },
+    children: [
       {
         path: 'oshi',
         name: 'oshi',
@@ -67,6 +100,7 @@ export const constantRoutes = [
     path: '/sys',
     component: Layout,
     name: '系统管理',
+    redirect: '/sys/user',
     meta: { title: '系统管理', icon: 'dashboard' },
     children: [
       {
@@ -86,38 +120,6 @@ export const constantRoutes = [
         name: '菜单管理',
         component: () => import('@/views/sys/menu'),
         meta: { title: '菜单管理', icon: 'el-icon-s-help' }
-      }
-    ]
-  },
-  // 404 page must be placed at the end !!!
-  { path: '*', redirect: '/404', hidden: true }
-]
-
-export const asyncRoutes = [
-  {
-    path: '/example',
-    component: Layout,
-    redirect: '/example/table',
-    name: 'Example',
-    meta: { title: 'Example', icon: 'el-icon-s-help' },
-    children: [
-      {
-        path: 'table',
-        name: 'Table',
-        component: () => import('@/views/table/index'),
-        meta: { title: 'Table', icon: 'table' }
-      },
-      {
-        path: 'tree',
-        name: 'Tree',
-        component: () => import('@/views/tree/index'),
-        meta: { title: 'Tree', icon: 'tree' }
-      },
-      {
-        path: '/orm',
-        name: 'Form',
-        component: () => import('@/views/form/index'),
-        meta: { title: 'Form', icon: 'form' }
       }
     ]
   },

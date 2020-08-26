@@ -7,5 +7,5 @@ public class Meta {
 
     private String title;
 
-    private String ico;
+    private String icon;
 }
