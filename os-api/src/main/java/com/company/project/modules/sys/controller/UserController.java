@@ -6,12 +6,10 @@ import cn.hutool.core.util.IdUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.company.project.core.Result;
-import com.company.project.core.ServiceException;
-import com.company.project.modules.sys.component.UserTimedCache;
+import com.company.project.modules.sys.component.UserCache;
 import com.company.project.modules.sys.entity.User;
 import com.company.project.modules.sys.service.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,13 +28,11 @@ import java.util.Objects;
 @RequestMapping("/sys/user")
 public class UserController {
     private final UserService userService;
-    private final UserTimedCache userTimedCache;
-    private final ObjectMapper objectMapper;
+    private final UserCache userCache;
 
-    public UserController(UserService userService, UserTimedCache userTimedCache, ObjectMapper objectMapper) {
+    public UserController(UserService userService, UserCache userCache) {
         this.userService = userService;
-        this.userTimedCache = userTimedCache;
-        this.objectMapper = objectMapper;
+        this.userCache = userCache;
     }
 
     @PostMapping
@@ -75,14 +71,18 @@ public class UserController {
     public Result<?> login(@RequestBody User user) throws JsonProcessingException {
         User currentUser = userService.getByUsernameAndPassword(user.getUsername(), user.getPassword());
         Assert.notNull(currentUser, "账号或密码不正确");
-        String token = IdUtil.simpleUUID();
-        userTimedCache.put(token, objectMapper.writeValueAsString(currentUser));
+        String token = userCache.getToken(currentUser.getUsername());
+        if (token == null) {
+            token = IdUtil.simpleUUID();
+            userCache.putToken(currentUser.getUsername(), token);
+        }
+        userCache.putUser(token, currentUser);
         return Result.success(Dict.create().set("token", token));
     }
 
     @GetMapping("/token")
     public Result<?> token(String token) throws JsonProcessingException {
-        User user = userTimedCache.get(token);
+        User user = userCache.getUser(token);
         Assert.notNull(user, "用户信息不存在");
         return Result.success(user);
     }

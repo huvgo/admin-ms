@@ -6,8 +6,10 @@ import cn.hutool.core.lang.Dict;
 import cn.hutool.core.lang.tree.Tree;
 import cn.hutool.core.lang.tree.TreeNode;
 import cn.hutool.core.lang.tree.TreeUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.company.project.common.annotation.RequiresPermissions;
 import com.company.project.core.Result;
-import com.company.project.modules.sys.component.UserTimedCache;
+import com.company.project.modules.sys.component.UserCache;
 import com.company.project.modules.sys.entity.Menu;
 import com.company.project.modules.sys.entity.Role;
 import com.company.project.modules.sys.entity.User;
@@ -31,13 +33,13 @@ import java.util.List;
 public class MenuController {
     private final MenuService menuService;
     private final RoleService roleService;
-    private final UserTimedCache userTimedCache;
+    private final UserCache userCache;
 
 
-    public MenuController(MenuService menuService, RoleService roleService, UserTimedCache userTimedCache) {
+    public MenuController(MenuService menuService, RoleService roleService, UserCache userCache) {
         this.menuService = menuService;
         this.roleService = roleService;
-        this.userTimedCache = userTimedCache;
+        this.userCache = userCache;
     }
 
     @PostMapping
@@ -47,6 +49,7 @@ public class MenuController {
     }
 
     @DeleteMapping
+    @RequiresPermissions
     public Result<?> delete(@RequestBody List<Long> ids) {
         menuService.removeByIds(ids);
         return Result.success();
@@ -65,6 +68,7 @@ public class MenuController {
     }
 
     @GetMapping
+    @RequiresPermissions
     public Result<List<Menu>> list() {
         List<Menu> list = menuService.list();
         return Result.success(list);
@@ -73,7 +77,7 @@ public class MenuController {
 
     @GetMapping("/tree")
     public Result<List<Tree<String>>> tree(@RequestHeader(value = "X-Token") String token) {
-        User user = userTimedCache.get(token);
+        User user = userCache.getUser(token);
         Assert.notNull(user, "用户信息不存在");
         List<Integer> roleIds = user.getRoleIds();
         List<Role> roles = roleService.listByIds(roleIds);
@@ -81,7 +85,7 @@ public class MenuController {
         for (Role role : roles) {
             menuIds.addAll(role.getMenuIds());
         }
-        List<Menu> menuList = menuService.listByIds(menuIds);
+        List<Menu> menuList = menuService.list(new QueryWrapper<Menu>().in("id", menuIds).ne("type", 2));
         // 构建node列表
         List<TreeNode<String>> nodeList = CollUtil.newArrayList();
         for (Menu menu : menuList) {

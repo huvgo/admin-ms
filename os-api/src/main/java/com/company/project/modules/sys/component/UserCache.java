@@ -16,24 +16,26 @@ import org.springframework.util.StringUtils;
  */
 @Slf4j
 @Component
-public class UserTimedCache {
+public class UserCache {
 
-    private TimedCache<String, String> timedCache;
+    private TimedCache<String, String> userCache;
+    private TimedCache<String, String> tokenCache;
 
     private ObjectMapper objectMapper;
 
-    public UserTimedCache(ObjectMapper objectMapper) {
+    public UserCache(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
         //创建缓存，默认一小时过期
-        timedCache = CacheUtil.newTimedCache(DateUnit.HOUR.getMillis());
+        userCache = CacheUtil.newTimedCache(DateUnit.HOUR.getMillis());
+        tokenCache = CacheUtil.newTimedCache(DateUnit.HOUR.getMillis());
     }
 
-    public synchronized void put(String key, String userInfo) {
-        timedCache.put(key, userInfo);
+    public synchronized void putUser(String key, User user) throws JsonProcessingException {
+        userCache.put(key, objectMapper.writeValueAsString(user));
     }
 
-    public synchronized User get(String key) {
-        String userInfo = timedCache.get(key);
+    public synchronized User getUser(String key) {
+        String userInfo = userCache.get(key);
         if (StringUtils.isEmpty(userInfo)) {
             return null;
         }
@@ -43,5 +45,13 @@ public class UserTimedCache {
             log.info(e.getMessage());
             return null;
         }
+    }
+
+    public synchronized void putToken(String key, String token) {
+        tokenCache.put(key, token);
+    }
+
+    public synchronized String getToken(String key) {
+        return tokenCache.get(key);
     }
 }

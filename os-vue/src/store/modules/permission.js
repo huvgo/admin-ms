@@ -18,7 +18,7 @@ function hasPermission(roles, route) {
 
 // 将本地routerMap映射到ajax获取到的serverRouterMap;
 function generateAsyncRouter(serverRouterMap) {
-  serverRouterMap.forEach(function(item, index) {
+  serverRouterMap.forEach((item, index) => {
     if (item.type === 0) {
       item.component = Layout
     } else {
