@@ -7,7 +7,7 @@
             <span>CPU信息</span>
           </div>
           <div class="component-item">
-            <table class="table table-striped table-bordered">
+            <table v-loading="listLoading" class="table table-striped table-bordered">
               <tr>
                 <td class="column">属性</td>
                 <td class="column">值</td>
@@ -18,15 +18,15 @@
               </tr>
               <tr>
                 <td class="value">用户使用率</td>
-                <td class="value">{{ data.cpu.used }}%</td>
+                <td class="value">{{ data.cpu.used }}</td>
               </tr>
               <tr>
                 <td class="value">系统使用率</td>
-                <td class="value">{{ data.cpu.sys }}%</td>
+                <td class="value">{{ data.cpu.sys }}</td>
               </tr>
               <tr>
                 <td class="value">当前空闲率</td>
-                <td class="value">{{ data.cpu.free }}%</td>
+                <td class="value">{{ data.cpu.free }}</td>
               </tr>
             </table>
           </div>
@@ -38,7 +38,7 @@
             <span>内存信息</span>
           </div>
           <div class="component-item">
-            <table class="table table-striped table-bordered">
+            <table v-loading="listLoading" class="table table-striped table-bordered">
               <tr>
                 <td class="column">属性</td>
                 <td class="column">内存</td>
@@ -46,23 +46,23 @@
               </tr>
               <tr>
                 <td class="value">总内存</td>
-                <td class="value">{{ data.mem.total }}GB</td>
-                <td class="value">{{ data.jvm.total }}MB</td>
+                <td class="value">{{ data.mem.total }}</td>
+                <td class="value">{{ data.jvm.total }}</td>
               </tr>
               <tr>
                 <td class="value">已用内存</td>
-                <td class="value">{{ data.mem.used }}GB</td>
-                <td class="value">{{ data.jvm.used }}MB</td>
+                <td class="value">{{ data.mem.used }}</td>
+                <td class="value">{{ data.jvm.used }}</td>
               </tr>
               <tr>
                 <td class="value">剩余内存</td>
-                <td class="value">{{ data.mem.free }}GB</td>
-                <td class="value">{{ data.jvm.free }}MB</td>
+                <td class="value">{{ data.mem.free }}</td>
+                <td class="value">{{ data.jvm.free }}</td>
               </tr>
               <tr>
                 <td class="value">使用率</td>
-                <td class="value">{{ data.mem.usage }}%</td>
-                <td class="value">{{ data.jvm.usage }}%</td>
+                <td class="value">{{ data.mem.usage }}</td>
+                <td class="value">{{ data.jvm.usage }}</td>
               </tr>
             </table>
           </div>
@@ -77,7 +77,7 @@
             <span>JAVA虚拟机信息</span>
           </div>
           <div class="component-item">
-            <table class="table table-striped table-bordered">
+            <table v-loading="listLoading" class="table table-striped table-bordered">
               <tr>
                 <td class="column">Jvm名称</td>
                 <td class="value">{{ data.jvm.name }}</td>
@@ -111,7 +111,7 @@
             <span>服务器信息</span>
           </div>
           <div class="component-item">
-            <table class="table table-striped table-bordered">
+            <table v-loading="listLoading" class="table table-striped table-bordered">
               <tr>
                 <td class="column">服务器名称</td>
                 <td class="value">{{ data.sys.computerName }}</td>
@@ -137,7 +137,7 @@
             <span>磁盘信息</span>
           </div>
           <div class="component-item">
-            <table class="table table-striped table-bordered">
+            <table v-loading="listLoading" class="table table-striped table-bordered">
               <tr>
                 <td class="column">盘符路径</td>
                 <td class="column">文件系统</td>
@@ -186,7 +186,8 @@ export default {
   },
   methods: {
     fetchData() {
-      getList().then((response) => {
+      this.listLoading = true
+      getList().then(response => {
         this.data = response.data
         this.listLoading = false
       })
@@ -216,7 +217,7 @@ export default {
   vertical-align: middle;
   min-height: 20px;
   line-height: 20px;
-  font-family: "Arial Normal", "Arial";
+  font-family: 'Arial Normal', 'Arial';
   position: relative;
   padding: 9px 15px;
   font-size: 14px;

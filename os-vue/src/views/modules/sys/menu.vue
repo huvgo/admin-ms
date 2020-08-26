@@ -2,12 +2,7 @@
   <div class="app-container">
     <el-form :inline="true" :model="queryParam" @keyup.enter.native="fetchData()">
       <el-form-item>
-        <el-input v-model="queryParam.id" placeholder="ID" clearable />
-      </el-form-item>
-      <el-form-item>
-        <el-button @click="fetchData()">查询</el-button>
         <el-button type="primary" @click="handleAdd()">新增</el-button>
-        <el-button type="danger" :disabled="ids.length <= 0" @click="handleBatchDelete()">批量删除</el-button>
       </el-form-item>
     </el-form>
 
@@ -24,7 +19,6 @@
     >
       <el-table-column label="ID" prop="id" width="80" align="center" />
       <el-table-column label="菜单名称" prop="name" />
-      <el-table-column label="上级菜单" prop="remark.parentName" />
       <el-table-column label="菜单URL" prop="path" />
       <el-table-column label="授权标识" prop="perms">
         <template slot-scope="scope">{{ scope.row.perms }}</template>
@@ -33,7 +27,10 @@
         <template slot-scope="scope">{{ scope.row.type }}</template>
       </el-table-column>
       <el-table-column label="菜单图标">
-        <template slot-scope="scope">{{ scope.row.meta.ico }}</template>
+        <template slot-scope="scope">
+          <i v-if="scope.row.meta.icon.indexOf('el-icon')===0" :class="scope.row.meta.icon" />
+          <svg-icon v-else :icon-class="scope.row.meta.icon" />
+        </template>
       </el-table-column>
       <el-table-column label="排序" prop="orderNum" />
       <el-table-column align="center" label="操作" width="150">
@@ -78,8 +75,8 @@
             <el-radio-button label="2">按钮</el-radio-button>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="菜单图标" prop="meta.ico">
-          <el-input v-model="dataForm.meta.ico" placeholder="请输入菜单图标" />
+        <el-form-item label="菜单图标" prop="meta.icon">
+          <el-input v-model="dataForm.meta.icon" placeholder="请输入菜单图标" />
         </el-form-item>
         <el-form-item label="排序" prop="orderNum">
           <el-input v-model="dataForm.orderNum" placeholder="请输入排序" />
@@ -94,122 +91,122 @@
 </template>
 
 <script>
-import { add, del, update, getList, tree } from "@/api/menu";
-import { treeDataTranslate } from "@/utils";
+import { add, del, update, getList, tree } from '@/api/menu'
+import { treeDataTranslate } from '@/utils'
 export default {
   filters: {
     statusFilter(status) {
       const statusMap = {
-        published: "success",
-        draft: "gray",
-        deleted: "danger",
-      };
-      return statusMap[status];
-    },
+        published: 'success',
+        draft: 'gray',
+        deleted: 'danger'
+      }
+      return statusMap[status]
+    }
   },
   data() {
     return {
       dialogVisible: false,
       queryParam: {
         currentPage: 1,
-        pageSize: 10,
+        pageSize: 10
       },
       dataForm: {
-        parentId: "",
-        name: "",
-        path: "",
+        parentId: '',
+        name: '',
+        path: '',
         meta: {
           title: this.name,
-          ico: "",
+          icon: ''
         },
-        perms: "",
-        type: "1",
-        orderNum: "",
+        perms: '',
+        type: '1',
+        orderNum: ''
       },
       ids: [],
       list: [],
       listLoading: true,
-      total: 0,
-    };
+      total: 0
+    }
   },
   watch: {
-    "dataForm.name": {
+    'dataForm.name': {
       handler(newName, oldName) {
-        this.dataForm.meta.title = newName;
-      },
-    },
+        this.dataForm.meta.title = newName
+      }
+    }
   },
   created() {
-    this.fetchData();
-    this.fetchMenuData();
+    this.fetchData()
+    this.fetchMenuData()
   },
   methods: {
     fetchData() {
-      this.listLoading = true;
-      getList(this.queryParam).then((response) => {
-        this.list = treeDataTranslate(response.data, "id");
-        this.total = response.data.total;
-        this.listLoading = false;
-      });
+      this.listLoading = true
+      getList(this.queryParam).then(response => {
+        this.list = treeDataTranslate(response.data, 'id')
+        this.total = response.data.total
+        this.listLoading = false
+      })
     },
     fetchMenuData() {
-      tree().then((response) => {
-        console.log(response);
-      });
+      tree().then(response => {
+        console.log(response)
+      })
     },
     dataFormSubmit() {
-      let request;
+      let request
       if (this.dataForm.id) {
-        request = update(this.dataForm);
+        request = update(this.dataForm)
       } else {
-        request = add(this.dataForm);
+        request = add(this.dataForm)
       }
-      request.then((response) => {
-        this.dialogVisible = false;
-        this.fetchData();
-        this.$message({ message: response.message, type: "success" });
-      });
+      request.then(response => {
+        this.dialogVisible = false
+        this.fetchData()
+        this.$message({ message: response.message, type: 'success' })
+      })
     },
     handleSizeChange(pageSize) {
-      this.queryParam.pageSize = pageSize;
-      this.fetchData();
+      this.queryParam.pageSize = pageSize
+      this.fetchData()
     },
     handleCurrentChange(currentPage) {
-      this.queryParam.currentPage = currentPage;
-      this.fetchData();
+      this.queryParam.currentPage = currentPage
+      this.fetchData()
     },
     handleAdd() {
-      this.dialogVisible = true;
+      this.dialogVisible = true
       this.$nextTick(() => {
-        this.$refs["dataForm"].resetFields();
-      });
+        this.$refs['dataForm'].resetFields()
+      })
     },
     handleDelete({ $index, row }) {
-      del([row.id]).then((response) => {
-        this.fetchData();
-        this.$message({ message: response.message, type: "success" });
-      });
+      del([row.id]).then(response => {
+        this.fetchData()
+        this.$message({ message: response.message, type: 'success' })
+      })
     },
     handleBatchDelete() {
-      del(this.ids).then((response) => {
-        this.fetchData();
-        this.$message({ message: response.message, type: "success" });
-      });
+      del(this.ids).then(response => {
+        this.fetchData()
+        this.$message({ message: response.message, type: 'success' })
+      })
     },
     handleEdit(scope) {
-      this.dialogVisible = true;
+      this.dialogVisible = true
       this.$nextTick(() => {
-        this.dataForm = JSON.parse(JSON.stringify(scope.row));
-      });
+        this.dataForm = JSON.parse(JSON.stringify(scope.row))
+      })
     },
     // 多选
     handleSelectionChange(ids) {
-      this.ids = ids.map((item) => {
-        return item.id;
-      });
-    },
-  },
-};
+      this.ids = ids.map(item => {
+        return item.id
+      })
+    }
+  }
+}
 </script>
 
 <style scoped>

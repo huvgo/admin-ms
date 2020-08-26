@@ -31,13 +31,7 @@ public class User extends Entity {
      */
     private String name;
 
-    /**
-     * 角色
-     */
-    @TableField(exist = false)
-    private List<String> roles;
 
-    @TableField(exist = false)
     private String introduction;
 
     /**

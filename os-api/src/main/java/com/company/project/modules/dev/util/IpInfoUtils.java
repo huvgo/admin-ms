@@ -1,4 +1,4 @@
-package com.company.project.modules.monitor.util;
+package com.company.project.modules.dev.util;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.InetAddress;

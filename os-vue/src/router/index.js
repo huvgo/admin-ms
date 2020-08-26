@@ -56,8 +56,8 @@ export const constantRoutes = [
       {
         path: 'home',
         component: () => import('@/views/common/home'),
-        name: '主页',
-        meta: { title: '主页', icon: 'home' }
+        name: '首页',
+        meta: { title: '首页', icon: 'el-icon-s-home' }
       }
     ]
   },
@@ -83,43 +83,45 @@ export const constantRoutes = [
  */
 export const asyncRoutes = [
   {
-    path: '/oshi',
-    component: Layout,
-    name: '系统监控',
-    meta: { title: '系统监控', icon: 'dashboard' },
-    children: [
-      {
-        path: 'oshi',
-        name: 'oshi',
-        component: () => import('@/views/dashboard/oshi'),
-        meta: { title: '系统监控', icon: 'el-icon-s-help' }
-      }
-    ]
-  },
-  {
     path: '/sys',
     component: Layout,
     name: '系统管理',
     redirect: '/sys/user',
-    meta: { title: '系统管理', icon: 'dashboard' },
+    meta: { title: '系统管理', icon: 'el-icon-setting' },
     children: [
       {
         path: 'user',
         name: '用户管理',
-        component: () => import('@/views/sys/user'),
-        meta: { title: '用户管理', icon: 'el-icon-s-help' }
+        component: () => import('@/views/modules/sys/user'),
+        meta: { title: '用户管理', icon: 'peoples' }
       },
       {
         path: 'role',
         name: '角色管理',
-        component: () => import('@/views/sys/role'),
-        meta: { title: '角色管理', icon: 'el-icon-s-help' }
+        component: () => import('@/views/modules/sys/role'),
+        meta: { title: '角色管理', icon: 'eye-open' }
       },
       {
         path: 'menu',
         name: '菜单管理',
-        component: () => import('@/views/sys/menu'),
-        meta: { title: '菜单管理', icon: 'el-icon-s-help' }
+        component: () => import('@/views/modules/sys/menu'),
+        meta: { title: '菜单管理', icon: 'el-icon-receiving' }
+      }
+    ]
+  },
+
+  {
+    path: '/oshi',
+    component: Layout,
+    name: '开发管理',
+    alwaysShow: true,
+    meta: { title: '开发管理', icon: 'bug' },
+    children: [
+      {
+        path: 'oshi',
+        name: 'oshi',
+        component: () => import('@/views/modules/dev/oshi'),
+        meta: { title: '服务器', icon: 'el-icon-s-platform' }
       }
     ]
   },

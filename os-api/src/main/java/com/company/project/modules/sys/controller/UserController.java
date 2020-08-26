@@ -1,16 +1,19 @@
 package com.company.project.modules.sys.controller;
 
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Dict;
-import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.IdUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.company.project.core.Result;
 import com.company.project.core.ServiceException;
+import com.company.project.modules.sys.component.UserTimedCache;
 import com.company.project.modules.sys.entity.User;
 import com.company.project.modules.sys.service.UserService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -27,9 +30,13 @@ import java.util.Objects;
 @RequestMapping("/sys/user")
 public class UserController {
     private final UserService userService;
+    private final UserTimedCache userTimedCache;
+    private final ObjectMapper objectMapper;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, UserTimedCache userTimedCache, ObjectMapper objectMapper) {
         this.userService = userService;
+        this.userTimedCache = userTimedCache;
+        this.objectMapper = objectMapper;
     }
 
     @PostMapping
@@ -65,29 +72,19 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public Result<?> login(@RequestBody User user) {
-        if ("111111".equals(user.getPassword())) {
-            return Result.success(Dict.create()
-                    .set("token", "admin-token"));
-        } else {
-            throw new ServiceException("账号或密码不正确");
-        }
+    public Result<?> login(@RequestBody User user) throws JsonProcessingException {
+        User currentUser = userService.getByUsernameAndPassword(user.getUsername(), user.getPassword());
+        Assert.notNull(currentUser, "账号或密码不正确");
+        String token = IdUtil.simpleUUID();
+        userTimedCache.put(token, objectMapper.writeValueAsString(currentUser));
+        return Result.success(Dict.create().set("token", token));
     }
 
     @GetMapping("/token")
-    public Result<?> token(String token) {
-        if ("admin-token".equals(token)) {
-            User user = new User();
-            ArrayList<String> roles = new ArrayList<>();
-            roles.add("admin");
-            user.setRoles(roles);
-            user.setName("Super Admin");
-            user.setAvatar("https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif");
-            user.setIntroduction("I am a super administrator");
-            return Result.success(user);
-        } else {
-            throw new ServiceException("账号或密码不正确");
-        }
+    public Result<?> token(String token) throws JsonProcessingException {
+        User user = userTimedCache.get(token);
+        Assert.notNull(user, "用户信息不存在");
+        return Result.success(user);
     }
 
     @PostMapping("/logout")

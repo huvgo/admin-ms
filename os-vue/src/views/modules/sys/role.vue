@@ -30,15 +30,6 @@
       <el-table-column label="备注">
         <template slot-scope="scope">{{ scope.row.remark }}</template>
       </el-table-column>
-      <el-table-column label="部门Id">
-        <template slot-scope="scope">{{ scope.row.deptId }}</template>
-      </el-table-column>
-      <el-table-column label="创建者ID">
-        <template slot-scope="scope">{{ scope.row.createUserId }}</template>
-      </el-table-column>
-      <el-table-column label="创建时间">
-        <template slot-scope="scope">{{ scope.row.createTime }}</template>
-      </el-table-column>
       <el-table-column align="center" label="操作" width="150">
         <template slot-scope="scope">
           <el-button size="mini" @click="handleEdit(scope)">修改</el-button>
@@ -139,14 +130,14 @@ export default {
   methods: {
     fetchData() {
       this.listLoading = true
-      getList(this.queryParam).then((response) => {
+      getList(this.queryParam).then(response => {
         this.list = response.data.records
         this.total = response.data.total
         this.listLoading = false
       })
     },
     fetchMenuData() {
-      getMenuList(this.queryParam).then((response) => {
+      getMenuList(this.queryParam).then(response => {
         this.menuList = treeDataTranslate(response.data, 'id')
       })
     },
@@ -157,7 +148,7 @@ export default {
       } else {
         request = add(this.dataForm)
       }
-      request.then((response) => {
+      request.then(response => {
         this.dialogVisible = false
         this.fetchData()
         this.$message({ message: response.message, type: 'success' })
@@ -178,13 +169,13 @@ export default {
       })
     },
     handleDelete({ $index, row }) {
-      del([row.id]).then((response) => {
+      del([row.id]).then(response => {
         this.fetchData()
         this.$message({ message: response.message, type: 'success' })
       })
     },
     handleBatchDelete() {
-      del(this.ids).then((response) => {
+      del(this.ids).then(response => {
         this.fetchData()
         this.$message({ message: response.message, type: 'success' })
       })

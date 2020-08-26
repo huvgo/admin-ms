@@ -1,7 +1,7 @@
-package com.company.project.modules.monitor.controller;
+package com.company.project.modules.dev.controller;
 
 import com.company.project.core.Result;
-import com.company.project.modules.monitor.entity.vo.oshi.SystemHardwareInfo;
+import com.company.project.modules.dev.entity.oshi.SystemHardwareInfo;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

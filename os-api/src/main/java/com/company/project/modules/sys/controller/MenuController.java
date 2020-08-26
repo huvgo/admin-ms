@@ -1,15 +1,21 @@
 package com.company.project.modules.sys.controller;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.lang.tree.Tree;
 import cn.hutool.core.lang.tree.TreeNode;
 import cn.hutool.core.lang.tree.TreeUtil;
 import com.company.project.core.Result;
+import com.company.project.modules.sys.component.UserTimedCache;
 import com.company.project.modules.sys.entity.Menu;
+import com.company.project.modules.sys.entity.Role;
+import com.company.project.modules.sys.entity.User;
 import com.company.project.modules.sys.service.MenuService;
+import com.company.project.modules.sys.service.RoleService;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -24,9 +30,14 @@ import java.util.List;
 @RequestMapping("/sys/menu")
 public class MenuController {
     private final MenuService menuService;
+    private final RoleService roleService;
+    private final UserTimedCache userTimedCache;
 
-    public MenuController(MenuService menuService) {
+
+    public MenuController(MenuService menuService, RoleService roleService, UserTimedCache userTimedCache) {
         this.menuService = menuService;
+        this.roleService = roleService;
+        this.userTimedCache = userTimedCache;
     }
 
     @PostMapping
@@ -56,25 +67,21 @@ public class MenuController {
     @GetMapping
     public Result<List<Menu>> list() {
         List<Menu> list = menuService.list();
-        for (Menu menu1 : list) {
-            if (menu1.getParentId() != 0) {
-                for (Menu menu2 : list) {
-                    if (menu1.getParentId().equals(menu2.getId())) {
-                        menu1.setRemark(Dict.create().set("parentName", menu2.getName()));
-                    }
-                }
-            } else {
-                menu1.setRemark(Dict.create().set("parentName", ""));
-            }
-
-        }
         return Result.success(list);
     }
 
 
     @GetMapping("/tree")
-    public Result<List<Tree<String>>> tree() {
-        List<Menu> menuList = menuService.list();
+    public Result<List<Tree<String>>> tree(@RequestHeader(value = "X-Token") String token) {
+        User user = userTimedCache.get(token);
+        Assert.notNull(user, "用户信息不存在");
+        List<Integer> roleIds = user.getRoleIds();
+        List<Role> roles = roleService.listByIds(roleIds);
+        HashSet<Integer> menuIds = new HashSet<>();
+        for (Role role : roles) {
+            menuIds.addAll(role.getMenuIds());
+        }
+        List<Menu> menuList = menuService.listByIds(menuIds);
         // 构建node列表
         List<TreeNode<String>> nodeList = CollUtil.newArrayList();
         for (Menu menu : menuList) {

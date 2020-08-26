@@ -1,6 +1,7 @@
-import { asyncRoutes, constantRoutes } from '@/router'
+// import { asyncRoutes, constantRoutes } from '@/router'
+import { constantRoutes } from '@/router'
 import Layout from '@/layout'
-import { tree } from "@/api/menu"
+import { tree } from '@/api/menu'
 
 /**
  * Use meta.role to determine if the current user has permission
@@ -17,19 +18,19 @@ function hasPermission(roles, route) {
 
 // 将本地routerMap映射到ajax获取到的serverRouterMap;
 function generateAsyncRouter(serverRouterMap) {
-  serverRouterMap.forEach(function (item, index) {
+  serverRouterMap.forEach(function(item, index) {
     if (item.type === 0) {
       item.component = Layout
     } else {
-      item.component = require('@/views' + item.path).default
+      item.component = require('@/views/modules' + item.path).default
     }
     if (item.children && item.children.length > 0) {
       generateAsyncRouter(item.children)
     }
   })
-  return serverRouterMap;
+  serverRouterMap.push({ path: '*', redirect: '/404', hidden: true })
+  return serverRouterMap
 }
-
 
 /**
  * Filter asynchronous routing tables by recursion
@@ -66,24 +67,21 @@ const mutations = {
 
 const actions = {
   generateRoutes({ commit }, roles) {
-
     return new Promise(resolve => {
-
       tree().then(response => {
-        let asyncRouterMap = generateAsyncRouter(response.data)
+        const asyncRouterMap = generateAsyncRouter(response.data)
         commit('SET_ROUTES', asyncRouterMap)
         resolve(asyncRouterMap)
       })
 
-      /* let accessedRoutes
-     if (roles.includes('admin')) {
-       accessedRoutes = asyncRoutes || []
-     } else {
-       accessedRoutes = filterAsyncRoutes(asyncRoutes, roles)
-     }
-     commit('SET_ROUTES', accessedRoutes)
-     resolve(accessedRoutes)  */
-
+      // let accessedRoutes
+      // if (roles.includes('admin')) {
+      //   accessedRoutes = asyncRoutes || []
+      // } else {
+      //   accessedRoutes = filterAsyncRoutes(asyncRoutes, roles)
+      // }
+      // commit('SET_ROUTES', accessedRoutes)
+      // resolve(accessedRoutes)
     })
   }
 }

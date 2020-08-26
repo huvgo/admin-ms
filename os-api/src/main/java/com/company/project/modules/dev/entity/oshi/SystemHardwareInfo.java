@@ -1,8 +1,8 @@
-package com.company.project.modules.monitor.entity.vo.oshi;
+package com.company.project.modules.dev.entity.oshi;
 
 import cn.hutool.core.net.NetUtil;
 import cn.hutool.core.util.NumberUtil;
-import com.company.project.modules.monitor.util.IpInfoUtils;
+import com.company.project.modules.dev.util.IpInfoUtils;
 import lombok.Data;
 import oshi.SystemInfo;
 import oshi.hardware.CentralProcessor;

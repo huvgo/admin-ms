@@ -1,4 +1,4 @@
-package com.company.project.modules.monitor.entity.vo.oshi;
+package com.company.project.modules.dev.entity.oshi;
 
 import lombok.Data;
 

@@ -1,4 +1,4 @@
-package com.company.project.modules.monitor.entity.vo.oshi;
+package com.company.project.modules.dev.entity.oshi;
 
 import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.date.DateUtil;
@@ -41,20 +41,20 @@ public class JvmInfo {
      */
     private String home;
 
-    public double getTotal() {
-        return NumberUtil.div(total, (1024 * 1024), 2);
+    public String getTotal() {
+        return NumberUtil.div(total, (1024 * 1024), 2) + "MB";
     }
 
-    public double getMax() {
-        return NumberUtil.div(max, (1024 * 1024), 2);
+    public String getMax() {
+        return NumberUtil.div(max, (1024 * 1024), 2) + "MB";
     }
 
-    public double getFree() {
-        return NumberUtil.div(free, (1024 * 1024), 2);
+    public String getFree() {
+        return NumberUtil.div(free, (1024 * 1024), 2) + "MB";
     }
 
-    public double getUsed() {
-        return NumberUtil.div(total - free, (1024 * 1024), 2);
+    public String getUsed() {
+        return NumberUtil.div(total - free, (1024 * 1024), 2) + "MB";
     }
 
     public String getVersion() {
@@ -65,8 +65,8 @@ public class JvmInfo {
         return home;
     }
 
-    public double getUsage() {
-        return NumberUtil.mul(NumberUtil.div(total - free, total, 4), 100);
+    public String getUsage() {
+        return NumberUtil.mul(NumberUtil.div(total - free, total, 4), 100) + "%";
     }
 
     /**

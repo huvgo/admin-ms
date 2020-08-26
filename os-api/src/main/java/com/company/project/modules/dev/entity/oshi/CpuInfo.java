@@ -1,4 +1,4 @@
-package com.company.project.modules.monitor.entity.vo.oshi;
+package com.company.project.modules.dev.entity.oshi;
 
 import cn.hutool.core.util.NumberUtil;
 import lombok.Setter;
@@ -50,20 +50,20 @@ public class CpuInfo {
         return NumberUtil.round(NumberUtil.mul(total, 100), 2).doubleValue();
     }
 
-    public double getSys() {
-        return NumberUtil.round(NumberUtil.mul(sys / total, 100), 2).doubleValue();
+    public String getSys() {
+        return NumberUtil.round(NumberUtil.mul(sys / total, 100), 2).doubleValue() + "%";
     }
 
-    public double getUsed() {
-        return NumberUtil.round(NumberUtil.mul(used / total, 100), 2).doubleValue();
+    public String getUsed() {
+        return NumberUtil.round(NumberUtil.mul(used / total, 100), 2).doubleValue() + "%";
     }
 
-    public double getWait() {
-        return NumberUtil.round(NumberUtil.mul(wait / total, 100), 2).doubleValue();
+    public String getWait() {
+        return NumberUtil.round(NumberUtil.mul(wait / total, 100), 2).doubleValue() + "%";
     }
 
-    public double getFree() {
-        return NumberUtil.round(NumberUtil.mul(free / total, 100), 2).doubleValue();
+    public String getFree() {
+        return NumberUtil.round(NumberUtil.mul(free / total, 100), 2).doubleValue() + "%";
     }
 
 }
