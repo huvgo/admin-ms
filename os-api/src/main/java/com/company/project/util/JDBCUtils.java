@@ -1,5 +1,7 @@
 package com.company.project.util;
 
+import com.company.project.core.Assert;
+
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.URL;
@@ -13,10 +15,9 @@ public class JDBCUtils {
     private static String url;
     private static String user;
     private static String password;
-    private static String driver;
 
-    /**
-     * 文件读取，只会执行一次，使用静态代码块
+    /*
+      文件读取，只会执行一次，使用静态代码块
      */
     static {
         //读取文件，获取值
@@ -26,20 +27,19 @@ public class JDBCUtils {
             //获取src路径下的文件--->ClassLoader类加载器
             ClassLoader classLoader = JDBCUtils.class.getClassLoader();
             URL resource = classLoader.getResource("jdbc.properties");
-            ;
+            Assert.requireNonNull(resource, "jdbc.properties配置文件不存在，需要在resources目录下放配置文件");
             String path = resource.getPath();
+            path = "C:\\Users\\HuWei\\Github Projects\\admin-os\\os-api\\target\\classes\\\\jdbc.properties";
             //2.加载文件
             pro.load(new FileReader(path));
             //3获取数据
             url = pro.getProperty("url");
             user = pro.getProperty("user");
             password = pro.getProperty("password");
-            driver = pro.getProperty("driver");
+            String driver = pro.getProperty("driver");
             //4.注册驱动
             Class.forName(driver);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
+        } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
@@ -50,28 +50,24 @@ public class JDBCUtils {
      * @return 连接对象
      */
     public static Connection getConnection() throws SQLException {
-        Connection conn = DriverManager.getConnection(url, user, password);
-        return conn;
+        return DriverManager.getConnection(url, user, password);
     }
 
     /**
      * 释放资源
      *
-     * @param rs
-     * @param st
-     * @param conn
      */
-    public static void close(ResultSet rs, Statement st, Connection conn) {
-        if (rs != null) {
+    public static void close(ResultSet resultSet, Statement statement, Connection conn) {
+        if (resultSet != null) {
             try {
-                rs.close();
+                resultSet.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
-        if (st != null) {
+        if (statement != null) {
             try {
-                st.close();
+                statement.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }

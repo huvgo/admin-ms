@@ -1,20 +1,16 @@
-package ${package.Service};
+package ${package}.service;
 
-import ${package.Entity}.${entity};
-import ${superServiceClassPackage};
+import ${package}.entity.${upperFirstName};
+import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
  * <p>
- * ${table.comment!} 服务类
+ * ${tableComment!} 服务类
  * </p>
  *
  * @author ${author}
  * @since ${date}
  */
-<#if kotlin>
-interface ${table.serviceName} : ${superServiceClass}<${entity}>
-<#else>
-public interface ${table.serviceName} extends ${superServiceClass}<${entity}> {
+public interface ${upperFirstName}Service extends IService<${upperFirstName}> {
 
 }
-</#if>

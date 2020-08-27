@@ -1,21 +1,17 @@
-package ${package.Mapper};
+package ${package}.mapper;
 
-import ${package.Entity}.${entity};
-import ${superMapperClassPackage};
+import ${package}.entity.${upperFirstName};
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 /**
  * <p>
- * ${table.comment!} Mapper 接口
+ * ${tableComment!} Mapper 接口
  * </p>
  *
  * @author ${author}
  * @since ${date}
  */
-<#if kotlin>
-interface ${table.mapperName} : ${superMapperClass}<${entity}>
-<#else>
 @Mapper
-public interface ${table.mapperName} extends ${superMapperClass}<${entity}> {
+public interface ${upperFirstName}Mapper extends BaseMapper<${upperFirstName}> {
 
 }
-</#if>

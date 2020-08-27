@@ -13,13 +13,13 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.company.project.modules.dev.component.code.engine;
+package com.company.project.modules.dev.component;
 
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
-import com.company.project.modules.dev.component.code.config.ConstVal;
-import com.company.project.modules.dev.component.code.config.builder.ConfigBuilder;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
@@ -31,32 +31,30 @@ import java.util.Map;
  * @author nieqiurong
  * @since 2018-01-11
  */
-public class FreemarkerTemplateEngine extends AbstractTemplateEngine {
+public class FreemarkerTemplateEngine {
+
+    private Logger logger = LoggerFactory.getLogger(FreemarkerTemplateEngine.class);
 
     private Configuration configuration;
 
-    @Override
-    public FreemarkerTemplateEngine init(ConfigBuilder configBuilder) {
-        super.init(configBuilder);
+    FreemarkerTemplateEngine() {
+        init();
+    }
+
+    public FreemarkerTemplateEngine init() {
         configuration = new Configuration(Configuration.DEFAULT_INCOMPATIBLE_IMPROVEMENTS);
-        configuration.setDefaultEncoding(ConstVal.UTF8);
+        configuration.setDefaultEncoding("UTF-8");
         configuration.setClassForTemplateLoading(FreemarkerTemplateEngine.class, StringPool.SLASH);
         return this;
     }
 
 
-    @Override
     public void writer(Map<String, Object> objectMap, String templatePath, String outputFile) throws Exception {
         Template template = configuration.getTemplate(templatePath);
         try (FileOutputStream fileOutputStream = new FileOutputStream(outputFile)) {
-            template.process(objectMap, new OutputStreamWriter(fileOutputStream, ConstVal.UTF8));
+            template.process(objectMap, new OutputStreamWriter(fileOutputStream, "UTF-8"));
         }
         logger.debug("模板:{};    文件:{}", templatePath, outputFile);
     }
 
-
-    @Override
-    public String templateFilePath(String filePath) {
-        return filePath + ".ftl";
-    }
 }

@@ -23,7 +23,6 @@ import java.util.List;
 @TableName(value = "sys_role", autoResultMap = true)
 public class Role extends Entity {
 
-    private static final long serialVersionUID = 1L;
 
     /**
      * 角色名称
