@@ -63,10 +63,7 @@
           <el-input v-model="dataForm.path" placeholder="请输入菜单URL" />
         </el-form-item>
         <el-form-item label="授权标识" prop="perms">
-          <el-input
-            v-model="dataForm.perms"
-            placeholder="请输入授权标识(多个用逗号分隔，如：user:list,user:create)"
-          />
+          <el-input v-model="dataForm.perms" placeholder="请输入授权标识" />
         </el-form-item>
         <el-form-item label="菜单类型" prop="type">
           <el-radio-group v-model="dataForm.type" size="small">
@@ -91,7 +88,7 @@
 </template>
 
 <script>
-import { add, del, update, getList, tree } from '@/api/menu'
+import { add, del, update, getList } from '@/api/sys/menu'
 import { treeDataTranslate } from '@/utils'
 export default {
   filters: {
@@ -138,20 +135,14 @@ export default {
   },
   created() {
     this.fetchData()
-    this.fetchMenuData()
   },
   methods: {
     fetchData() {
       this.listLoading = true
-      getList(this.queryParam).then(response => {
+      getList(this.queryParam).then((response) => {
         this.list = treeDataTranslate(response.data, 'id')
         this.total = response.data.total
         this.listLoading = false
-      })
-    },
-    fetchMenuData() {
-      tree().then(response => {
-        console.log(response)
       })
     },
     dataFormSubmit() {
@@ -161,7 +152,7 @@ export default {
       } else {
         request = add(this.dataForm)
       }
-      request.then(response => {
+      request.then((response) => {
         this.dialogVisible = false
         this.fetchData()
         this.$message({ message: response.message, type: 'success' })
@@ -182,13 +173,13 @@ export default {
       })
     },
     handleDelete({ $index, row }) {
-      del([row.id]).then(response => {
+      del([row.id]).then((response) => {
         this.fetchData()
         this.$message({ message: response.message, type: 'success' })
       })
     },
     handleBatchDelete() {
-      del(this.ids).then(response => {
+      del(this.ids).then((response) => {
         this.fetchData()
         this.$message({ message: response.message, type: 'success' })
       })
@@ -201,7 +192,7 @@ export default {
     },
     // 多选
     handleSelectionChange(ids) {
-      this.ids = ids.map(item => {
+      this.ids = ids.map((item) => {
         return item.id
       })
     }

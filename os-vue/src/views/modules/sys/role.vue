@@ -85,8 +85,8 @@
 </template>
 
 <script>
-import { add, del, update, getList } from '@/api/role'
-import { getList as getMenuList } from '@/api/menu'
+import { add, del, update, getList } from '@/api/sys/role'
+import { getList as getMenuList } from '@/api/sys/menu'
 import { treeDataTranslate } from '@/utils'
 
 export default {
@@ -130,14 +130,14 @@ export default {
   methods: {
     fetchData() {
       this.listLoading = true
-      getList(this.queryParam).then(response => {
+      getList(this.queryParam).then((response) => {
         this.list = response.data.records
         this.total = response.data.total
         this.listLoading = false
       })
     },
     fetchMenuData() {
-      getMenuList(this.queryParam).then(response => {
+      getMenuList(this.queryParam).then((response) => {
         this.menuList = treeDataTranslate(response.data, 'id')
       })
     },
@@ -148,7 +148,7 @@ export default {
       } else {
         request = add(this.dataForm)
       }
-      request.then(response => {
+      request.then((response) => {
         this.dialogVisible = false
         this.fetchData()
         this.$message({ message: response.message, type: 'success' })
@@ -169,13 +169,13 @@ export default {
       })
     },
     handleDelete({ $index, row }) {
-      del([row.id]).then(response => {
+      del([row.id]).then((response) => {
         this.fetchData()
         this.$message({ message: response.message, type: 'success' })
       })
     },
     handleBatchDelete() {
-      del(this.ids).then(response => {
+      del(this.ids).then((response) => {
         this.fetchData()
         this.$message({ message: response.message, type: 'success' })
       })
@@ -189,7 +189,7 @@ export default {
     },
     // 多选
     handleSelectionChange(ids) {
-      this.ids = ids.map(item => {
+      this.ids = ids.map((item) => {
         return item.id
       })
     },

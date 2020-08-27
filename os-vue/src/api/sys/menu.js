@@ -43,9 +43,9 @@ export function update(data) {
   })
 }
 
-export function tree(data) {
+export function sidebar(data) {
   return request({
-    url: url + "/tree",
+    url: url + '/sidebar',
     method: 'get',
     params: data
   })

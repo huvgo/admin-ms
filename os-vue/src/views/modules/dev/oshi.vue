@@ -165,7 +165,7 @@
 </template>
 
 <script>
-import { getList } from '@/api/device'
+import { getList } from '@/api/dev/oshi'
 
 export default {
   data() {
@@ -217,7 +217,7 @@ export default {
   vertical-align: middle;
   min-height: 20px;
   line-height: 20px;
-  font-family: 'Arial Normal', 'Arial';
+  font-family: "Arial Normal", "Arial";
   position: relative;
   padding: 9px 15px;
   font-size: 14px;

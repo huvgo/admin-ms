@@ -7,7 +7,11 @@
       <el-form-item>
         <el-button @click="fetchData()">查询</el-button>
         <el-button type="primary" @click="handleAdd()">新增</el-button>
-        <el-button type="danger" :disabled="multipleSelection.length <= 0" @click="handleBatchDelete()">批量删除</el-button>
+        <el-button
+          type="danger"
+          :disabled="multipleSelection.length <= 0"
+          @click="handleBatchDelete()"
+        >批量删除</el-button>
       </el-form-item>
     </el-form>
 
@@ -61,7 +65,11 @@
                   <el-input v-model.trim="dataForm.password" type="password" placeholder="请输入密码" />
                 </el-form-item>
                 <el-form-item label="确认密码" prop="comfirmPassword">
-                  <el-input v-model.trim="dataForm.comfirmPassword" type="password" placeholder="确认密码" />
+                  <el-input
+                    v-model.trim="dataForm.comfirmPassword"
+                    type="password"
+                    placeholder="确认密码"
+                  />
                 </el-form-item>
                 <el-form-item label="允许登陆" size="mini" prop="status">
                   <el-switch
@@ -71,7 +79,12 @@
                   />
                 </el-form-item>
                 <el-form-item label="角色配置" prop="roleIds">
-                  <el-select v-model="dataForm.roleIds" multiple placeholder="请选择" style="width: 100%;">
+                  <el-select
+                    v-model="dataForm.roleIds"
+                    multiple
+                    placeholder="请选择"
+                    style="width: 100%;"
+                  >
                     <el-option
                       v-for="item in roleOptions"
                       :key="item.id"
@@ -112,13 +125,12 @@
         <el-button type="primary" @click="dataFormSubmit()">确定</el-button>
       </div>
     </el-dialog>
-
   </div>
 </template>
 
 <script>
-import { add, del, update, getList } from '@/api/user'
-import { option } from '@/api/role'
+import { add, del, update, getList } from '@/api/sys/user'
+import { option } from '@/api/sys/role'
 
 export default {
   filters: {
@@ -248,13 +260,13 @@ export default {
 </script>
 
 <style scoped>
-.el-dialog{
+.el-dialog {
   padding: 10px 20px;
 }
-.el-card{
+.el-card {
   border: 0 solid #ffffff;
 }
- .padd >>> .el-dialog__body{
-    padding-top: 15px;
-  }
+.padd >>> .el-dialog__body {
+  padding-top: 15px;
+}
 </style>

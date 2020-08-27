@@ -110,4 +110,7 @@ public class User extends Entity {
      */
     private String avatar;
 
+    @TableField(exist = false)
+    private List<Menu> menuList;
+
 }

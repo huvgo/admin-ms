@@ -1,5 +1,6 @@
 package com.company.project.modules.dev.controller;
 
+import com.company.project.common.annotation.Permissions;
 import com.company.project.core.Result;
 import com.company.project.modules.dev.entity.oshi.SystemHardwareInfo;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,11 +15,12 @@ import org.springframework.web.bind.annotation.RestController;
  * @author root
  */
 @RestController
-@RequestMapping("/monitor/oshi")
+@RequestMapping("/dev/oshi")
 public class OshiController {
 
     @GetMapping
-    public Result<SystemHardwareInfo> detail() {
+    @Permissions
+    public Result<SystemHardwareInfo> get() {
         SystemHardwareInfo systemHardwareInfo = new SystemHardwareInfo();
         systemHardwareInfo.copyTo();
         return Result.success(systemHardwareInfo);

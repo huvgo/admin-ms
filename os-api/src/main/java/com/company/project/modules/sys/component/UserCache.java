@@ -5,10 +5,8 @@ import cn.hutool.cache.impl.TimedCache;
 import cn.hutool.core.date.DateUnit;
 import com.company.project.modules.sys.entity.User;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 
 /**
  * 用户信息缓存
@@ -18,33 +16,22 @@ import org.springframework.util.StringUtils;
 @Component
 public class UserCache {
 
-    private TimedCache<String, String> userCache;
-    private TimedCache<String, String> tokenCache;
+    private final TimedCache<String, User> userCache;
+    private final TimedCache<String, String> tokenCache;
 
-    private ObjectMapper objectMapper;
 
-    public UserCache(ObjectMapper objectMapper) {
-        this.objectMapper = objectMapper;
+    public UserCache() {
         //创建缓存，默认一小时过期
         userCache = CacheUtil.newTimedCache(DateUnit.HOUR.getMillis());
         tokenCache = CacheUtil.newTimedCache(DateUnit.HOUR.getMillis());
     }
 
-    public synchronized void putUser(String key, User user) throws JsonProcessingException {
-        userCache.put(key, objectMapper.writeValueAsString(user));
+    public synchronized void putUser(String token, User user) throws JsonProcessingException {
+        userCache.put(token, user);
     }
 
-    public synchronized User getUser(String key) {
-        String userInfo = userCache.get(key);
-        if (StringUtils.isEmpty(userInfo)) {
-            return null;
-        }
-        try {
-            return objectMapper.readValue(userInfo, User.class);
-        } catch (JsonProcessingException e) {
-            log.info(e.getMessage());
-            return null;
-        }
+    public synchronized User getUser(String token) {
+        return userCache.get(token);
     }
 
     public synchronized void putToken(String key, String token) {

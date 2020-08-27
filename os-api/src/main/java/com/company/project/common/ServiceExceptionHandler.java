@@ -16,11 +16,9 @@ public class ServiceExceptionHandler {
 
         //判断异常的类型,返回不一样的返回值
         if (ex instanceof ServiceException) {
-            String message = ex.getMessage();
-            fail.setMessage(message);
-        } else if (ex instanceof IllegalArgumentException) {
-            String message = ex.getMessage();
-            fail.setMessage(message);
+            ServiceException serviceException = (ServiceException) ex;
+            fail.setCode(serviceException.getCode());
+            fail.setMessage(serviceException.getMessage());
         } else {
             ex.printStackTrace();
         }

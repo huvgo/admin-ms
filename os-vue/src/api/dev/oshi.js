@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function getList(data) {
   return request({
-    url: '/monitor/oshi',
+    url: '/dev/oshi',
     method: 'get',
     data
   })

@@ -1,7 +1,7 @@
 // import { asyncRoutes, constantRoutes } from '@/router'
 import { constantRoutes } from '@/router'
 import Layout from '@/layout'
-import { tree } from '@/api/menu'
+import { sidebar } from '@/api/sys/menu'
 
 /**
  * Use meta.role to determine if the current user has permission
@@ -68,7 +68,7 @@ const mutations = {
 const actions = {
   generateRoutes({ commit }, roles) {
     return new Promise(resolve => {
-      tree().then(response => {
+      sidebar().then(response => {
         const asyncRouterMap = generateAsyncRouter(response.data)
         commit('SET_ROUTES', asyncRouterMap)
         resolve(asyncRouterMap)

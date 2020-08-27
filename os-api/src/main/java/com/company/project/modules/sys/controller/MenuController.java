@@ -1,13 +1,8 @@
 package com.company.project.modules.sys.controller;
 
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.lang.Assert;
-import cn.hutool.core.lang.Dict;
-import cn.hutool.core.lang.tree.Tree;
-import cn.hutool.core.lang.tree.TreeNode;
-import cn.hutool.core.lang.tree.TreeUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.company.project.common.annotation.RequiresPermissions;
+import com.company.project.common.annotation.Permissions;
+import com.company.project.core.Assert;
 import com.company.project.core.Result;
 import com.company.project.modules.sys.component.UserCache;
 import com.company.project.modules.sys.entity.Menu;
@@ -15,10 +10,13 @@ import com.company.project.modules.sys.entity.Role;
 import com.company.project.modules.sys.entity.User;
 import com.company.project.modules.sys.service.MenuService;
 import com.company.project.modules.sys.service.RoleService;
+import com.company.project.util.TreeUtil;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -42,59 +40,61 @@ public class MenuController {
         this.userCache = userCache;
     }
 
+    @Permissions
     @PostMapping
-    public Result<?> add(@RequestBody Menu menu) {
+    public Result<?> post(@RequestBody Menu menu) {
         menuService.save(menu);
         return Result.success();
     }
 
+    @Permissions
     @DeleteMapping
-    @RequiresPermissions
     public Result<?> delete(@RequestBody List<Long> ids) {
         menuService.removeByIds(ids);
         return Result.success();
     }
 
+    @Permissions
     @PutMapping
-    public Result<?> update(@RequestBody Menu menu) {
+    public Result<?> put(@RequestBody Menu menu) {
         menuService.updateById(menu);
         return Result.success();
     }
 
+    @Permissions
     @GetMapping("/{id}")
-    public Result<Menu> detail(@PathVariable Integer id) {
+    public Result<Menu> get(@PathVariable Integer id) {
         Menu menu = menuService.getById(id);
         return Result.success(menu);
     }
 
+    @Permissions
     @GetMapping
-    @RequiresPermissions
-    public Result<List<Menu>> list() {
+    public Result<List<Menu>> get() {
         List<Menu> list = menuService.list();
         return Result.success(list);
     }
 
-
-    @GetMapping("/tree")
-    public Result<List<Tree<String>>> tree(@RequestHeader(value = "X-Token") String token) {
+    /**
+     * 侧边栏
+     */
+    @GetMapping("/sidebar")
+    public Result<List<Menu>> sidebar(@RequestHeader(value = "X-Token") String token) throws JsonProcessingException {
         User user = userCache.getUser(token);
-        Assert.notNull(user, "用户信息不存在");
+        Assert.requireNonNull(user, "登录过期,请重新登陆");
         List<Integer> roleIds = user.getRoleIds();
         List<Role> roles = roleService.listByIds(roleIds);
         HashSet<Integer> menuIds = new HashSet<>();
         for (Role role : roles) {
             menuIds.addAll(role.getMenuIds());
         }
-        List<Menu> menuList = menuService.list(new QueryWrapper<Menu>().in("id", menuIds).ne("type", 2));
+        List<Menu> menuList = menuService.list(new QueryWrapper<Menu>().in("id", menuIds));
+        user.setMenuList(menuList);
+        userCache.putUser(token, user);
+
+        List<Menu> collect = menuList.stream().filter(menu -> menu.getType() != 2).collect(Collectors.toList());
         // 构建node列表
-        List<TreeNode<String>> nodeList = CollUtil.newArrayList();
-        for (Menu menu : menuList) {
-            TreeNode<String> treeNode = new TreeNode<>(menu.getId().toString(), menu.getParentId().toString(), menu.getName(), menu.getOrderNum());
-            Dict extra = Dict.create().set("type", menu.getType()).set("path", menu.getPath()).set("meta", menu.getMeta());
-            treeNode.setExtra(extra);
-            nodeList.add(treeNode);
-        }
-        List<Tree<String>> tree = TreeUtil.build(nodeList, "0");
+        List<Menu> tree = TreeUtil.build(collect, 0);
         return Result.success(tree);
     }
 }

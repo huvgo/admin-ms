@@ -3,10 +3,11 @@ package com.company.project.modules.sys.entity;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
-import com.company.project.core.Entity;
+import com.company.project.core.TreeNode;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -20,14 +21,9 @@ import java.util.Map;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @TableName(value = "sys_menu", autoResultMap = true)
-public class Menu extends Entity {
+public class Menu extends TreeNode<Menu> {
 
     private static final long serialVersionUID = 1L;
-
-    /**
-     * 父菜单ID，一级菜单为0
-     */
-    private Integer parentId;
 
     /**
      * 菜单名称
@@ -52,16 +48,18 @@ public class Menu extends Entity {
      */
     private Integer type;
 
-
     /**
      * 排序
      */
     private Integer orderNum;
-
 
     /**
      * 附加信息
      */
     @TableField(exist = false)
     private Map<String, Object> remark;
+
+    public Boolean getHidden() {
+        return this.type == 2;
+    }
 }
