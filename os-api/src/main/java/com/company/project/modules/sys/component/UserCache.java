@@ -4,7 +4,6 @@ import cn.hutool.cache.CacheUtil;
 import cn.hutool.cache.impl.TimedCache;
 import cn.hutool.core.date.DateUnit;
 import com.company.project.modules.sys.entity.User;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -16,29 +15,29 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserCache {
 
-    private final TimedCache<String, User> userCache;
-    private final TimedCache<String, String> tokenCache;
+    private final TimedCache<String, User> userTimedCache;
+    private final TimedCache<String, String> timedCache;
 
 
     public UserCache() {
         //创建缓存，默认一小时过期
-        userCache = CacheUtil.newTimedCache(DateUnit.HOUR.getMillis());
-        tokenCache = CacheUtil.newTimedCache(DateUnit.HOUR.getMillis());
+        userTimedCache = CacheUtil.newTimedCache(DateUnit.HOUR.getMillis());
+        timedCache = CacheUtil.newTimedCache(DateUnit.HOUR.getMillis());
     }
 
-    public synchronized void putUser(String token, User user) throws JsonProcessingException {
-        userCache.put(token, user);
+    public synchronized void putUser(String token, User user) {
+        userTimedCache.put(token, user);
     }
 
     public synchronized User getUser(String token) {
-        return userCache.get(token);
+        return userTimedCache.get(token);
     }
 
     public synchronized void putToken(String key, String token) {
-        tokenCache.put(key, token);
+        timedCache.put(key, token);
     }
 
     public synchronized String getToken(String key) {
-        return tokenCache.get(key);
+        return timedCache.get(key);
     }
 }

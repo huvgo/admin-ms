@@ -42,21 +42,21 @@ public class MenuController {
 
     @Permissions
     @PostMapping
-    public Result<?> post(@RequestBody Menu menu) {
+    public Result<Object> post(@RequestBody Menu menu) {
         menuService.save(menu);
         return Result.success();
     }
 
     @Permissions
     @DeleteMapping
-    public Result<?> delete(@RequestBody List<Long> ids) {
+    public Result<Object> delete(@RequestBody List<Long> ids) {
         menuService.removeByIds(ids);
         return Result.success();
     }
 
     @Permissions
     @PutMapping
-    public Result<?> put(@RequestBody Menu menu) {
+    public Result<Object> put(@RequestBody Menu menu) {
         menuService.updateById(menu);
         return Result.success();
     }

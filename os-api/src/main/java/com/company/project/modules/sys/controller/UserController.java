@@ -41,21 +41,21 @@ public class UserController {
 
     @Permissions
     @PostMapping
-    public Result<?> post(@RequestBody User user) {
+    public Result<Object> post(@RequestBody User user) {
         userService.save(user);
         return Result.success();
     }
 
     @Permissions
     @DeleteMapping
-    public Result<?> delete(@RequestBody List<Long> ids) {
+    public Result<Object> delete(@RequestBody List<Long> ids) {
         userService.removeByIds(ids);
         return Result.success();
     }
 
     @Permissions
     @PutMapping
-    public Result<?> put(@RequestBody User user) {
+    public Result<Object> put(@RequestBody User user) {
         userService.updateById(user);
         return Result.success();
     }
@@ -77,7 +77,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public Result<?> login(@RequestBody User user) throws JsonProcessingException {
+    public Result<Object> login(@RequestBody User user) throws JsonProcessingException {
         User currentUser = userService.getByUsernameAndPassword(user.getUsername(), user.getPassword());
         Assert.requireNonNull(currentUser, "账号或密码不正确");
         String token = userCache.getToken(currentUser.getUsername());
@@ -90,14 +90,14 @@ public class UserController {
     }
 
     @GetMapping("/token")
-    public Result<?> token(String token) {
+    public Result<Object> token(String token) {
         User user = userCache.getUser(token);
         Assert.requireNonNull(user, "登录过期,请重新登陆");
         return Result.success(user);
     }
 
     @PostMapping("/logout")
-    public Result<?> logout() {
+    public Result<Object> logout() {
         return Result.success();
     }
 }

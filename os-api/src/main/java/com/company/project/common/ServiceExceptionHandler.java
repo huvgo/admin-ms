@@ -11,8 +11,8 @@ public class ServiceExceptionHandler {
 
     @ResponseBody
     @ExceptionHandler(value = Exception.class)
-    public Result<?> errorHandler(Exception ex) {
-        Result<?> fail = Result.fail();
+    public Result<Object> errorHandler(Exception ex) {
+        Result<Object> fail = Result.fail();
 
         //判断异常的类型,返回不一样的返回值
         if (ex instanceof ServiceException) {

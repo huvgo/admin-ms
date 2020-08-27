@@ -12,7 +12,7 @@ public class Result<T> {
     private static final String DEFAULT_SUCCESS_MESSAGE = "操作成功";
     private static final String DEFAULT_FAIL_MESSAGE = "操作失败";
 
-    public static Result<?> success() {
+    public static Result<Object> success() {
         return new Result<>().setCode(ResultCode.SUCCESS).setMessage(DEFAULT_SUCCESS_MESSAGE);
     }
 
