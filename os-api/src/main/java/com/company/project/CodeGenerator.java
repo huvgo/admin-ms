@@ -1,14 +1,10 @@
 package com.company.project;
 
-import com.baomidou.mybatisplus.core.exceptions.MybatisPlusException;
-import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.company.project.core.Entity;
 import com.company.project.modules.dev.component.code.AutoGenerator;
 import com.company.project.modules.dev.component.code.config.*;
 import com.company.project.modules.dev.component.code.config.rules.NamingStrategy;
 import com.company.project.modules.dev.component.code.engine.FreemarkerTemplateEngine;
-
-import java.util.Scanner;
 
 // 演示例子，执行 main 方法控制台输入模块表名回车自动生成对应项目目录中
 public class CodeGenerator {
@@ -25,22 +21,6 @@ public class CodeGenerator {
 
     private static final String MODULE_NAME = "sys";
     private static final String TABLE_NAME = "sys_role_menu";
-    /**
-     * <p>
-     * 读取控制台内容
-     * </p>
-     */
-    public static String scanner(String tip) {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("请输入" + tip + "：");
-        if (scanner.hasNext()) {
-            String ipt = scanner.next();
-            if (StringUtils.isNotBlank(ipt)) {
-                return ipt;
-            }
-        }
-        throw new MybatisPlusException("请输入正确的" + tip + "！");
-    }
 
     public static void main(String[] args) {
         // 代码生成器
@@ -75,10 +55,8 @@ public class CodeGenerator {
         strategy.setEntityLombokModel(true);
         strategy.setRestControllerStyle(true);
         // 公共父类
-//        strategy.setSuperControllerClass("你自己的父类控制器,没有就不用设置!");
         // 写于父类中的公共字段
         strategy.setSuperEntityColumns("id");
-//        strategy.setInclude(scanner("表名，多个英文逗号分割").split(","));
         strategy.setInclude(TABLE_NAME);
         strategy.setControllerMappingHyphenStyle(true);
         strategy.setTablePrefix(packageConfig.getModuleName() + "_");
@@ -90,7 +68,7 @@ public class CodeGenerator {
         mpg.execute();
     }
 
-    private static GlobalConfig getGlobalConfig(){
+    private static GlobalConfig getGlobalConfig() {
         GlobalConfig gc = new GlobalConfig();
         String projectPath = System.getProperty("user.dir");
         gc.setOutputDir(projectPath + "/src/main/java");
@@ -100,10 +78,9 @@ public class CodeGenerator {
         return gc;
     }
 
-    private static DataSourceConfig getDataSourceConfig(){
+    private static DataSourceConfig getDataSourceConfig() {
         DataSourceConfig dsc = new DataSourceConfig();
         dsc.setUrl(URL);
-        // dsc.setSchemaName("public");
         dsc.setDriverName(DRIVER_NAME);
         dsc.setUsername(USERNAME);
         dsc.setPassword(PASSWORD);
@@ -111,9 +88,8 @@ public class CodeGenerator {
     }
 
 
-    private static PackageConfig getPackageConfig(){
+    private static PackageConfig getPackageConfig() {
         PackageConfig pc = new PackageConfig();
-//        pc.setModuleName(scanner("模块名"));
         pc.setModuleName(MODULE_NAME);
         pc.setParent(DIR);
         return pc;

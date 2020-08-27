@@ -25,6 +25,7 @@ import com.company.project.modules.dev.component.code.config.po.TableField;
 import com.company.project.modules.dev.component.code.config.po.TableFill;
 import com.company.project.modules.dev.component.code.config.po.TableInfo;
 import com.company.project.modules.dev.component.code.config.querys.H2Query;
+import com.company.project.modules.dev.component.code.config.querys.MySqlQuery;
 import com.company.project.modules.dev.component.code.config.rules.NamingStrategy;
 import com.company.project.modules.dev.component.code.config.GlobalConfig;
 
@@ -405,7 +406,7 @@ public class ConfigBuilder {
             tableInfo.getImportPackages().add(com.baomidou.mybatisplus.annotation.TableId.class.getCanonicalName());
         }
         if (StringUtils.isNotBlank(strategyConfig.getVersionFieldName())
-            && CollectionUtils.isNotEmpty(tableInfo.getFields())) {
+                && CollectionUtils.isNotEmpty(tableInfo.getFields())) {
             tableInfo.getFields().forEach(f -> {
                 if (strategyConfig.getVersionFieldName().equals(f.getName())) {
                     tableInfo.getImportPackages().add(com.baomidou.mybatisplus.annotation.Version.class.getCanonicalName());
@@ -482,10 +483,10 @@ public class ConfigBuilder {
                 }
                 if (isInclude) {
                     sql.append(" AND ").append(dbQuery.tableName()).append(" IN (")
-                        .append(Arrays.stream(config.getInclude()).map(tb -> "'" + tb + "'").collect(Collectors.joining(","))).append(")");
+                            .append(Arrays.stream(config.getInclude()).map(tb -> "'" + tb + "'").collect(Collectors.joining(","))).append(")");
                 } else if (isExclude) {
                     sql.append(" AND ").append(dbQuery.tableName()).append(" NOT IN (")
-                        .append(Arrays.stream(config.getExclude()).map(tb -> "'" + tb + "'").collect(Collectors.joining(","))).append(")");
+                            .append(Arrays.stream(config.getExclude()).map(tb -> "'" + tb + "'").collect(Collectors.joining(","))).append(")");
                 }
             }
             TableInfo tableInfo;
@@ -571,7 +572,22 @@ public class ConfigBuilder {
      */
     private boolean tableNameMatches(String setTableName, String dbTableName) {
         return setTableName.equalsIgnoreCase(dbTableName)
-            || StringUtils.matches(setTableName, dbTableName);
+                || StringUtils.matches(setTableName, dbTableName);
+    }
+
+    public static void main(String[] args) {
+        boolean haveId = false;
+        List<TableField> fieldList = new ArrayList<>();
+        List<TableField> commonFieldList = new ArrayList<>();
+        String tableName = "sys_menu";
+        MySqlQuery dbQuery = new MySqlQuery();
+        String tableFieldsSql = dbQuery.tableFieldsSql();
+
+        tableFieldsSql = String.format(tableFieldsSql, tableName);
+
+        System.out.println("tableFieldsSql = " + tableFieldsSql);
+
+
     }
 
     /**
@@ -617,8 +633,8 @@ public class ConfigBuilder {
                 tableFieldsSql = String.format(tableFieldsSql, tableName);
             }
             try (
-                PreparedStatement preparedStatement = connection.prepareStatement(tableFieldsSql);
-                ResultSet results = preparedStatement.executeQuery()) {
+                    PreparedStatement preparedStatement = connection.prepareStatement(tableFieldsSql);
+                    ResultSet results = preparedStatement.executeQuery()) {
                 while (results.next()) {
                     TableField field = new TableField();
                     String columnName = results.getString(dbQuery.fieldName());
@@ -682,7 +698,7 @@ public class ConfigBuilder {
                     if (null != tableFillList) {
                         // 忽略大写字段问题
                         tableFillList.stream().filter(tf -> tf.getFieldName().equalsIgnoreCase(field.getName()))
-                            .findFirst().ifPresent(tf -> field.setFill(tf.getFieldFill().name()));
+                                .findFirst().ifPresent(tf -> field.setFill(tf.getFieldFill().name()));
                     }
                     if (strategyConfig.includeSuperEntityColumns(field.getName())) {
                         // 跳过公共字段
