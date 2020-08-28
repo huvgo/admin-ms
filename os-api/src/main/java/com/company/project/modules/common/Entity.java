@@ -1,4 +1,4 @@
-package com.company.project.core;
+package com.company.project.modules.common;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;

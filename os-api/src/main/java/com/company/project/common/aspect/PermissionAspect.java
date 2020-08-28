@@ -1,7 +1,7 @@
 package com.company.project.common.aspect;
 
 import com.company.project.core.Assert;
-import com.company.project.modules.sys.component.UserCache;
+import com.company.project.modules.sys.util.UserCache;
 import com.company.project.modules.sys.entity.Menu;
 import com.company.project.modules.sys.entity.User;
 import lombok.extern.slf4j.Slf4j;

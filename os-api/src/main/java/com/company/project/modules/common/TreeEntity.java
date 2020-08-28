@@ -1,4 +1,4 @@
-package com.company.project.core;
+package com.company.project.modules.common;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -8,15 +8,16 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class TreeNode<T> {
-    @TableId(type= IdType.AUTO)
-    private Integer id;
+public class TreeEntity<E, T> {
+
+    @TableId(type = IdType.AUTO)
+    private E id;
 
 
     /**
      * 父菜单ID，一级菜单为0
      */
-    private Integer parentId;
+    private E parentId;
 
 
     /**

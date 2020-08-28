@@ -1,6 +1,6 @@
 package ${package}.entity;
 
-import com.company.project.core.Entity;
+import com.company.project.modules.common.Entity;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

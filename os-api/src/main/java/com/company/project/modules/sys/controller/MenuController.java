@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.company.project.common.annotation.Permissions;
 import com.company.project.core.Assert;
 import com.company.project.core.Result;
-import com.company.project.modules.sys.component.UserCache;
+import com.company.project.modules.sys.util.UserCache;
 import com.company.project.modules.sys.entity.Menu;
 import com.company.project.modules.sys.entity.Role;
 import com.company.project.modules.sys.entity.User;

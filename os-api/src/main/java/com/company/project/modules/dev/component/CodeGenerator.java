@@ -4,11 +4,13 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.db.DbUtil;
 import cn.hutool.db.Entity;
 import cn.hutool.db.handler.EntityListHandler;
 import cn.hutool.db.sql.SqlExecutor;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
+import com.company.project.modules.dev.util.Convert;
 import com.company.project.util.JDBCUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -80,6 +82,7 @@ public class CodeGenerator {
 
             freemarkerTemplateEngine.writer(objectMap, template.getTemplatePath(), outputFilePath);
         }
+        DbUtil.close(conn);
     }
 
     private Map<String, Object> genTemplateParams(List<Entity> tableFields, List<Entity> tableInfo, String moduleName, String tableName) {
@@ -101,7 +104,7 @@ public class CodeGenerator {
 
             String jdbcTypeAndLength = (String) row.get("type");
             String jdbcType = jdbcTypeAndLength.split("\\(")[0];
-            row.put("javaType", jdbcType2JavaTypeMap.get(jdbcType));
+            row.put("javaType", Convert.jdbcType2JavaType(jdbcType));
             table.add(row);
         });
         String name = StrUtil.toCamelCase(StrUtil.removePrefix(tableName, moduleName));
@@ -138,29 +141,5 @@ public class CodeGenerator {
         }
     }
 
-    private static HashMap<String, String> jdbcType2JavaTypeMap = new HashMap<>();
 
-    static {
-        jdbcType2JavaTypeMap.put("tinyint", "Integer");
-        jdbcType2JavaTypeMap.put("smallint", "Integer");
-        jdbcType2JavaTypeMap.put("mediumint", "Integer");
-        jdbcType2JavaTypeMap.put("int", "Integer");
-        jdbcType2JavaTypeMap.put("integer", "Integer");
-        jdbcType2JavaTypeMap.put("bigint", "Long");
-        jdbcType2JavaTypeMap.put("float", "Float");
-        jdbcType2JavaTypeMap.put("double", "Double");
-        jdbcType2JavaTypeMap.put("decimal", "BigDecimal");
-        jdbcType2JavaTypeMap.put("bit", "Boolean");
-
-        jdbcType2JavaTypeMap.put("char", "String");
-        jdbcType2JavaTypeMap.put("varchar", "String");
-        jdbcType2JavaTypeMap.put("tinytext", "String");
-        jdbcType2JavaTypeMap.put("text", "String");
-        jdbcType2JavaTypeMap.put("mediumtext", "String");
-        jdbcType2JavaTypeMap.put("longtext", "String");
-
-        jdbcType2JavaTypeMap.put("date", "Date");
-        jdbcType2JavaTypeMap.put("datetime", "Date");
-        jdbcType2JavaTypeMap.put("timestamp", "Date");
-    }
 }

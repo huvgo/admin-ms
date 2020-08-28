@@ -7,7 +7,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.company.project.common.annotation.Permissions;
 import com.company.project.core.Assert;
 import com.company.project.core.Result;
-import com.company.project.modules.sys.component.UserCache;
+import com.company.project.modules.sys.util.UserCache;
 import com.company.project.modules.sys.entity.User;
 import com.company.project.modules.sys.service.MenuService;
 import com.company.project.modules.sys.service.UserService;

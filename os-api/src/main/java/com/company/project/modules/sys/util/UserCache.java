@@ -1,4 +1,4 @@
-package com.company.project.modules.sys.component;
+package com.company.project.modules.sys.util;
 
 import cn.hutool.cache.CacheUtil;
 import cn.hutool.cache.impl.TimedCache;

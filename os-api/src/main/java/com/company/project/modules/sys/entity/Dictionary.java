@@ -1,7 +1,7 @@
 package com.company.project.modules.sys.entity;
 
-import com.company.project.core.Entity;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.company.project.modules.common.TreeEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -20,12 +20,7 @@ import lombok.experimental.Accessors;
 @EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
 @TableName(value = "sys_dictionary")
-public class Dictionary extends Entity<Integer> {
-
-        /**
-        * 上级节点ID
-        */
-        private Integer parentId;
+public class Dictionary extends TreeEntity<Integer, Dictionary> {
 
         /**
         * 编码

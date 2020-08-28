@@ -7,7 +7,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
-import com.company.project.core.Entity;
+import com.company.project.modules.common.Entity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

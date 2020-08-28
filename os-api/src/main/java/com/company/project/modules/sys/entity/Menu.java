@@ -3,7 +3,7 @@ package com.company.project.modules.sys.entity;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
-import com.company.project.core.TreeNode;
+import com.company.project.modules.common.TreeEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -20,7 +20,7 @@ import java.util.Map;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @TableName(value = "sys_menu", autoResultMap = true)
-public class Menu extends TreeNode<Menu> {
+public class Menu extends TreeEntity<Integer, Menu> {
 
     private static final long serialVersionUID = 1L;
 
