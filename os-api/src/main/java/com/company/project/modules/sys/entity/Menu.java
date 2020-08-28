@@ -50,15 +50,11 @@ public class Menu extends TreeNode<Menu> {
     /**
      * 排序
      */
-    private Integer orderNum;
+    private Integer sort;
 
     /**
      * 附加信息
      */
     @TableField(exist = false)
     private Map<String, Object> remark;
-
-    public Boolean getHidden() {
-        return this.type == 2;
-    }
 }

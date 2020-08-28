@@ -21,11 +21,27 @@
                 @selection-change="handleSelectionChange"
         >
             <el-table-column type="selection" header-align="center" align="center" width="50" />
-            <#list table as row>
-                <el-table-column label="${row.comment}">
-                    <template slot-scope="scope">{{ scope.row.${row.field} }}</template>
+                            <el-table-column label="ID">
+                    <template slot-scope="scope">{{ scope.row.id }}</template>
                 </el-table-column>
-            </#list>
+                <el-table-column label="上级节点ID">
+                    <template slot-scope="scope">{{ scope.row.parentId }}</template>
+                </el-table-column>
+                <el-table-column label="编码">
+                    <template slot-scope="scope">{{ scope.row.code }}</template>
+                </el-table-column>
+                <el-table-column label="名称">
+                    <template slot-scope="scope">{{ scope.row.name }}</template>
+                </el-table-column>
+                <el-table-column label="排序">
+                    <template slot-scope="scope">{{ scope.row.sort }}</template>
+                </el-table-column>
+                <el-table-column label="备注">
+                    <template slot-scope="scope">{{ scope.row.remarks }}</template>
+                </el-table-column>
+                <el-table-column label="逻辑删除">
+                    <template slot-scope="scope">{{ scope.row.deleted }}</template>
+                </el-table-column>
             <el-table-column align="center" label="操作" width="150">
                 <template slot-scope="scope">
                     <el-button size="mini" @click="handleEdit(scope)">修改</el-button>
@@ -45,15 +61,25 @@
 
         <el-dialog :visible.sync="dialogVisible" :title="'新增'">
             <el-form ref="dataForm" :model="dataForm" label-width="80px" label-position="left">
-                <#list table as row>
-                    <#if row.field = "id">
                         <el-form-item v-show="false" label="ID" prop="id" />
-                    <#else>
-                        <el-form-item label="${row.comment}" prop="${row.field}">
-                            <el-input v-model="dataForm.${row.field}" placeholder="请输入${row.comment}" />
+                        <el-form-item label="上级节点ID" prop="parentId">
+                            <el-input v-model="dataForm.parentId" placeholder="请输入上级节点ID" />
                         </el-form-item>
-                    </#if>
-                </#list>
+                        <el-form-item label="编码" prop="code">
+                            <el-input v-model="dataForm.code" placeholder="请输入编码" />
+                        </el-form-item>
+                        <el-form-item label="名称" prop="name">
+                            <el-input v-model="dataForm.name" placeholder="请输入名称" />
+                        </el-form-item>
+                        <el-form-item label="排序" prop="sort">
+                            <el-input v-model="dataForm.sort" placeholder="请输入排序" />
+                        </el-form-item>
+                        <el-form-item label="备注" prop="remarks">
+                            <el-input v-model="dataForm.remarks" placeholder="请输入备注" />
+                        </el-form-item>
+                        <el-form-item label="逻辑删除" prop="deleted">
+                            <el-input v-model="dataForm.deleted" placeholder="请输入逻辑删除" />
+                        </el-form-item>
             </el-form>
             <div style="text-align:right;">
                 <el-button type="danger" @click="dialogVisible=false">取消</el-button>
@@ -65,7 +91,7 @@
 </template>
 
 <script>
-    import { add, del, update, getList } from '@/api/${moduleName}/${lowerFirstName}'
+    import { add, del, update, getList } from '@/api/sys/dictionary'
 
     export default {
         filters: {
@@ -86,9 +112,13 @@
                     pageSize: 10
                 },
                 dataForm: {
-                    <#list table as row>
-                    ${row.field}: ''<#if row_has_next>,</#if>
-                    </#list>
+                    id: '',
+                    parentId: '',
+                    code: '',
+                    name: '',
+                    sort: '',
+                    remarks: '',
+                    deleted: ''
                 },
                 ids: [],
                 list: null,

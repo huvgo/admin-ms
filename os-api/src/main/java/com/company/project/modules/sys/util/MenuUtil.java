@@ -1,11 +1,11 @@
-package com.company.project.util;
+package com.company.project.modules.sys.util;
 
 import com.company.project.core.TreeNode;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class TreeUtil {
+public class MenuUtil {
 
     /**
      * 树构建
@@ -15,12 +15,12 @@ public class TreeUtil {
      * @param parentId 最顶层父id值 一般为 0 之类
      * @return List
      */
-    public static <E extends TreeNode<E>> List<E> build(List<E> list, Integer parentId) {
+    public static <E extends TreeNode<E>> List<E> buildTree(List<E> list, Integer parentId) {
         List<E> tree = new ArrayList<>();
         for (E treeNode : list) {
             if (parentId.equals(treeNode.getParentId())) {
                 tree.add(treeNode);
-                treeNode.setChildren(build(list, treeNode.getId()));
+                treeNode.setChildren(buildTree(list, treeNode.getId()));
             }
         }
         return tree;

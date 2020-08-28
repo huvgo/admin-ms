@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 
-const url = '/${moduleName}/${lowerFirstName}'
+const url = '/sys/dictionary'
 
 export function getList(data) {
   return request({

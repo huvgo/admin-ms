@@ -19,14 +19,17 @@ import lombok.experimental.Accessors;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
-public class ${upperFirstName} extends Entity {
+@TableName(value = "${tableName}")
+public class ${upperFirstName} extends Entity<${table[0].javaType}> {
 
 <#list table as row>
-    /**
-    * ${row.comment}
-    */
-    private ${row.javaType} ${row.field};
+    <#if row.field != "id">
+        /**
+        * ${row.comment}
+        */
+        private ${row.javaType} ${row.field};
 
+    </#if>
 </#list>
 }
 

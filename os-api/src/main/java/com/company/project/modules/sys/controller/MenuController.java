@@ -10,7 +10,7 @@ import com.company.project.modules.sys.entity.Role;
 import com.company.project.modules.sys.entity.User;
 import com.company.project.modules.sys.service.MenuService;
 import com.company.project.modules.sys.service.RoleService;
-import com.company.project.util.TreeUtil;
+import com.company.project.modules.sys.util.MenuUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.web.bind.annotation.*;
 
@@ -94,7 +94,7 @@ public class MenuController {
 
         List<Menu> collect = menuList.stream().filter(menu -> menu.getType() != 2).collect(Collectors.toList());
         // 构建node列表
-        List<Menu> tree = TreeUtil.build(collect, 0);
+        List<Menu> tree = MenuUtil.buildTree(collect, 0);
         return Result.success(tree);
     }
 }

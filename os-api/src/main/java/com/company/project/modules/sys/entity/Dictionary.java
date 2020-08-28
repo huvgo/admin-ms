@@ -14,62 +14,43 @@ import lombok.experimental.Accessors;
  * </p>
  *
  * @author root
- * @since 2020-08-27
+ * @since 2020-08-28
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
-public class Dictionary extends Entity {
+@TableName(value = "sys_dictionary")
+public class Dictionary extends Entity<Integer> {
 
-    /**
-    * 父节点
-    */
-    private Long parentId;
+        /**
+        * 上级节点ID
+        */
+        private Integer parentId;
 
-    /**
-    * 内部编码
-    */
-    private String innerCode;
+        /**
+        * 编码
+        */
+        private String code;
 
-    /**
-    * 编码
-    */
-    private String code;
+        /**
+        * 名称
+        */
+        private String name;
 
-    /**
-    * 名称
-    */
-    private String name;
+        /**
+        * 排序
+        */
+        private Integer sort;
 
-    /**
-    * 层级
-    */
-    private Integer rank;
+        /**
+        * 备注
+        */
+        private String remarks;
 
-    /**
-    * 排序号
-    */
-    private Integer sortNum;
-
-    /**
-    * 备注
-    */
-    private String remarks;
-
-    /**
-    * ext1
-    */
-    private String ext1;
-
-    /**
-    * ext2
-    */
-    private String ext2;
-
-    /**
-    * 数据状态 0:有效 1:无效
-    */
-    private Integer delFlag;
+        /**
+        * 逻辑删除
+        */
+        private Integer deleted;
 
 }
 

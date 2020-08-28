@@ -9,7 +9,7 @@ import org.apache.ibatis.annotations.Mapper;
  * </p>
  *
  * @author root
- * @since 2020-08-27
+ * @since 2020-08-28
  */
 @Mapper
 public interface DictionaryMapper extends BaseMapper<Dictionary> {

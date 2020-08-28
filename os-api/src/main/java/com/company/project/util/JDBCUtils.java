@@ -26,17 +26,16 @@ public class JDBCUtils {
             Properties pro = new Properties();
             //获取src路径下的文件--->ClassLoader类加载器
             ClassLoader classLoader = JDBCUtils.class.getClassLoader();
-            URL resource = classLoader.getResource("jdbc.properties");
-            Assert.requireNonNull(resource, "jdbc.properties配置文件不存在，需要在resources目录下放配置文件");
+            URL resource = classLoader.getResource("application.properties");
+            Assert.requireNonNull(resource, "application.properties配置文件不存在，需要在resources目录下放配置文件");
             String path = resource.getPath();
-            path = "C:\\Users\\HuWei\\Github Projects\\admin-os\\os-api\\target\\classes\\\\jdbc.properties";
             //2.加载文件
             pro.load(new FileReader(path));
             //3获取数据
-            url = pro.getProperty("url");
-            user = pro.getProperty("user");
-            password = pro.getProperty("password");
-            String driver = pro.getProperty("driver");
+            url = pro.getProperty("spring.datasource.url");
+            user = pro.getProperty("spring.datasource.username");
+            password = pro.getProperty("spring.datasource.password");
+            String driver = pro.getProperty("spring.datasource.driver-class-name");
             //4.注册驱动
             Class.forName(driver);
         } catch (IOException | ClassNotFoundException e) {

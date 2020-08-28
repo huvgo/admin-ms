@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.Data;
 
 @Data
-public class Entity {
+public class Entity<T> {
     @TableId(type= IdType.AUTO)
-    private Integer id;
+    private T id;
 }

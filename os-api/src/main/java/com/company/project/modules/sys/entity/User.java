@@ -22,7 +22,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @TableName(value = "sys_user", autoResultMap = true)
-public class User extends Entity {
+public class User extends Entity<Integer> {
 
     private static final long serialVersionUID = 1L;
 

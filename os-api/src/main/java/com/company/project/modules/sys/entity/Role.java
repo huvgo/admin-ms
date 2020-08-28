@@ -21,7 +21,7 @@ import java.util.List;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @TableName(value = "sys_role", autoResultMap = true)
-public class Role extends Entity {
+public class Role extends Entity<Integer> {
 
 
     /**

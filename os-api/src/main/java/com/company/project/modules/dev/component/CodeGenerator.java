@@ -1,7 +1,8 @@
 package com.company.project.modules.dev.component;
 
-import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.db.Entity;
 import cn.hutool.db.handler.EntityListHandler;
@@ -40,10 +41,8 @@ public class CodeGenerator {
         templateList.add(new Template("/templates/mapper.java.ftl", "mapper", "Mapper.java"));
         templateList.add(new Template("/templates/mapper.xml.ftl", "mapper" + File.separator + "xml", "Mapper.xml"));
 
-/*
         templateList.add(new Template("/templates/page.vue.ftl", "vue", ".vue"));
-        templateList.add(new Template("/templates/page.js.ftl", "vue", ".vue"));
-*/
+        templateList.add(new Template("/templates/page.js.ftl", "vue", ".js"));
 
         CodeGenerator generator = new CodeGenerator();
         generator.generator(moduleName, tableName, templateList);
@@ -57,23 +56,37 @@ public class CodeGenerator {
         // 查询表的字段信息
         Connection conn = JDBCUtils.getConnection();
         List<Entity> tableFields = SqlExecutor.query(conn, "show full fields from " + tableName, new EntityListHandler());
+        // 查询表信息
+        List<Entity> tableInfo = SqlExecutor.query(conn, "show table status WHERE name = ?", new EntityListHandler(), tableName);
 
         // 整理模板需要的数据
-        Map<String, Object> objectMap = genTemplateParams(tableFields, moduleName, tableName);
+        Map<String, Object> objectMap = genTemplateParams(tableFields, tableInfo, moduleName, tableName);
 
         // 输出模板
         FreemarkerTemplateEngine freemarkerTemplateEngine = new FreemarkerTemplateEngine();
         for (Template template : templateList) {
-            String outputFilePath = OUTPUT_PATH + File.separator + moduleName + File.separator + template.getDirectory() + File.separator + objectMap.get("upperFirstName") + template.getFileSuffix();
+            String outputFileDir = OUTPUT_PATH + File.separator + moduleName + File.separator + template.getDirectory();
+            FileUtil.mkdir(outputFileDir);
+            String fileName;
+
+            String fileSuffix = template.getFileSuffix();
+            String sub = StrUtil.sub(fileSuffix, fileSuffix.lastIndexOf(".") + 1, fileSuffix.length());
+            if ("java".equals(sub) || "xml".equals(sub)) {
+                fileName = objectMap.get("upperFirstName") + template.getFileSuffix();
+            } else {
+                fileName = objectMap.get("lowerFirstName") + template.getFileSuffix();
+            }
+            String outputFilePath = outputFileDir + File.separator + fileName;
+
             freemarkerTemplateEngine.writer(objectMap, template.getTemplatePath(), outputFilePath);
         }
     }
 
-    private Map<String, Object> genTemplateParams(List<Entity> tableFields, String moduleName, String tableName) {
+    private Map<String, Object> genTemplateParams(List<Entity> tableFields, List<Entity> tableInfo, String moduleName, String tableName) {
         Map<String, Object> objectMap = new HashMap<>();
-        ArrayList<Object> table = CollectionUtil.newArrayList();
+        ArrayList<Object> table = CollUtil.newArrayList();
         tableFields.forEach(entity -> {
-            HashMap<String, Object> row = CollectionUtil.newHashMap();
+            HashMap<String, Object> row = CollUtil.newHashMap();
             Set<Map.Entry<String, Object>> entries = entity.entrySet();
             entries.forEach(e -> {
                 String key = StrUtil.lowerFirst(e.getKey());
@@ -93,7 +106,8 @@ public class CodeGenerator {
         });
         String name = StrUtil.toCamelCase(StrUtil.removePrefix(tableName, moduleName));
         objectMap.put("table", table);
-        objectMap.put("tableComment", "数据字典");
+        objectMap.put("tableName", tableName);
+        objectMap.put("tableComment", tableInfo.get(0).getStr("Comment"));
         objectMap.put("package", packageName + "." + moduleName);
         objectMap.put("moduleName", moduleName);
         objectMap.put("lowerFirstName", StrUtil.lowerFirst(name));
