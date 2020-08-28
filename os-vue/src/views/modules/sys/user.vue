@@ -25,9 +25,17 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" header-align="center" align="center" width="50" />
-      <el-table-column label="用户名" prop="username" />
+      <el-table-column label="账号" prop="username" />
+      <el-table-column label="角色" prop="roleIds">
+        <template slot-scope="scope">{{ scope.row.roleIds |roleFilter(roleOptions) }}</template>
+      </el-table-column>
       <el-table-column label="姓名" prop="name" />
       <el-table-column label="手机号" prop="mobile" />
+      <el-table-column label="允许登录" prop="mobile">
+        <template slot-scope="{row}">
+          <el-tag :type="row.status | statusFilter">{{ row.status?'正常':'冻结' }}</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="操作" width="150">
         <template slot-scope="scope">
           <el-button size="mini" @click="handleEdit(scope)">修改</el-button>
@@ -55,7 +63,7 @@
             <div class="component-item">
               <el-form ref="dataForm" :model="dataForm" label-width="80px" label-position="left">
                 <el-form-item v-show="false" label="ID" prop="id" />
-                <el-form-item label="昵称" prop="username">
+                <el-form-item label="账号" prop="username">
                   <el-input v-model="dataForm.username" placeholder="请输入昵称" />
                 </el-form-item>
                 <el-form-item label="手机号" prop="mobile">
@@ -71,7 +79,7 @@
                     placeholder="确认密码"
                   />
                 </el-form-item>
-                <el-form-item label="允许登陆" size="mini" prop="status">
+                <el-form-item label="登陆状态" size="mini" prop="status">
                   <el-switch
                     v-model="dataForm.status"
                     active-color="#13ce66"
@@ -137,10 +145,21 @@ export default {
     statusFilter(status) {
       const statusMap = {
         published: 'success',
-        draft: 'gray',
-        deleted: 'danger'
+        draft: 'info',
+        false: 'danger'
       }
       return statusMap[status]
+    },
+    roleFilter(roleIds, options) {
+      let roleNames = ''
+      for (var i = 0; i < roleIds.length; i++) {
+        for (var j = 0; j < options.length; j++) {
+          if (roleIds[i] === options[j].id) {
+            roleNames += options[j].roleName + '、'
+          }
+        }
+      }
+      return roleNames.substring(0, roleNames.lastIndexOf('、'))
     }
   },
   data() {

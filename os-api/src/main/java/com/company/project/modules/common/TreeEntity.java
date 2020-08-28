@@ -19,6 +19,10 @@ public class TreeEntity<E, T> {
      */
     private E parentId;
 
+    /**
+     * 排序
+     */
+    private Integer sort;
 
     /**
      * 附加信息

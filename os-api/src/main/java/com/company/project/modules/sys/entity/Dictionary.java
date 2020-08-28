@@ -33,11 +33,6 @@ public class Dictionary extends TreeEntity<Integer, Dictionary> {
         private String name;
 
         /**
-        * 排序
-        */
-        private Integer sort;
-
-        /**
         * 备注
         */
         private String remarks;

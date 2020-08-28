@@ -3,7 +3,9 @@ package com.company.project.modules.sys.util;
 import com.company.project.modules.common.TreeEntity;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class MenuUtil {
 
@@ -23,6 +25,7 @@ public class MenuUtil {
                 treeNode.setChildren(buildTree(list, treeNode.getId()));
             }
         }
+        tree = tree.stream().sorted(Comparator.comparing(TreeEntity::getSort, Comparator.nullsLast(Integer::compareTo))).collect(Collectors.toList());
         return tree;
     }
 

@@ -32,7 +32,7 @@
           <svg-icon v-else :icon-class="scope.row.meta.icon" />
         </template>
       </el-table-column>
-      <el-table-column label="排序" prop="orderNum" />
+      <el-table-column label="排序" prop="sort" />
       <el-table-column align="center" label="操作" width="150">
         <template slot-scope="scope">
           <el-button size="mini" @click="handleEdit(scope)">修改</el-button>

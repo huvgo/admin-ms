@@ -21,10 +21,8 @@
                 @selection-change="handleSelectionChange"
         >
             <el-table-column type="selection" header-align="center" align="center" width="50" />
-            <#list table as row>
-                <el-table-column label="${row.comment}">
-                    <template slot-scope="scope">{{ scope.row.${row.field} }}</template>
-                </el-table-column>
+            <#list fields as field>
+                <el-table-column label="${field.comment}" prop="${field.name}" />
             </#list>
             <el-table-column align="center" label="操作" width="150">
                 <template slot-scope="scope">
@@ -45,12 +43,12 @@
 
         <el-dialog :visible.sync="dialogVisible" :title="'新增'">
             <el-form ref="dataForm" :model="dataForm" label-width="80px" label-position="left">
-                <#list table as row>
-                    <#if row.field = "id">
+                <#list fields as field>
+                    <#if field.name = "id">
                         <el-form-item v-show="false" label="ID" prop="id" />
                     <#else>
-                        <el-form-item label="${row.comment}" prop="${row.field}">
-                            <el-input v-model="dataForm.${row.field}" placeholder="请输入${row.comment}" />
+                        <el-form-item label="${field.comment}" prop="${field.name}">
+                            <el-input v-model="dataForm.${field.name}" placeholder="请输入${field.comment}" />
                         </el-form-item>
                     </#if>
                 </#list>
@@ -86,8 +84,8 @@
                     pageSize: 10
                 },
                 dataForm: {
-                    <#list table as row>
-                    ${row.field}: ''<#if row_has_next>,</#if>
+                    <#list fields as field>
+                    ${field.name}: ''<#if field_has_next>,</#if>
                     </#list>
                 },
                 ids: [],

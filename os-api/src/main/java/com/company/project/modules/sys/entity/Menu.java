@@ -47,10 +47,6 @@ public class Menu extends TreeEntity<Integer, Menu> {
      */
     private Integer type;
 
-    /**
-     * 排序
-     */
-    private Integer sort;
 
     /**
      * 附加信息

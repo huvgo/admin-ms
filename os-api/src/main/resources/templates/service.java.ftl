@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
  * <p>
- * ${tableComment!} 服务类
+ * ${table.comment!} 服务类
  * </p>
  *
  * @author ${author}

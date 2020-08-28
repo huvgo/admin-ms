@@ -21,15 +21,19 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" header-align="center" align="center" width="50" />
-      <el-table-column label="角色名称">
-        <template slot-scope="scope">{{ scope.row.roleName }}</template>
-      </el-table-column>
-      <el-table-column label="数据权限范围">
-        <template slot-scope="scope">{{ scope.row.dataScope }}</template>
-      </el-table-column>
-      <el-table-column label="备注">
-        <template slot-scope="scope">{{ scope.row.remark }}</template>
-      </el-table-column>
+      <el-table-column label="部门ID" prop="id" />
+      <el-table-column label="上级部门ID" prop="parent_id" />
+      <el-table-column label="所有上级部门ID" prop="parent_ids" />
+      <el-table-column label="部门名称" prop="name" />
+      <el-table-column label="机构类型" prop="type" />
+      <el-table-column label="排序" prop="sort" />
+      <el-table-column label="联系电话" prop="mobile" />
+      <el-table-column label="逻辑删除" prop="status" />
+      <el-table-column label="创建者ID" prop="create_user_id" />
+      <el-table-column label="创建时间" prop="create_time" />
+      <el-table-column label="修改者ID" prop="modify_user_id" />
+      <el-table-column label="修改时间" prop="modify_time" />
+      <el-table-column label="是否删除  1：已删除  0：正常" prop="deleted" />
       <el-table-column align="center" label="操作" width="150">
         <template slot-scope="scope">
           <el-button size="mini" @click="handleEdit(scope)">修改</el-button>
@@ -50,32 +54,41 @@
     <el-dialog :visible.sync="dialogVisible" :title="'新增'">
       <el-form ref="dataForm" :model="dataForm" label-width="80px" label-position="left">
         <el-form-item v-show="false" label="ID" prop="id" />
-        <el-form-item label="角色名称" prop="roleName">
-          <el-input v-model="dataForm.roleName" placeholder="请输入角色名称" />
+        <el-form-item label="上级部门ID" prop="parent_id">
+          <el-input v-model="dataForm.parent_id" placeholder="请输入上级部门ID" />
         </el-form-item>
-        <el-form-item label="数据权限" prop="dataScope">
-          <el-input v-model="dataForm.dataScope" placeholder="请输入数据权限范围" />
+        <el-form-item label="所有上级部门ID" prop="parent_ids">
+          <el-input v-model="dataForm.parent_ids" placeholder="请输入所有上级部门ID" />
         </el-form-item>
-        <el-form-item label="菜单权限" prop="menuIds">
-          <el-tree
-            ref="menuTree"
-            :data="menuList"
-            :props="{
-              children: 'children',
-              label: 'name'
-            }"
-            show-checkbox
-            node-key="id"
-            class="permission-tree"
-            :expand-on-click-node="false"
-            :check-strictly="true"
-            :check-on-click-node="true"
-            :default-expand-all="true"
-            @check="handleNodeClick"
-          />
+        <el-form-item label="部门名称" prop="name">
+          <el-input v-model="dataForm.name" placeholder="请输入部门名称" />
         </el-form-item>
-        <el-form-item label="备注" prop="remark">
-          <el-input v-model="dataForm.remark" placeholder="请输入备注" />
+        <el-form-item label="机构类型" prop="type">
+          <el-input v-model="dataForm.type" placeholder="请输入机构类型" />
+        </el-form-item>
+        <el-form-item label="排序" prop="sort">
+          <el-input v-model="dataForm.sort" placeholder="请输入排序" />
+        </el-form-item>
+        <el-form-item label="联系电话" prop="mobile">
+          <el-input v-model="dataForm.mobile" placeholder="请输入联系电话" />
+        </el-form-item>
+        <el-form-item label="逻辑删除" prop="status">
+          <el-input v-model="dataForm.status" placeholder="请输入逻辑删除" />
+        </el-form-item>
+        <el-form-item label="创建者ID" prop="create_user_id">
+          <el-input v-model="dataForm.create_user_id" placeholder="请输入创建者ID" />
+        </el-form-item>
+        <el-form-item label="创建时间" prop="create_time">
+          <el-input v-model="dataForm.create_time" placeholder="请输入创建时间" />
+        </el-form-item>
+        <el-form-item label="修改者ID" prop="modify_user_id">
+          <el-input v-model="dataForm.modify_user_id" placeholder="请输入修改者ID" />
+        </el-form-item>
+        <el-form-item label="修改时间" prop="modify_time">
+          <el-input v-model="dataForm.modify_time" placeholder="请输入修改时间" />
+        </el-form-item>
+        <el-form-item label="是否删除  1：已删除  0：正常" prop="deleted">
+          <el-input v-model="dataForm.deleted" placeholder="请输入是否删除  1：已删除  0：正常" />
         </el-form-item>
       </el-form>
       <div style="text-align:right;">
@@ -87,9 +100,7 @@
 </template>
 
 <script>
-import { add, del, update, getList } from '@/api/sys/role'
-import { getList as getMenuList } from '@/api/sys/menu'
-import { treeDataTranslate } from '@/utils'
+import { add, del, update, getList } from '@/api/sys/dept'
 
 export default {
   filters: {
@@ -110,24 +121,28 @@ export default {
         pageSize: 10
       },
       dataForm: {
-        roleName: '',
-        menuIds: [],
-        dataScope: '',
-        remark: '',
-        deptId: '',
-        createUserId: '',
-        createTime: ''
+        id: '',
+        parent_id: '',
+        parent_ids: '',
+        name: '',
+        type: '',
+        sort: '',
+        mobile: '',
+        status: '',
+        create_user_id: '',
+        create_time: '',
+        modify_user_id: '',
+        modify_time: '',
+        deleted: ''
       },
       ids: [],
       list: null,
-      menuList: null,
       listLoading: true,
       total: 0
     }
   },
   created() {
     this.fetchData()
-    this.fetchMenuData()
   },
   methods: {
     fetchData() {
@@ -136,11 +151,6 @@ export default {
         this.list = response.data.records
         this.total = response.data.total
         this.listLoading = false
-      })
-    },
-    fetchMenuData() {
-      getMenuList(this.queryParam).then((response) => {
-        this.menuList = treeDataTranslate(response.data, 'id')
       })
     },
     dataFormSubmit() {
@@ -168,7 +178,6 @@ export default {
       this.dialogVisible = true
       this.$nextTick(() => {
         this.$refs['dataForm'].resetFields()
-        this.$refs.menuTree.setCheckedKeys(this.dataForm.menuIds)
       })
     },
     handleDelete({ $index, row }) {
@@ -187,18 +196,13 @@ export default {
       this.dialogVisible = true
       this.$nextTick(() => {
         this.dataForm = JSON.parse(JSON.stringify(scope.row))
-        this.$refs.menuTree.setCheckedKeys(this.dataForm.menuIds)
       })
     },
     // 多选
     handleSelectionChange(ids) {
-      this.ids = ids.map((item) => {
+      this.ids = ids.map(item => {
         return item.id
       })
-    },
-    handleNodeClick(data, checked) {
-      this.dataForm.menuIds = checked.checkedKeys.concat(checked.halfCheckedKeys)
-      // this.dataForm.menuIds = checked.checkedKeys
     }
   }
 }

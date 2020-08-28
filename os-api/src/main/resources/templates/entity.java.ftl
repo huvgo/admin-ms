@@ -6,11 +6,15 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
-
+<#list fields as field>
+    <#if field.javaType = "Date">
+import java.util.Date;
+    </#if>
+</#list>
 
 /**
  * <p>
- * ${tableComment!}
+ * ${table.comment!}
  * </p>
  *
  * @author ${author}
@@ -19,15 +23,15 @@ import lombok.experimental.Accessors;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
-@TableName(value = "${tableName}")
-public class ${upperFirstName} extends Entity<${table[0].javaType}> {
+@TableName(value = "${table.name}")
+public class ${upperFirstName} extends Entity<${fields[0].javaType}> {
 
-<#list table as row>
-    <#if row.field != "id">
+<#list fields as field>
+    <#if field.name != "id">
         /**
-        * ${row.comment}
+        * ${field.comment}
         */
-        private ${row.javaType} ${row.field};
+        private ${field.javaType} ${field.name};
 
     </#if>
 </#list>

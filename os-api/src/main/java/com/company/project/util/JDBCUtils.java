@@ -2,9 +2,8 @@ package com.company.project.util;
 
 import com.company.project.core.Assert;
 
-import java.io.FileReader;
 import java.io.IOException;
-import java.net.URL;
+import java.io.InputStream;
 import java.sql.*;
 import java.util.Properties;
 
@@ -26,11 +25,10 @@ public class JDBCUtils {
             Properties pro = new Properties();
             //获取src路径下的文件--->ClassLoader类加载器
             ClassLoader classLoader = JDBCUtils.class.getClassLoader();
-            URL resource = classLoader.getResource("application.properties");
+            InputStream resource = classLoader.getResourceAsStream("application.properties");
             Assert.requireNonNull(resource, "application.properties配置文件不存在，需要在resources目录下放配置文件");
-            String path = resource.getPath();
             //2.加载文件
-            pro.load(new FileReader(path));
+            pro.load(resource);
             //3获取数据
             url = pro.getProperty("spring.datasource.url");
             user = pro.getProperty("spring.datasource.username");
@@ -54,7 +52,6 @@ public class JDBCUtils {
 
     /**
      * 释放资源
-     *
      */
     public static void close(ResultSet resultSet, Statement statement, Connection conn) {
         if (resultSet != null) {

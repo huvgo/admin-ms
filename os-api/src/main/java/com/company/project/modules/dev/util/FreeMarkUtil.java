@@ -1,14 +1,15 @@
 package com.company.project.modules.dev.util;
 
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
-import com.company.project.modules.dev.component.FreemarkerTemplateEngine;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
@@ -21,7 +22,7 @@ public class FreeMarkUtil {
     public FreeMarkUtil() {
         configuration = new Configuration(Configuration.DEFAULT_INCOMPATIBLE_IMPROVEMENTS);
         configuration.setDefaultEncoding("UTF-8");
-        configuration.setClassForTemplateLoading(FreemarkerTemplateEngine.class, StringPool.SLASH);
+        configuration.setClassForTemplateLoading(FreeMarkUtil.class, StringPool.SLASH);
     }
 
 
