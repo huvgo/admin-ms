@@ -1,23 +1,27 @@
 package com.company.project.modules.dev.service.impl;
 
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.lang.Dict;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.db.Entity;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
-import com.company.project.modules.dev.component.FreemarkerTemplateEngine;
 import com.company.project.modules.dev.component.Template;
+import com.company.project.modules.dev.mapper.TableMapper;
 import com.company.project.modules.dev.service.CodeService;
 import com.company.project.modules.dev.util.FreeMarkUtil;
 import freemarker.template.TemplateException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Service
 public class CodeServiceImpl implements CodeService {
-
+    private final TableMapper tableMapper;
     // 包名
     private static final String packageName = "com.company.project.modules";
 
@@ -29,10 +33,15 @@ public class CodeServiceImpl implements CodeService {
     // 代码输出路径 绝对路径 eg. C:\admin-os\os-api\src\main\java\com\company\project\modules
     private static final String ABSOLUTE_OUTPUT_PATH = System.getProperty("user.dir") + RELATIVE_OUTPUT_PATH;
 
-    public void generator(List<Template> templateList, String tableName, boolean local) throws IOException, TemplateException {
-        // 整理模板需要的数据
-        Map<String, Object> objectMap = null;
+    public CodeServiceImpl(TableMapper tableMapper) {
+        this.tableMapper = tableMapper;
+    }
 
+    public void generator(List<Template> templateList, String tableName, boolean local) throws IOException, TemplateException, SQLException {
+        // 整理模板需要的数据
+        Map<String, Object> objectMap = new HashMap<>();
+        List<Entity> entities = tableMapper.queryColumns(tableName);
+        objectMap.put("table", entities);
         // 处理名称
         int i = tableName.indexOf("_");
         String moduleNameDir = tableName.substring(0, i);
