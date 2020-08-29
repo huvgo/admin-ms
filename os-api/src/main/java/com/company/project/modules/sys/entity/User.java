@@ -2,14 +2,14 @@ package com.company.project.modules.sys.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
+import com.company.project.modules.com.BaseEntity;
+import com.company.project.modules.com.IntegerArray2SplitTypeHandler;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.Date;
 import java.util.List;
-
-import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
-import com.company.project.modules.common.Entity;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 /**
  * <p>
@@ -22,7 +22,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @TableName(value = "sys_user", autoResultMap = true)
-public class User extends Entity<Integer> {
+public class User extends BaseEntity {
 
     private static final long serialVersionUID = 1L;
 
@@ -76,9 +76,15 @@ public class User extends Entity<Integer> {
     private Boolean status;
 
     /**
-     * 部门Id
+     * 部门ID
      */
-    private Long deptId;
+    private Integer deptId;
+
+    /**
+     * 所有上级部门ID
+     */
+    @TableField(typeHandler = IntegerArray2SplitTypeHandler.class)
+    private List<Integer> deptIds;
 
     /**
      * 创建者ID

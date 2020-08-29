@@ -1,57 +1,58 @@
 <template>
   <div class="app-container">
-    <el-form :inline="true" :model="queryParam" @keyup.enter.native="fetchData()">
-      <el-form-item>
-        <el-input v-model="queryParam.id" placeholder="ID" clearable />
-      </el-form-item>
-      <el-form-item>
-        <el-button @click="fetchData()">查询</el-button>
-        <el-button type="primary" @click="handleAdd()">新增</el-button>
-        <el-button type="danger" :disabled="ids.length <= 0" @click="handleBatchDelete()">批量删除</el-button>
-      </el-form-item>
-    </el-form>
+    <el-card class="box-card">
+      <el-form :inline="true" :model="queryParam" @keyup.enter.native="fetchData()">
+        <el-form-item>
+          <el-input v-model="queryParam.id" placeholder="ID" clearable />
+        </el-form-item>
+        <el-form-item>
+          <el-button @click="fetchData()">查询</el-button>
+          <el-button type="primary" @click="handleAdd()">新增</el-button>
+          <el-button type="danger" :disabled="ids.length <= 0" @click="handleBatchDelete()">批量删除</el-button>
+        </el-form-item>
+      </el-form>
 
-    <el-table
-      v-loading="listLoading"
-      :data="list"
-      element-loading-text="Loading"
-      border
-      fit
-      highlight-current-row
-      @selection-change="handleSelectionChange"
-    >
-      <el-table-column type="selection" header-align="center" align="center" width="50" />
-      <el-table-column label="角色名称">
-        <template slot-scope="scope">{{ scope.row.roleName }}</template>
-      </el-table-column>
-      <el-table-column label="数据权限范围">
-        <template slot-scope="scope">{{ scope.row.dataScope }}</template>
-      </el-table-column>
-      <el-table-column label="备注">
-        <template slot-scope="scope">{{ scope.row.remark }}</template>
-      </el-table-column>
-      <el-table-column align="center" label="操作" width="150">
-        <template slot-scope="scope">
-          <el-button size="mini" @click="handleEdit(scope)">修改</el-button>
-          <el-button type="danger" size="mini" @click="handleDelete(scope)">删除</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-    <el-pagination
-      :current-page="queryParam.currentPage"
-      :page-sizes="[10, 20, 50, 100]"
-      :page-size="queryParam.pageSize"
-      layout="total, sizes, prev, pager, next, jumper"
-      :total="total"
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
-    />
-
+      <el-table
+        v-loading="listLoading"
+        :data="list"
+        element-loading-text="Loading"
+        border
+        fit
+        highlight-current-row
+        @selection-change="handleSelectionChange"
+      >
+        <el-table-column type="selection" header-align="center" align="center" width="50" />
+        <el-table-column label="角色名称">
+          <template slot-scope="scope">{{ scope.row.name }}</template>
+        </el-table-column>
+        <el-table-column label="数据权限范围">
+          <template slot-scope="scope">{{ scope.row.dataScope }}</template>
+        </el-table-column>
+        <el-table-column label="备注">
+          <template slot-scope="scope">{{ scope.row.remark }}</template>
+        </el-table-column>
+        <el-table-column align="center" label="操作" width="150">
+          <template slot-scope="scope">
+            <el-button size="mini" @click="handleEdit(scope)">修改</el-button>
+            <el-button type="danger" size="mini" @click="handleDelete(scope)">删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <el-pagination
+        :current-page="queryParam.currentPage"
+        :page-sizes="[10, 20, 50, 100]"
+        :page-size="queryParam.pageSize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="total"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+      />
+    </el-card>
     <el-dialog :visible.sync="dialogVisible" :title="'新增'">
       <el-form ref="dataForm" :model="dataForm" label-width="80px" label-position="left">
         <el-form-item v-show="false" label="ID" prop="id" />
-        <el-form-item label="角色名称" prop="roleName">
-          <el-input v-model="dataForm.roleName" placeholder="请输入角色名称" />
+        <el-form-item label="角色名称" prop="name">
+          <el-input v-model="dataForm.name" placeholder="请输入角色名称" />
         </el-form-item>
         <el-form-item label="数据权限" prop="dataScope">
           <el-input v-model="dataForm.dataScope" placeholder="请输入数据权限范围" />
@@ -110,7 +111,7 @@ export default {
         pageSize: 10
       },
       dataForm: {
-        roleName: '',
+        name: '',
         menuIds: [],
         dataScope: '',
         remark: '',

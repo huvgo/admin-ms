@@ -45,6 +45,7 @@ public class PermissionAspect {
         HttpServletRequest request = Objects.requireNonNull((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         String token = request.getHeader("X-Token");
         User user = userCache.getUser(token);
+        Assert.requireNonNull(user, "登录过期,请重新登陆");
         List<Menu> menuList = user.getMenuList();
 
         // 获取当前访问的菜单和当前访问菜单的权限

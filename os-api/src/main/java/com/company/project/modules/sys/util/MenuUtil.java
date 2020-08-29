@@ -1,6 +1,6 @@
 package com.company.project.modules.sys.util;
 
-import com.company.project.modules.common.TreeEntity;
+import com.company.project.modules.com.TreeEntity;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -17,13 +17,21 @@ public class MenuUtil {
      * @param parentId 最顶层父id值 一般为 0 之类
      * @return List
      */
-    public static <T, E extends TreeEntity<T, E>> List<E> buildTree(List<E> list, T parentId) {
+    public static <E extends TreeEntity<E>> List<E> buildTree(List<E> list, Integer parentId) {
+
         List<E> tree = new ArrayList<>();
         for (E treeNode : list) {
+            if (treeNode.getParentId() == null) {
+                treeNode.setParentId(0);
+            }
             if (parentId.equals(treeNode.getParentId())) {
                 tree.add(treeNode);
                 treeNode.setChildren(buildTree(list, treeNode.getId()));
             }
+        }
+
+        if (tree.isEmpty()) {
+            return null;
         }
         tree = tree.stream().sorted(Comparator.comparing(TreeEntity::getSort, Comparator.nullsLast(Integer::compareTo))).collect(Collectors.toList());
         return tree;

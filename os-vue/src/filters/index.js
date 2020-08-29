@@ -66,3 +66,15 @@ export function toThousandFilter(num) {
 export function uppercaseFirst(string) {
   return string.charAt(0).toUpperCase() + string.slice(1)
 }
+
+export function arrayFilter(ids, options) {
+  let names = ''
+  for (var i = 0; i < ids.length; i++) {
+    for (var j = 0; j < options.length; j++) {
+      if (ids[i] === options[j].id) {
+        names += options[j].name + '/'
+      }
+    }
+  }
+  return names.substring(0, names.lastIndexOf('/'))
+}

@@ -2,11 +2,15 @@ package com.company.project.modules.sys.controller;
 
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.util.IdUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.company.project.common.annotation.Permissions;
 import com.company.project.core.Assert;
 import com.company.project.core.Result;
+import com.company.project.modules.sys.entity.Menu;
+import com.company.project.modules.sys.entity.Role;
+import com.company.project.modules.sys.service.RoleService;
 import com.company.project.modules.sys.util.UserCache;
 import com.company.project.modules.sys.entity.User;
 import com.company.project.modules.sys.service.MenuService;
@@ -14,6 +18,7 @@ import com.company.project.modules.sys.service.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -31,11 +36,13 @@ import java.util.Objects;
 public class UserController {
     private final UserService userService;
     private final MenuService menuService;
+    private final RoleService roleService;
     private final UserCache userCache;
 
-    public UserController(UserService userService, MenuService menuService, UserCache userCache) {
+    public UserController(UserService userService, MenuService menuService, RoleService roleService, UserCache userCache) {
         this.userService = userService;
         this.menuService = menuService;
+        this.roleService = roleService;
         this.userCache = userCache;
     }
 
@@ -70,8 +77,10 @@ public class UserController {
     @Permissions
     @GetMapping
     public Result<Page<User>> get(@RequestParam(defaultValue = "0") Integer currentPage, @RequestParam(defaultValue = "10") Integer pageSize, @RequestParam Map<String, Object> params) {
-        QueryWrapper<User> queryWrapper = new QueryWrapper<User>()
-                .eq(Objects.nonNull(params.get("key")), "key", params.get("key"));
+        boolean deptIdCondition = StrUtil.isNotEmpty((String) params.get("deptId"));
+
+        QueryWrapper<User> queryWrapper = new QueryWrapper<User>().eq(deptIdCondition, "dept_Id", params.get("deptId")).or()
+                .apply(deptIdCondition, "FIND_IN_SET({0},dept_Ids)", params.get("deptId"));
         Page<User> page = userService.page(new Page<>(currentPage, pageSize, true), queryWrapper);
         return Result.success(page);
     }
@@ -80,6 +89,18 @@ public class UserController {
     public Result<Object> login(@RequestBody User user) throws JsonProcessingException {
         User currentUser = userService.getByUsernameAndPassword(user.getUsername(), user.getPassword());
         Assert.requireNonNull(currentUser, "账号或密码不正确");
+
+        // 菜单权限
+        List<Integer> roleIds = currentUser.getRoleIds();
+        List<Role> roles = roleService.listByIds(roleIds);
+        HashSet<Integer> menuIds = new HashSet<>();
+        for (Role role : roles) {
+            menuIds.addAll(role.getMenuIds());
+        }
+        List<Menu> menuList = menuService.list(new QueryWrapper<Menu>().in("id", menuIds));
+        currentUser.setMenuList(menuList);
+
+        // 重新刷新缓存
         String token = userCache.getToken(currentUser.getUsername());
         if (token == null) {
             token = IdUtil.simpleUUID();

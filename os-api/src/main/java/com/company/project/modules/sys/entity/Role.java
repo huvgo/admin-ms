@@ -3,7 +3,7 @@ package com.company.project.modules.sys.entity;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
-import com.company.project.modules.common.Entity;
+import com.company.project.modules.com.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -21,13 +21,13 @@ import java.util.List;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @TableName(value = "sys_role", autoResultMap = true)
-public class Role extends Entity<Integer> {
+public class Role extends BaseEntity {
 
 
     /**
      * 角色名称
      */
-    private String roleName;
+    private String name;
 
     /**
      * 关联菜单id

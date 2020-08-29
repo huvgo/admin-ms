@@ -68,7 +68,7 @@ public class RoleController {
 
     @GetMapping("/option")
     public Result<List<Role>> option() {
-        List<Role> list = roleService.list(new QueryWrapper<Role>().select("id","role_name"));
+        List<Role> list = roleService.list(new QueryWrapper<Role>().select("id","name"));
         return Result.success(list);
     }
 }

@@ -67,13 +67,13 @@ public class LogAspect {
      * 获取响应返回值  方法执行return之后
      */
     @AfterReturning(returning = "object", pointcut = "log()")
-    public void doAfterReturning(Object object) {
+    public void doAfterReturning(Object object) throws JsonProcessingException {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request;
         if (attributes != null) {
             request = attributes.getRequest();
             // 会打印出一个对象，想打印出具体内容需要在定义模型处加上toString()
-            log.info("\n{} 日志响应结果: \n{}\n", request.getRequestURI(), object.toString());
+            log.info("\n{} 日志响应结果: \n{}\n", request.getRequestURI(), objectMapper.writeValueAsString(object));
         }
     }
 

@@ -62,7 +62,10 @@ public class TableMapper {
         List<Entity> columnList = SqlExecutor.query(conn, sql, new EntityListHandler());
         DbUtil.close(conn);
 
-        columnList.forEach(entity -> entity.put("javaType", Convert.jdbcType2JavaType(entity.getStr("dataType"))));
+        columnList.forEach(entity -> {
+            entity.put("javaType", Convert.jdbcType2JavaType(entity.getStr("dataType")));
+            entity.put("name", StrUtil.toCamelCase(entity.getStr("name")));
+        });
         return columnList;
     }
 }

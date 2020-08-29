@@ -1,11 +1,13 @@
 package com.company.project.modules.sys.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.company.project.modules.common.TreeEntity;
+import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
+import com.company.project.modules.com.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.experimental.Accessors;
 
+import java.util.List;
 
 
 /**
@@ -18,29 +20,41 @@ import lombok.experimental.Accessors;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-@Accessors(chain = true)
-@TableName(value = "sys_dictionary")
-public class Dictionary extends TreeEntity<Integer, Dictionary> {
+@TableName(value = "sys_dictionary", autoResultMap = true)
+public class Dictionary extends BaseEntity {
 
-        /**
-        * 编码
-        */
-        private String code;
+    /**
+     * 上级ID，一级ID为0
+     */
+    private Integer parentId = 0;
 
-        /**
-        * 名称
-        */
-        private String name;
+    /**
+     * 编码
+     */
+    private String code;
 
-        /**
-        * 备注
-        */
-        private String remarks;
+    /**
+     * 名称
+     */
+    private String name;
 
-        /**
-        * 逻辑删除
-        */
-        private Integer deleted;
+    /**
+     * 备注
+     */
+    private String remarks;
+
+    /**
+     * 选项
+     */
+    @TableField(typeHandler = JacksonTypeHandler.class)
+    private List<Option> options;
+
+    /**
+     * 逻辑删除
+     */
+    private Integer deleted;
 
 }
+
+
 

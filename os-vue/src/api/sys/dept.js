@@ -2,6 +2,20 @@ import request from '@/utils/request'
 
 const url = '/sys/dept'
 
+export function getMap() {
+  return request({
+    url: url + '/map',
+    method: 'get'
+  })
+}
+
+export function getTree() {
+  return request({
+    url: url + '/tree',
+    method: 'get'
+  })
+}
+
 export function getList(data) {
   return request({
     url: url,

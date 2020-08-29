@@ -1,84 +1,97 @@
 <template>
   <div class="app-container">
-    <el-form :inline="true" :model="queryParam" @keyup.enter.native="fetchData()">
-      <el-form-item>
-        <el-input v-model="queryParam.id" placeholder="ID" clearable />
-      </el-form-item>
-      <el-form-item>
-        <el-button @click="fetchData()">查询</el-button>
-        <el-button type="primary" @click="handleAdd()">新增</el-button>
-        <el-button type="danger" :disabled="ids.length <= 0" @click="handleBatchDelete()">批量删除</el-button>
-      </el-form-item>
-    </el-form>
+    <el-card>
+      <el-form :inline="true" :model="queryParam" @keyup.enter.native="fetchData()">
+        <el-form-item>
+          <el-input v-model="queryParam.id" placeholder="ID" clearable />
+        </el-form-item>
+        <el-form-item>
+          <el-button @click="fetchData()">查询</el-button>
+          <el-button type="primary" @click="handleAdd()">新增</el-button>
+        </el-form-item>
+      </el-form>
 
-    <el-table
-      v-loading="listLoading"
-      :data="list"
-      element-loading-text="Loading"
-      border
-      fit
-      highlight-current-row
-      @selection-change="handleSelectionChange"
-    >
-      <el-table-column type="selection" header-align="center" align="center" width="50" />
-      <el-table-column label="ID">
-        <template slot-scope="scope">{{ scope.row.id }}</template>
-      </el-table-column>
-      <el-table-column label="上级节点ID">
-        <template slot-scope="scope">{{ scope.row.parentId }}</template>
-      </el-table-column>
-      <el-table-column label="编码">
-        <template slot-scope="scope">{{ scope.row.code }}</template>
-      </el-table-column>
-      <el-table-column label="名称">
-        <template slot-scope="scope">{{ scope.row.name }}</template>
-      </el-table-column>
-      <el-table-column label="排序">
-        <template slot-scope="scope">{{ scope.row.sort }}</template>
-      </el-table-column>
-      <el-table-column label="备注">
-        <template slot-scope="scope">{{ scope.row.remarks }}</template>
-      </el-table-column>
-      <el-table-column label="逻辑删除">
-        <template slot-scope="scope">{{ scope.row.deleted }}</template>
-      </el-table-column>
-      <el-table-column align="center" label="操作" width="150">
-        <template slot-scope="scope">
-          <el-button size="mini" @click="handleEdit(scope)">修改</el-button>
-          <el-button type="danger" size="mini" @click="handleDelete(scope)">删除</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-    <el-pagination
-      :current-page="queryParam.currentPage"
-      :page-sizes="[10, 20, 50, 100]"
-      :page-size="queryParam.pageSize"
-      layout="total, sizes, prev, pager, next, jumper"
-      :total="total"
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
-    />
+      <el-table
+        v-loading="listLoading"
+        :data="list"
+        element-loading-text="Loading"
+        border
+        fit
+        highlight-current-row
+        @selection-change="handleSelectionChange"
+      >
+        <el-table-column type="expand">
+          <template slot-scope="scope">
+            <el-table class="deep" :data="scope.row.options">
+              <el-table-column align="center" prop="label" label="选项名" />
+              <el-table-column align="center" prop="value" label="值" />
+              <el-table-column align="center" prop="code" label="编码">
+                <template slot-scope="{row}">{{ row.code?row.code:'未设置' }}</template>
+              </el-table-column>
+            </el-table>
+          </template>
+        </el-table-column>
+        <el-table-column label="名称" prop="name" width="150" />
+        <el-table-column label="编码" prop="code" width="150" />
 
+        <el-table-column label="备注" prop="remarks" />
+        <el-table-column align="center" label="操作" width="150">
+          <template slot-scope="scope">
+            <el-button size="mini" @click="handleEdit(scope)">修改</el-button>
+            <el-button type="danger" size="mini" @click="handleDelete(scope)">删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <el-pagination
+        :current-page="queryParam.currentPage"
+        :page-sizes="[10, 20, 50, 100]"
+        :page-size="queryParam.pageSize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="total"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+      />
+    </el-card>
     <el-dialog :visible.sync="dialogVisible" :title="'新增'">
       <el-form ref="dataForm" :model="dataForm" label-width="80px" label-position="left">
         <el-form-item v-show="false" label="ID" prop="id" />
-        <el-form-item label="上级节点ID" prop="parentId">
-          <el-input v-model="dataForm.parentId" placeholder="请输入上级节点ID" />
+        <el-form-item label="名称" prop="name">
+          <el-input v-model="dataForm.name" placeholder="请输入名称" />
         </el-form-item>
         <el-form-item label="编码" prop="code">
           <el-input v-model="dataForm.code" placeholder="请输入编码" />
         </el-form-item>
-        <el-form-item label="名称" prop="name">
-          <el-input v-model="dataForm.name" placeholder="请输入名称" />
-        </el-form-item>
-        <el-form-item label="排序" prop="sort">
-          <el-input v-model="dataForm.sort" placeholder="请输入排序" />
-        </el-form-item>
         <el-form-item label="备注" prop="remarks">
-          <el-input v-model="dataForm.remarks" placeholder="请输入备注" />
+          <el-input
+            v-model="dataForm.remarks"
+            type="textarea"
+            maxlength="140"
+            placeholder="请输入备注"
+            show-word-limit
+          />
         </el-form-item>
-        <el-form-item label="逻辑删除" prop="deleted">
-          <el-input v-model="dataForm.deleted" placeholder="请输入逻辑删除" />
+        <el-form-item>
+          <el-button icon="el-icon-plus" @click="handleAddOption()">添加新选项</el-button>
+        </el-form-item>
+        <el-form-item :label="'选项'" prop="options" :inline="true">
+          <div v-for="(item,index) in dataForm.options" :key="index">
+            <el-input
+              v-model="item.label"
+              placeholder="请输入选项名称"
+              style="width:20%;margin-right:5px;margin-top:10px"
+            />
+            <el-input
+              v-model="item.value"
+              placeholder="请输入值"
+              style="width:20%;margin-right:5px;margin-top:10px"
+            />
+            <el-input
+              v-model="item.code"
+              placeholder="请输入编码"
+              style="width:20%;margin-right:5px;margin-top:10px"
+            />
+            <el-button type="warn" @click="handleDelOption(index)">删除</el-button>
+          </div>
         </el-form-item>
       </el-form>
       <div style="text-align:right;">
@@ -117,7 +130,18 @@ export default {
         name: '',
         sort: '',
         remarks: '',
-        deleted: ''
+        options: [
+          {
+            label: '',
+            value: '',
+            code: ''
+          }
+        ]
+      },
+      option: {
+        label: '',
+        value: '',
+        code: ''
       },
       ids: [],
       list: null,
@@ -170,12 +194,6 @@ export default {
         this.$message({ message: response.message, type: 'success' })
       })
     },
-    handleBatchDelete() {
-      del(this.ids).then((response) => {
-        this.fetchData()
-        this.$message({ message: response.message, type: 'success' })
-      })
-    },
     handleEdit(scope) {
       this.dialogVisible = true
       this.$nextTick(() => {
@@ -187,8 +205,15 @@ export default {
       this.ids = ids.map(item => {
         return item.id
       })
+    },
+    handleAddOption() {
+      this.dataForm.options.push(JSON.parse(JSON.stringify(this.option)))
+    },
+    handleDelOption(index) {
+      this.dataForm.options.splice(index, 1)
     }
   }
+
 }
 </script>
 
@@ -198,5 +223,14 @@ export default {
 }
 .el-card {
   border: 0 solid #ffffff;
+}
+.el-tag {
+  margin-left: 5px;
+}
+.deep >>> .el-table__body th,
+.deep >>> .el-table__body td,
+.deep >>> .el-table__header th,
+.deep >>> .el-table__header td {
+  border: 0 solid #ffffff !important;
 }
 </style>

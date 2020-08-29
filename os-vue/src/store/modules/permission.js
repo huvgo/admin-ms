@@ -1,7 +1,7 @@
 // import { asyncRoutes, constantRoutes } from '@/router'
 import { constantRoutes } from '@/router'
 import Layout from '@/layout'
-import { sidebar } from '@/api/sys/menu'
+import { sidebar } from '@/api/layout'
 
 /**
  * Use meta.role to determine if the current user has permission

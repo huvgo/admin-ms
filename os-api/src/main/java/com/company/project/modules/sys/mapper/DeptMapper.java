@@ -9,7 +9,7 @@ import org.apache.ibatis.annotations.Mapper;
  * </p>
  *
  * @author author
- * @since 2020-08-28
+ * @since 2020-08-29
  */
 @Mapper
 public interface DeptMapper extends BaseMapper<Dept> {

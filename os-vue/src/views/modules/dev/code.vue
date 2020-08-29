@@ -1,45 +1,46 @@
 <template>
   <div class="app-container">
-    <el-form :inline="true" :model="queryParam" @keyup.enter.native="fetchData()">
-      <el-form-item>
-        <el-input v-model="queryParam.id" placeholder="ID" clearable />
-      </el-form-item>
-      <el-form-item>
-        <el-button @click="fetchData()">查询</el-button>
-        <el-button type="primary" @click="onSubmit">立即生成</el-button>
-        <el-button type="info" @click="handleEdit">其他设置</el-button>
-      </el-form-item>
-    </el-form>
+    <el-card class="box-card">
+      <el-form :inline="true" :model="queryParam" @keyup.enter.native="fetchData()">
+        <el-form-item>
+          <el-input v-model="queryParam.id" placeholder="ID" clearable />
+        </el-form-item>
+        <el-form-item>
+          <el-button @click="fetchData()">查询</el-button>
+          <el-button type="primary" @click="onSubmit">立即生成</el-button>
+          <el-button type="info" @click="handleEdit">其他设置</el-button>
+        </el-form-item>
+      </el-form>
 
-    <el-table
-      v-loading="listLoading"
-      :data="list"
-      element-loading-text="Loading"
-      border
-      fit
-      highlight-current-row
-      @selection-change="handleSelectionChange"
-    >
-      <el-table-column type="selection" header-align="center" align="center" width="50" />
-      <el-table-column label="表名" prop="tableName" />
-      <el-table-column label="注释" prop="tableComment" />
-      <el-table-column label="修改时间" prop="createTime" />
-      <el-table-column align="center" label="操作" width="150">
-        <template slot-scope="scope">
-          <el-button size="mini" type="info" @click="handleEdit(scope)">字段配置</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-    <el-pagination
-      :current-page="queryParam.currentPage"
-      :page-sizes="[10, 20, 50, 100]"
-      :page-size="queryParam.pageSize"
-      layout="total, sizes, prev, pager, next, jumper"
-      :total="total"
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
-    />
-
+      <el-table
+        v-loading="listLoading"
+        :data="list"
+        element-loading-text="Loading"
+        border
+        fit
+        highlight-current-row
+        @selection-change="handleSelectionChange"
+      >
+        <el-table-column type="selection" header-align="center" align="center" width="50" />
+        <el-table-column label="表名" prop="tableName" />
+        <el-table-column label="注释" prop="tableComment" />
+        <el-table-column label="修改时间" prop="createTime" />
+        <el-table-column align="center" label="操作" width="150">
+          <template slot-scope="scope">
+            <el-button size="mini" type="info" @click="handleEdit(scope)">字段配置</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <el-pagination
+        :current-page="queryParam.currentPage"
+        :page-sizes="[10, 20, 50, 100]"
+        :page-size="queryParam.pageSize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="total"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+      />
+    </el-card>
     <el-dialog :visible.sync="dialogVisible" :title="'新增'">
       <el-form ref="dataForm" :model="dataForm" label-width="80px" label-position="left">
         <el-form-item label="模块">

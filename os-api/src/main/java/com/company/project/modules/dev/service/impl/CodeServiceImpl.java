@@ -11,6 +11,8 @@ import com.company.project.modules.dev.mapper.TableMapper;
 import com.company.project.modules.dev.service.CodeService;
 import com.company.project.modules.dev.util.FreeMarkUtil;
 import freemarker.template.TemplateException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -22,6 +24,7 @@ import java.util.Map;
 
 @Service
 public class CodeServiceImpl implements CodeService {
+    private static final Logger logger = LoggerFactory.getLogger(CodeServiceImpl.class);
     private final TableMapper tableMapper;
     // 包名
     private static final String packageName = "com.company.project.modules";
@@ -84,7 +87,11 @@ public class CodeServiceImpl implements CodeService {
                 fileName = StrUtil.lowerFirst(fileName);
             }
             String outputFilePath = outputFileDir + File.separator + fileName + template.getFileSuffix();
-            freeMarkUtil.writer(objectMap, template.getTemplatePath(), outputFilePath);
+            if (!FileUtil.exist(outputFilePath)) {
+                freeMarkUtil.writer(objectMap, template.getTemplatePath(), outputFilePath);
+            } else {
+                logger.info("文件存在：{}", outputFilePath);
+            }
         }
     }
 

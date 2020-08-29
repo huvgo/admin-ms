@@ -1,57 +1,76 @@
 <template>
   <div class="app-container">
-    <el-form :inline="true" :model="queryParam" @keyup.enter.native="fetchData()">
-      <el-form-item>
-        <el-input v-model="queryParam.username" placeholder="用户名" clearable />
-      </el-form-item>
-      <el-form-item>
-        <el-button @click="fetchData()">查询</el-button>
-        <el-button type="primary" @click="handleAdd()">新增</el-button>
-        <el-button
-          type="danger"
-          :disabled="multipleSelection.length <= 0"
-          @click="handleBatchDelete()"
-        >批量删除</el-button>
-      </el-form-item>
-    </el-form>
+    <el-row :gutter="10">
+      <el-col :span="4">
+        <menu-tree :data="treeData" @tree-click="handleTreeClick" />
+      </el-col>
+      <el-col :span="20">
+        <el-card class="box-card">
+          <el-form :inline="true" :model="queryParam" @keyup.enter.native="fetchData()">
+            <el-form-item>
+              <el-input v-model="queryParam.username" placeholder="用户名" clearable />
+            </el-form-item>
+            <el-form-item>
+              <el-button @click="fetchData()">查询</el-button>
+              <el-button type="primary" @click="handleAdd()">新增</el-button>
+              <el-button
+                type="danger"
+                :disabled="multipleSelection.length <= 0"
+                @click="handleBatchDelete()"
+              >批量删除</el-button>
+            </el-form-item>
+          </el-form>
 
-    <el-table
-      v-loading="listLoading"
-      :data="list"
-      element-loading-text="Loading"
-      border
-      fit
-      highlight-current-row
-      @selection-change="handleSelectionChange"
-    >
-      <el-table-column type="selection" header-align="center" align="center" width="50" />
-      <el-table-column label="账号" prop="username" />
-      <el-table-column label="角色" prop="roleIds">
-        <template slot-scope="scope">{{ scope.row.roleIds |roleFilter(roleOptions) }}</template>
-      </el-table-column>
-      <el-table-column label="姓名" prop="name" />
-      <el-table-column label="手机号" prop="mobile" />
-      <el-table-column label="允许登录" prop="mobile">
-        <template slot-scope="{row}">
-          <el-tag :type="row.status | statusFilter">{{ row.status?'正常':'冻结' }}</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="操作" width="150">
-        <template slot-scope="scope">
-          <el-button size="mini" @click="handleEdit(scope)">修改</el-button>
-          <el-button type="danger" size="mini" @click="handleDelete(scope)">删除</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-    <el-pagination
-      :current-page="queryParam.currentPage"
-      :page-sizes="[10, 20, 50, 100]"
-      :page-size="queryParam.pageSize"
-      layout="total, sizes, prev, pager, next, jumper"
-      :total="total"
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
-    />
+          <el-table
+            v-loading="listLoading"
+            :data="list"
+            element-loading-text="Loading"
+            border
+            fit
+            highlight-current-row
+            @selection-change="handleSelectionChange"
+          >
+            <el-table-column type="selection" header-align="center" align="center" width="50" />
+            <el-table-column label="账号" prop="username" />
+            <el-table-column label="角色" prop="roleIds">
+              <template slot-scope="scope">{{ scope.row.roleIds |arrayFilter(roleOptions) }}</template>
+            </el-table-column>
+            <el-table-column label="部门" prop="deptId">
+              <template slot-scope="scope">{{ deptMap[scope.row.deptId] }}</template>
+            </el-table-column>
+            <el-table-column label="姓名" prop="name" />
+            <el-table-column label="手机号" prop="mobile" />
+            <el-table-column label="头像" align="center" prop="avatar" width="120">
+              <template slot-scope="{row}">
+                <el-image style="width: 60px; height: 60px" :src="row.avatar">
+                  <div slot="error" />
+                </el-image>
+              </template>
+            </el-table-column>
+            <el-table-column label="状态" align="center" prop="status" width="150">
+              <template slot-scope="{row}">
+                <el-tag :type="row.status | statusFilter">{{ row.status?'正常':'冻结' }}</el-tag>
+              </template>
+            </el-table-column>
+            <el-table-column align="center" label="操作" width="150">
+              <template slot-scope="scope">
+                <el-button size="mini" @click="handleEdit(scope)">修改</el-button>
+                <el-button type="danger" size="mini" @click="handleDelete(scope)">删除</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+          <el-pagination
+            :current-page="queryParam.currentPage"
+            :page-sizes="[10, 20, 50, 100]"
+            :page-size="queryParam.pageSize"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="total"
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+          />
+        </el-card>
+      </el-col>
+    </el-row>
 
     <el-dialog class="padd" :visible.sync="dialogVisible" :title="'新增'">
       <el-row :gutter="15">
@@ -79,7 +98,7 @@
                     placeholder="确认密码"
                   />
                 </el-form-item>
-                <el-form-item label="登陆状态" size="mini" prop="status">
+                <el-form-item label="状态" size="mini" prop="status">
                   <el-switch
                     v-model="dataForm.status"
                     active-color="#13ce66"
@@ -96,10 +115,22 @@
                     <el-option
                       v-for="item in roleOptions"
                       :key="item.id"
-                      :label="item.roleName"
+                      :label="item.name"
                       :value="item.id"
                     />
                   </el-select>
+                </el-form-item>
+                <el-form-item label="所属部门" prop="deptIds">
+                  <el-cascader
+                    ref="cascader"
+                    v-model="dataForm.deptIds"
+                    :options="treeData"
+                    :props="{ checkStrictly: true,label:'name',value:'id',expandTrigger:'hover' }"
+                    clearable
+                    :show-all-levels="true"
+                    style="width:100%"
+                    @change="handleCascaderChange"
+                  />
                 </el-form-item>
               </el-form>
             </div>
@@ -139,49 +170,25 @@
 <script>
 import { add, del, update, getList } from '@/api/sys/user'
 import { option } from '@/api/sys/role'
-
+import { getTree, getMap } from '@/api/sys/dept'
+import MenuTree from './components/MenuTree'
 export default {
+  components: { MenuTree },
   filters: {
     statusFilter(status) {
       const statusMap = {
-        published: 'success',
+        true: 'success',
         draft: 'info',
         false: 'danger'
       }
       return statusMap[status]
-    },
-    roleFilter(roleIds, options) {
-      let roleNames = ''
-      for (var i = 0; i < roleIds.length; i++) {
-        for (var j = 0; j < options.length; j++) {
-          if (roleIds[i] === options[j].id) {
-            roleNames += options[j].roleName + '、'
-          }
-        }
-      }
-      return roleNames.substring(0, roleNames.lastIndexOf('、'))
     }
   },
   data() {
     return {
-      options: [{
-        value: '选项1',
-        label: '黄金糕'
-      }, {
-        value: '选项2',
-        label: '双皮奶'
-      }, {
-        value: '选项3',
-        label: '蚵仔煎'
-      }, {
-        value: '选项4',
-        label: '龙须面'
-      }, {
-        value: '选项5',
-        label: '北京烤鸭'
-      }],
       dialogVisible: false,
       queryParam: {
+        deptId: '',
         currentPage: 1,
         pageSize: 10
       },
@@ -197,7 +204,9 @@ export default {
         idNumber: '',
         email: ''
       },
+      treeData: [],
       multipleSelection: [],
+      deptMap: [],
       roleOptions: [],
       list: null,
       listLoading: true,
@@ -205,8 +214,9 @@ export default {
     }
   },
   created() {
+    this.fetchDeptTreeData()
+    this.fetchOptionData()
     this.fetchData()
-    this.fetchRoleData()
   },
   methods: {
     fetchData() {
@@ -217,7 +227,15 @@ export default {
         this.listLoading = false
       })
     },
-    fetchRoleData() {
+    fetchDeptTreeData() {
+      getTree().then((response) => {
+        this.treeData = response.data
+      })
+    },
+    fetchOptionData() {
+      getMap().then((response) => {
+        this.deptMap = response.data
+      })
       option().then((response) => {
         this.roleOptions = response.data
       })
@@ -273,6 +291,15 @@ export default {
     // 多选
     handleSelectionChange(val) {
       this.multipleSelection = val
+    },
+    handleTreeClick(val) {
+      this.queryParam.deptId = val
+      this.fetchData()
+    },
+    handleCascaderChange(val) {
+      const parentId = val[val.length - 1]
+      this.dataForm.deptId = parentId
+      this.dataForm.deptIds = val
     }
   }
 }
