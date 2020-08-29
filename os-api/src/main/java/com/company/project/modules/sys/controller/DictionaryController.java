@@ -1,17 +1,17 @@
 package com.company.project.modules.sys.controller;
 
-import com.company.project.core.Result;
-import org.springframework.web.bind.annotation.*;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.company.project.modules.sys.service.DictionaryService;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.company.project.core.Result;
 import com.company.project.modules.sys.entity.Dictionary;
+import com.company.project.modules.sys.entity.Option;
+import com.company.project.modules.sys.service.DictionaryService;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-
-import org.springframework.web.bind.annotation.RestController;
 
 /**
  * <p>
@@ -61,4 +61,17 @@ public class DictionaryController {
         );
         return Result.success(page);
     }
+
+    @GetMapping("/option")
+    public Result<HashMap<String, List<Option>>> option(@RequestParam String codes) {
+        String[] codeArray = codes.split(",");
+        HashMap<String, List<Option>> map = new HashMap<>();
+        for (String code : codeArray) {
+            Dictionary dictionary = dictionaryService.getByCode(code);
+            List<Option> options = dictionary.getOptions();
+            map.put(code + "Options", options);
+        }
+        return Result.success(map);
+    }
+
 }

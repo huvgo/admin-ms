@@ -13,4 +13,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface DictionaryService extends IService<Dictionary> {
 
+    Dictionary getByCode(String code);
 }

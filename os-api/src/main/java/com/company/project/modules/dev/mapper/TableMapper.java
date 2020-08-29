@@ -1,12 +1,15 @@
 package com.company.project.modules.dev.mapper;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.db.DbUtil;
 import cn.hutool.db.Entity;
+import cn.hutool.db.handler.BeanListHandler;
 import cn.hutool.db.handler.EntityHandler;
-import cn.hutool.db.handler.EntityListHandler;
 import cn.hutool.db.handler.NumberHandler;
 import cn.hutool.db.sql.SqlExecutor;
+import com.company.project.modules.dev.entity.code.Column;
+import com.company.project.modules.dev.entity.code.Table;
 import com.company.project.modules.dev.util.Convert;
 import com.company.project.util.JDBCUtils;
 import org.springframework.stereotype.Component;
@@ -18,8 +21,8 @@ import java.util.Map;
 
 @Component
 public class TableMapper {
-    public List<Entity> page(Integer offset, Integer limit, Map<String, Object> params) throws SQLException {
-        String sql = "select table_name tableName, engine, table_comment tableComment, create_time createTime " +
+    public List<Table> page(Integer offset, Integer limit, Map<String, Object> params) throws SQLException {
+        String sql = "select table_name name, engine, table_comment comment, create_time createTime " +
                 "from information_schema.tables " +
                 "where table_schema = (select database()) {} order by create_time desc limit {}, {}";
         String condition = "";
@@ -29,9 +32,14 @@ public class TableMapper {
         }
         String formatSql = StrUtil.format(sql, condition, offset, limit);
         Connection conn = JDBCUtils.getConnection();
-        List<Entity> page = SqlExecutor.query(conn, formatSql, new EntityListHandler());
+        List<Table> tableList = SqlExecutor.query(conn, formatSql, new BeanListHandler<>(Table.class));
         DbUtil.close(conn);
-        return page;
+        if (CollUtil.isNotEmpty(tableList)) {
+            for (Table table : tableList) {
+                table.setColumns(this.queryColumns(table.getName()));
+            }
+        }
+        return tableList;
     }
 
     public int total(Map<String, Object> params) throws SQLException {
@@ -56,15 +64,15 @@ public class TableMapper {
         return entity;
     }
 
-    public List<Entity> queryColumns(String tableName) throws SQLException {
+    public List<Column> queryColumns(String tableName) throws SQLException {
         String sql = "select column_name name, data_type dataType, column_comment comment, column_key primarykey, extra from information_schema.columns where table_name = '" + tableName + "' and table_schema = (select database()) order by ordinal_position";
         Connection conn = JDBCUtils.getConnection();
-        List<Entity> columnList = SqlExecutor.query(conn, sql, new EntityListHandler());
+        List<Column> columnList = SqlExecutor.query(conn, sql, new BeanListHandler<>(Column.class));
         DbUtil.close(conn);
 
         columnList.forEach(entity -> {
-            entity.put("javaType", Convert.jdbcType2JavaType(entity.getStr("dataType")));
-            entity.put("name", StrUtil.toCamelCase(entity.getStr("name")));
+            entity.setJavaType(Convert.jdbcType2JavaType(entity.getDataType()));
+            entity.setName(StrUtil.toCamelCase(entity.getName()));
         });
         return columnList;
     }

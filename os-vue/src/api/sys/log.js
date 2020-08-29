@@ -1,14 +1,6 @@
 import request from '@/utils/request'
 
-const url = '/sys/dictionary'
-
-export function option(data) {
-  return request({
-    url: url + '/option',
-    method: 'get',
-    params: data
-  })
-}
+const url = '/sys/log'
 
 export function getList(data) {
   return request({

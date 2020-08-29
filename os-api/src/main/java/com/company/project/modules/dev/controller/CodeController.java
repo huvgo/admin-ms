@@ -1,20 +1,15 @@
 package com.company.project.modules.dev.controller;
 
-import cn.hutool.db.Entity;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.company.project.common.annotation.Permissions;
 import com.company.project.core.Result;
-import com.company.project.modules.dev.entity.oshi.Template;
-import com.company.project.modules.dev.mapper.TableMapper;
+import com.company.project.modules.dev.entity.code.Table;
 import com.company.project.modules.dev.service.CodeService;
-import com.company.project.modules.dev.service.impl.CodeServiceImpl;
 import freemarker.template.TemplateException;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -37,28 +32,18 @@ public class CodeController {
 
     @GetMapping
     @Permissions
-    public Result<Page<Entity>> get(@RequestParam(defaultValue = "1") Integer currentPage, @RequestParam(defaultValue = "10") Integer pageSize, @RequestParam Map<String, Object> params) throws SQLException {
-        Page<Entity> page = codeService.page(currentPage, pageSize, params);
+    public Result<Page<Table>> get(@RequestParam(defaultValue = "1") Integer currentPage, @RequestParam(defaultValue = "10") Integer pageSize, @RequestParam Map<String, Object> params) throws SQLException {
+        Page<Table> page = codeService.page(currentPage, pageSize, params);
         return Result.success(page);
     }
 
     @PostMapping("/generator")
-    public Result<Object> generator(Map<String, Object> params) throws SQLException, IOException, TemplateException {
-        String tableName = (String) params.get("tableName");
-        List<Template> templateList = new ArrayList<>();
-        templateList.add(new Template("/templates/controller.java.ftl", "controller", "Controller.java"));
-        templateList.add(new Template("/templates/entity.java.ftl", "entity", ".java"));
-        templateList.add(new Template("/templates/service.java.ftl", "service", "Service.java"));
-        templateList.add(new Template("/templates/serviceImpl.java.ftl", "service" + File.separator + "impl", "ServiceImpl.java"));
-        templateList.add(new Template("/templates/mapper.java.ftl", "mapper", "Mapper.java"));
-        templateList.add(new Template("/templates/mapper.xml.ftl", "mapper" + File.separator + "xml", "Mapper.xml"));
-
-        templateList.add(new Template("/templates/page.js.ftl", "abs:C:\\Users\\HuWei\\Github Projects\\admin-os\\os-vue\\src\\api", ".js"));
-        templateList.add(new Template("/templates/page.vue.ftl", "abs:C:\\Users\\HuWei\\Github Projects\\admin-os\\os-vue\\src\\views\\modules", ".vue"));
-
-        CodeService codeService = new CodeServiceImpl(new TableMapper());
-        codeService.generator(templateList, tableName, true);
-
+    public Result<Object> generator(@RequestBody List<Table> tableList) throws SQLException, IOException, TemplateException {
+        for (Table table : tableList) {
+            if (table.isGenerator()) {
+                codeService.generator(table, true);
+            }
+        }
         return Result.success();
     }
 

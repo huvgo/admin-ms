@@ -3,9 +3,9 @@ package com.company.project.modules.dev.service.impl;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.db.Entity;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.company.project.modules.dev.entity.code.Table;
 import com.company.project.modules.dev.entity.oshi.Template;
 import com.company.project.modules.dev.mapper.TableMapper;
 import com.company.project.modules.dev.service.CodeService;
@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,14 +43,18 @@ public class CodeServiceImpl implements CodeService {
     }
 
     @Override
-    public Page<Entity> page(Integer currentPage, Integer pageSize, Map<String, Object> params) throws SQLException {
-        Page<Entity> page = new Page<>();
+    public Page<Table> page(Integer currentPage, Integer pageSize, Map<String, Object> params) throws SQLException {
+        Page<Table> page = new Page<>();
         page.setRecords(tableMapper.page((currentPage - 1) * pageSize, pageSize, params));
         page.setTotal(tableMapper.total(params));
         return page;
     }
 
-    public void generator(List<Template> templateList, String tableName, boolean local) throws IOException, TemplateException, SQLException {
+    public void generator(Table table, boolean local) throws IOException, TemplateException, SQLException {
+
+        List<Template> templateList = getTemplate();
+        String tableName = table.getName();
+
         // 表前缀为模块名称
         int i = tableName.indexOf("_");
         String moduleName = tableName.substring(0, i);
@@ -58,9 +63,7 @@ public class CodeServiceImpl implements CodeService {
 
         // 整理模板需要的数据
         Map<String, Object> objectMap = new HashMap<>();
-        List<Entity> fields = tableMapper.queryColumns(tableName);
-        objectMap.put("fields", fields);
-        Entity table = tableMapper.queryTable(tableName);
+        objectMap.put("fields", table.getColumns());
         objectMap.put("table", table);
         objectMap.put("moduleName", moduleName);
         objectMap.put("lowerFirstName", StrUtil.lowerFirst(fileName));
@@ -95,5 +98,18 @@ public class CodeServiceImpl implements CodeService {
         }
     }
 
+    private List<Template> getTemplate() {
+        List<Template> templateList = new ArrayList<>();
+        templateList.add(new Template("/templates/controller.java.ftl", "controller", "Controller.java"));
+        templateList.add(new Template("/templates/entity.java.ftl", "entity", ".java"));
+        templateList.add(new Template("/templates/service.java.ftl", "service", "Service.java"));
+        templateList.add(new Template("/templates/serviceImpl.java.ftl", "service" + File.separator + "impl", "ServiceImpl.java"));
+        templateList.add(new Template("/templates/mapper.java.ftl", "mapper", "Mapper.java"));
+        templateList.add(new Template("/templates/mapper.xml.ftl", "mapper" + File.separator + "xml", "Mapper.xml"));
+
+        templateList.add(new Template("/templates/page.js.ftl", "abs:C:\\Users\\HuWei\\Github Projects\\admin-os\\os-vue\\src\\api", ".js"));
+        templateList.add(new Template("/templates/page.vue.ftl", "abs:C:\\Users\\HuWei\\Github Projects\\admin-os\\os-vue\\src\\views\\modules", ".vue"));
+        return templateList;
+    }
 
 }
