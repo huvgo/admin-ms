@@ -1,9 +1,10 @@
 package com.company.project.common.aspect;
 
 import com.company.project.core.Assert;
-import com.company.project.modules.sys.util.UserCache;
+import com.company.project.core.ResultCode;
 import com.company.project.modules.sys.entity.Menu;
 import com.company.project.modules.sys.entity.User;
+import com.company.project.modules.sys.util.UserCache;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
@@ -45,7 +46,7 @@ public class PermissionAspect {
         HttpServletRequest request = Objects.requireNonNull((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         String token = request.getHeader("X-Token");
         User user = userCache.getUser(token);
-        Assert.requireNonNull(user, "登录过期,请重新登陆");
+        Assert.requireNonNull(user, ResultCode.LOGIN_EXPIRED, "登录过期,请重新登陆");
         List<Menu> menuList = user.getMenuList();
 
         // 获取当前访问的菜单和当前访问菜单的权限
@@ -59,7 +60,7 @@ public class PermissionAspect {
 
         // 判断用户是否具有该菜单
         Optional<Menu> menuOptional = menuList.stream().filter(menu -> requestPath.equals(menu.getPath())).findFirst();
-        Assert.requireTrue(menuOptional.isPresent(), "你没有权限去该页面");
+        Assert.requireTrue(menuOptional.isPresent(), "您没有此操作的权限，请联系管理员为您添加代码生成的权限");
         Menu requestMenu = menuOptional.get();
 
         // 判断用户是否具有该权限

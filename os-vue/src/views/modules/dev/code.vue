@@ -7,7 +7,7 @@
         </el-form-item>
         <el-form-item>
           <el-button @click="fetchData()">查询</el-button>
-          <el-button type="primary" @click="onSubmit">立即生成</el-button>
+          <el-button type="primary" @click="dataFormSubmit()">立即生成</el-button>
           <el-button type="info" @click="handleEdit">其他设置</el-button>
         </el-form-item>
       </el-form>
@@ -66,7 +66,7 @@
 </template>
 
 <script>
-import { add, del, update, getList } from '@/api/dev/code'
+import { getList, generator } from '@/api/dev/code'
 
 export default {
   filters: {
@@ -127,13 +127,7 @@ export default {
       })
     },
     dataFormSubmit() {
-      let request
-      if (this.dataForm.id) {
-        request = update(this.dataForm)
-      } else {
-        request = add(this.dataForm)
-      }
-      request.then((response) => {
+      generator(this.dataForm).then((response) => {
         this.dialogVisible = false
         this.fetchData()
         this.$message({ message: response.message, type: 'success' })
@@ -151,18 +145,6 @@ export default {
       this.dialogVisible = true
       this.$nextTick(() => {
         this.$refs['dataForm'].resetFields()
-      })
-    },
-    handleDelete({ $index, row }) {
-      del([row.id]).then((response) => {
-        this.fetchData()
-        this.$message({ message: response.message, type: 'success' })
-      })
-    },
-    handleBatchDelete() {
-      del(this.ids).then((response) => {
-        this.fetchData()
-        this.$message({ message: response.message, type: 'success' })
       })
     },
     handleEdit(scope) {
