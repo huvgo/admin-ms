@@ -9,7 +9,7 @@
 
       <el-table
         v-loading="listLoading"
-        :data="list"
+        :data="treeData"
         element-loading-text="Loading"
         border
         fit
@@ -58,7 +58,7 @@
           <el-input v-model="dataForm.name" placeholder="请输入菜单名称" />
         </el-form-item>
         <el-form-item label="上级菜单" prop="parentId">
-          <el-input v-model="dataForm.parentId" placeholder="请输入父菜单ID，一级菜单为0" />
+          <tree-Popover :id="dataForm.parentId" @tree-popover-click="handleTreePopoverClick" />
         </el-form-item>
         <el-form-item label="菜单URL" prop="path">
           <el-input v-model="dataForm.path" placeholder="请输入菜单URL" />
@@ -91,7 +91,9 @@
 <script>
 import { add, del, update, getList } from '@/api/sys/menu'
 import { treeDataTranslate } from '@/utils'
+import TreePopover from './components/TreePopover'
 export default {
+  components: { TreePopover },
   filters: {
     statusFilter(status) {
       const statusMap = {
@@ -110,7 +112,7 @@ export default {
         pageSize: 10
       },
       dataForm: {
-        parentId: '',
+        parentId: 0,
         name: '',
         path: '',
         meta: {
@@ -122,16 +124,10 @@ export default {
         orderNum: ''
       },
       ids: [],
+      treeData: [],
       list: [],
       listLoading: true,
       total: 0
-    }
-  },
-  watch: {
-    'dataForm.name': {
-      handler(newName, oldName) {
-        this.dataForm.meta.title = newName
-      }
     }
   },
   created() {
@@ -141,7 +137,8 @@ export default {
     fetchData() {
       this.listLoading = true
       getList(this.queryParam).then((response) => {
-        this.list = treeDataTranslate(response.data, 'id')
+        this.list = response.data
+        this.treeData = treeDataTranslate(response.data, 'id')
         this.total = response.data.total
         this.listLoading = false
       })
@@ -196,6 +193,9 @@ export default {
       this.ids = ids.map((item) => {
         return item.id
       })
+    },
+    handleTreePopoverClick(val) {
+      this.dataForm.parentId = val
     }
   }
 }

@@ -42,8 +42,8 @@
     </el-card>
     <el-dialog :visible.sync="dialogVisible" :title="'新增'">
       <el-form ref="dataForm" :model="dataForm" label-width="80px" label-position="left">
-        <el-form-item label="上级菜单">
-          <el-input v-model="dataForm.menuParentId" placeholder="上级菜单" />
+        <el-form-item label="上级菜单" prop="menuParentId">
+          <tree-Popover :id="dataForm.parentMenuId" @tree-popover-click="handleTreePopoverClick" />
         </el-form-item>
         <el-table :data="dataForm.columns" border fit highlight-current-row>
           <el-table-column label="字段名" prop="name" />
@@ -78,8 +78,9 @@
 <script>
 import { getList, generator } from '@/api/dev/code'
 import { option } from '@/api/sys/dictionary'
-
+import TreePopover from './../sys/components/TreePopover'
 export default {
+  components: { TreePopover },
   filters: {
     statusFilter(status) {
       const statusMap = {
@@ -94,13 +95,12 @@ export default {
     return {
       dataForm: {
         name: '',
-        menuParentId: '',
-        tablePrefix: '',
-        author: '',
-        projectPath: ''
+        parentMenuId: 0,
+        comment: '',
+        createTime: '',
+        engine: '',
+        generator: false
       },
-      dataForm2: [
-      ],
       dialogVisible: false,
       queryParam: {
         currentPage: 1,
@@ -110,7 +110,11 @@ export default {
       list: null,
       listLoading: true,
       total: 0,
-      otherSetting: false
+      otherSetting: false,
+      defaultProps: {
+        children: 'children',
+        label: 'name'
+      }
     }
   },
   created() {
@@ -153,10 +157,10 @@ export default {
       })
     },
     handleEdit(scope) {
-      console.log(scope)
       this.dialogVisible = true
       this.$nextTick(() => {
         this.dataForm = scope.row
+        console.log(this.dataForm)
       })
     },
     // 多选
@@ -170,6 +174,9 @@ export default {
         })
       })
       console.log(this.list)
+    },
+    handleTreePopoverClick(val) {
+      this.dataForm.parentMenuId = val
     }
   }
 }

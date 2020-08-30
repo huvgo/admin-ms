@@ -20,7 +20,7 @@ import java.util.Date;
 @EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
 @TableName(value = "sys_log")
-public class Log extends BaseEntity {
+public class Log extends BaseEntity<Integer> {
 
         /**
         * 操作用户ID

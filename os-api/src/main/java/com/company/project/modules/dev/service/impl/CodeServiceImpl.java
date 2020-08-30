@@ -51,6 +51,9 @@ public class CodeServiceImpl implements CodeService {
     }
 
     public void generator(Table table, boolean local) throws IOException, TemplateException, SQLException {
+        int parentMenuId = table.getParentMenuId();
+        // todo 生成菜单栏
+
 
         List<Template> templateList = getTemplate();
         String tableName = table.getName();

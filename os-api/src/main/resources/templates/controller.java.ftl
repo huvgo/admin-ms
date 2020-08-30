@@ -57,7 +57,11 @@ public class ${upperFirstName}Controller {
     @GetMapping
     public Result<Page<${upperFirstName}>> get(@RequestParam(defaultValue = "0") Integer current, @RequestParam(defaultValue = "10") Integer size, @RequestParam Map<String, Object> params) {
         Page<${upperFirstName}> page = ${lowerFirstName}Service.page(new Page<>(current, size, true), new QueryWrapper<${upperFirstName}>()
-                .eq(Objects.nonNull(params.get("key")), "key", params.get("key"))
+            <#list fields as field>
+                <#if field.condition>
+                .eq(Objects.nonNull(params.get("${field.name}")), "${field.columnName}", params.get("${field.name}"))
+                </#if>
+            </#list>
         );
         return Result.success(page);
     }

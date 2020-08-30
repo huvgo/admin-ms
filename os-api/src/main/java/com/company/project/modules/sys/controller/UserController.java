@@ -6,6 +6,7 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.company.project.common.annotation.Permissions;
+import com.company.project.common.constant.UserConst;
 import com.company.project.core.Assert;
 import com.company.project.core.Result;
 import com.company.project.modules.sys.entity.Menu;
@@ -18,10 +19,8 @@ import com.company.project.modules.sys.service.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -92,12 +91,15 @@ public class UserController {
 
         // 菜单权限
         List<Integer> roleIds = currentUser.getRoleIds();
-        List<Role> roles = roleService.listByIds(roleIds);
-        HashSet<Integer> menuIds = new HashSet<>();
-        for (Role role : roles) {
-            menuIds.addAll(role.getMenuIds());
+        List<Menu> menuList = null;
+        if (roleIds.contains(UserConst.SUPER_ADMIN_ROLE_ID)) {
+            menuList = menuService.list();
+        }else {
+            List<Role> roles = roleService.listByIds(roleIds);
+            HashSet<Integer> menuIds = new HashSet<>();
+            roles.forEach(role -> menuIds.addAll(role.getMenuIds()));
+            menuService.list(new QueryWrapper<Menu>().in("id", menuIds));
         }
-        List<Menu> menuList = menuService.list(new QueryWrapper<Menu>().in("id", menuIds));
         currentUser.setMenuList(menuList);
 
         // 重新刷新缓存

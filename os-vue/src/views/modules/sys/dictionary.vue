@@ -218,15 +218,6 @@ export default {
 </script>
 
 <style scoped>
-.el-dialog {
-  padding: 10px 20px;
-}
-.el-card {
-  border: 0 solid #ffffff;
-}
-.el-tag {
-  margin-left: 5px;
-}
 .deep >>> .el-table__body th,
 .deep >>> .el-table__body td,
 .deep >>> .el-table__header th,

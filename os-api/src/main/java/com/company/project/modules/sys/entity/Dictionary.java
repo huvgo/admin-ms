@@ -21,7 +21,7 @@ import java.util.List;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @TableName(value = "sys_dictionary", autoResultMap = true)
-public class Dictionary extends BaseEntity {
+public class Dictionary extends BaseEntity<Integer> {
 
     /**
      * 上级ID，一级ID为0
@@ -41,7 +41,7 @@ public class Dictionary extends BaseEntity {
     /**
      * 备注
      */
-    private String remarks;
+    private String remark;
 
     /**
      * 选项

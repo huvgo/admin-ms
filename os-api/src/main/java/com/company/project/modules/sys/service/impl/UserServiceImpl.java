@@ -19,6 +19,13 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
 
     @Override
+    public User getByUsername(String username) {
+        QueryWrapper<User> queryWrapper = new QueryWrapper<User>().eq("username", username);
+
+        return this.getOne(queryWrapper);
+    }
+
+    @Override
     public User getByUsernameAndPassword(String username, String password) {
         QueryWrapper<User> queryWrapper = new QueryWrapper<User>().eq("username", username).eq("password", password);
         return this.getOne(queryWrapper);

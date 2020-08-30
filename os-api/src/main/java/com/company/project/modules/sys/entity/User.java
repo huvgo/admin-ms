@@ -22,7 +22,7 @@ import java.util.List;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @TableName(value = "sys_user", autoResultMap = true)
-public class User extends BaseEntity {
+public class User extends BaseEntity<Integer> {
 
     private static final long serialVersionUID = 1L;
 

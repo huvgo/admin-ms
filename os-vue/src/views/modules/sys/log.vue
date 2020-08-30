@@ -1,53 +1,61 @@
 <template>
   <div class="app-container">
-    <el-form :inline="true" :model="queryParam" @keyup.enter.native="fetchData()">
-      <el-form-item>
-        <el-input v-model="queryParam.id" placeholder="ID" clearable />
-      </el-form-item>
-      <el-form-item>
-        <el-button @click="fetchData()">查询</el-button>
-        <el-button type="primary" @click="handleAdd()">新增</el-button>
-        <el-button type="danger" :disabled="ids.length <= 0" @click="handleBatchDelete()">批量删除</el-button>
-      </el-form-item>
-    </el-form>
+    <el-card class="box-card">
+      <el-form :inline="true" :model="queryParam" @keyup.enter.native="fetchData()">
+        <el-form-item>
+          <el-input v-model="queryParam.operation" placeholder="用户操作" clearable />
+        </el-form-item>
+        <el-form-item>
+          <el-input v-model="queryParam.method" placeholder="请求方法" clearable />
+        </el-form-item>
+        <el-form-item>
+          <el-input v-model="queryParam.params" placeholder="请求参数" clearable />
+        </el-form-item>
+        <el-form-item>
+          <el-button @click="fetchData()">查询</el-button>
+          <el-button type="primary" @click="handleAdd()">新增</el-button>
+          <el-button type="danger" :disabled="ids.length <= 0" @click="handleBatchDelete()">批量删除</el-button>
+        </el-form-item>
+      </el-form>
 
-    <el-table
-      v-loading="listLoading"
-      :data="list"
-      element-loading-text="Loading"
-      border
-      fit
-      highlight-current-row
-      @selection-change="handleSelectionChange"
-    >
-      <el-table-column type="selection" header-align="center" align="center" width="50" />
-      <el-table-column label prop="id" />
-      <el-table-column label="操作用户ID" prop="operationUserId" />
-      <el-table-column label="用户操作" prop="operation" />
-      <el-table-column label="请求方法" prop="method" />
-      <el-table-column label="请求参数" prop="params" />
-      <el-table-column label="执行时长(毫秒)" prop="time" />
-      <el-table-column label="IP地址" prop="ip" />
-      <el-table-column label="创建时间" prop="createDate" />
-      <el-table-column align="center" label="操作" width="150">
-        <template slot-scope="scope">
-          <el-button size="mini" @click="handleEdit(scope)">修改</el-button>
-          <el-button type="danger" size="mini" @click="handleDelete(scope)">删除</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-    <el-pagination
-      :current-page="queryParam.currentPage"
-      :page-sizes="[10, 20, 50, 100]"
-      :page-size="queryParam.pageSize"
-      layout="total, sizes, prev, pager, next, jumper"
-      :total="total"
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
-    />
-
+      <el-table
+        v-loading="listLoading"
+        :data="list"
+        element-loading-text="Loading"
+        border
+        fit
+        highlight-current-row
+        @selection-change="handleSelectionChange"
+      >
+        <el-table-column type="selection" header-align="center" align="center" width="50" />
+        <el-table-column label="" prop="id" />
+        <el-table-column label="操作用户ID" prop="operationUserId" />
+        <el-table-column label="用户操作" prop="operation" />
+        <el-table-column label="请求方法" prop="method" />
+        <el-table-column label="请求参数" prop="params" />
+        <el-table-column label="执行时长(毫秒)" prop="time" />
+        <el-table-column label="IP地址" prop="ip" />
+        <el-table-column label="创建时间" prop="createDate" />
+        <el-table-column align="center" label="操作" width="150">
+          <template slot-scope="scope">
+            <el-button size="mini" @click="handleEdit(scope)">修改</el-button>
+            <el-button type="danger" size="mini" @click="handleDelete(scope)">删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <el-pagination
+        :current-page="queryParam.currentPage"
+        :page-sizes="[10, 20, 50, 100]"
+        :page-size="queryParam.pageSize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="total"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+      />
+    </el-card>
     <el-dialog :visible.sync="dialogVisible" :title="'新增'">
       <el-form ref="dataForm" :model="dataForm" label-width="80px" label-position="left">
+        <el-form-item v-show="false" label="ID" prop="id" />
         <el-form-item v-show="false" label="ID" prop="id" />
         <el-form-item label="操作用户ID" prop="operationUserId">
           <el-input v-model="dataForm.operationUserId" placeholder="请输入操作用户ID" />
@@ -68,7 +76,13 @@
           <el-input v-model="dataForm.ip" placeholder="请输入IP地址" />
         </el-form-item>
         <el-form-item label="创建时间" prop="createDate">
-          <el-input v-model="dataForm.createDate" placeholder="请输入创建时间" />
+          <el-date-picker
+            v-model="dataForm.createDate"
+            style="width:100%"
+            type="date"
+            format="yyyy-MM-dd"
+            placeholder="选择用户操作日期"
+          />
         </el-form-item>
       </el-form>
       <div style="text-align:right;">
@@ -97,6 +111,9 @@ export default {
     return {
       dialogVisible: false,
       queryParam: {
+        operation: '',
+        method: '',
+        params: '',
         currentPage: 1,
         pageSize: 10
       },

@@ -12,9 +12,10 @@ public class Column {
     private String javaType;
     private boolean condition;
     private String extra;
+    private String columnName;
     private String name;
     private String comment;
     private String primaryKey;
-    private String element;
+    private String element = "1";
 
 }

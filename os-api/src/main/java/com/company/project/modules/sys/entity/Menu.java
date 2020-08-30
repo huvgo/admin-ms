@@ -1,5 +1,6 @@
 package com.company.project.modules.sys.entity;
 
+import cn.hutool.core.util.RandomUtil;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
@@ -47,10 +48,4 @@ public class Menu extends TreeEntity<Menu> {
      */
     private Integer type;
 
-
-    /**
-     * 附加信息
-     */
-    @TableField(exist = false)
-    private Map<String, Object> remark;
 }

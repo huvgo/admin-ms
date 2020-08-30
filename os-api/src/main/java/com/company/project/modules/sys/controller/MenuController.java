@@ -1,9 +1,12 @@
 package com.company.project.modules.sys.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.company.project.common.annotation.Permissions;
 import com.company.project.core.Result;
+import com.company.project.core.ServiceException;
 import com.company.project.modules.sys.entity.Menu;
 import com.company.project.modules.sys.service.MenuService;
+import com.company.project.modules.sys.util.MenuUtil;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,6 +31,9 @@ public class MenuController {
     @Permissions
     @PostMapping
     public Result<Object> post(@RequestBody Menu menu) {
+        if (menu.getParentId() == 0 && menu.getType() != 0) {
+            throw new ServiceException("菜单或按钮必须选择上级菜单");
+        }
         menuService.save(menu);
         return Result.success();
     }
@@ -55,9 +61,17 @@ public class MenuController {
 
     @Permissions
     @GetMapping
-    public Result<List<Menu>> get() {
-        List<Menu> list = menuService.list();
+    public Result<List<Menu>> get(@RequestParam(value = "nonButton", required = false) boolean nonButton) {
+        List<Menu> list = menuService.list(new QueryWrapper<Menu>().ne(nonButton, "type", 2));
         return Result.success(list);
     }
+
+/*    @Permissions
+    @GetMapping("/tree")
+    public Result<List<Menu>> tree(@RequestParam(value = "nonButton", required = false) boolean nonButton) {
+        List<Menu> list = menuService.list(new QueryWrapper<Menu>().ne(nonButton, "type", 2));
+        List<Menu> tree = MenuUtil.buildTree(list, 0);
+        return Result.success(tree);
+    }*/
 
 }

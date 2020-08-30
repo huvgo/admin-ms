@@ -65,14 +65,18 @@ public class TableMapper {
     }
 
     public List<Column> queryColumns(String tableName) throws SQLException {
-        String sql = "select column_name name, data_type dataType, column_comment comment, column_key primarykey, extra from information_schema.columns where table_name = '" + tableName + "' and table_schema = (select database()) order by ordinal_position";
+        String sql = "select column_name columnName, data_type dataType, column_comment comment, column_key primarykey, extra from information_schema.columns where table_name = '" + tableName + "' and table_schema = (select database()) order by ordinal_position";
         Connection conn = JDBCUtils.getConnection();
         List<Column> columnList = SqlExecutor.query(conn, sql, new BeanListHandler<>(Column.class));
         DbUtil.close(conn);
 
         columnList.forEach(entity -> {
-            entity.setJavaType(Convert.jdbcType2JavaType(entity.getDataType()));
-            entity.setName(StrUtil.toCamelCase(entity.getName()));
+            String javaType = Convert.jdbcType2JavaType(entity.getDataType());
+            if ("date".equalsIgnoreCase(javaType)) {
+                entity.setElement("3");
+            }
+            entity.setJavaType(javaType);
+            entity.setName(StrUtil.toCamelCase(entity.getColumnName()));
         });
         return columnList;
     }

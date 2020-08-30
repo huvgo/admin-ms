@@ -16,7 +16,6 @@ public class Table {
     private String name;
     private String engine;
     private Date createTime;
-    private int id;
-
+    private int parentMenuId;
     private List<Column> columns;
 }

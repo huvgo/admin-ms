@@ -1,6 +1,7 @@
 package com.company.project.modules.sys.controller;
 
 import com.company.project.core.Result;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -57,7 +58,9 @@ public class LogController {
     @GetMapping
     public Result<Page<Log>> get(@RequestParam(defaultValue = "0") Integer current, @RequestParam(defaultValue = "10") Integer size, @RequestParam Map<String, Object> params) {
         Page<Log> page = logService.page(new Page<>(current, size, true), new QueryWrapper<Log>()
-                .eq(Objects.nonNull(params.get("key")), "key", params.get("key"))
+                .eq(!StringUtils.isEmpty(params.get("operation")), "operation", params.get("operation"))
+                .eq(!StringUtils.isEmpty(params.get("method")), "method", params.get("method"))
+                .eq(!StringUtils.isEmpty(params.get("params")), "params", params.get("params"))
         );
         return Result.success(page);
     }
