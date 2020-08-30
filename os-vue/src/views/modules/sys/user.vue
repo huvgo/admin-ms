@@ -43,7 +43,7 @@
             <el-table-column label="头像" align="center" prop="avatar" width="120">
               <template slot-scope="{row}">
                 <el-image style="width: 60px; height: 60px" :src="row.avatar">
-                  <div slot="error" />
+                  <div slot="error"></div>
                 </el-image>
               </template>
             </el-table-column>
