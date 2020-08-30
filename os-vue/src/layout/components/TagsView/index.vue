@@ -66,6 +66,7 @@ export default {
     }
   },
   mounted() {
+    document.getElementsByClassName('el-scrollbar__wrap').item(1).style.marginBottom = ''
     this.initTags()
     this.addTags()
   },
