@@ -1,6 +1,6 @@
 <template>
-  <div id="tags-view-container" class="tags-view-container 222">
-    <scroll-pane ref="scrollPane" class="tags-view-wrapper 111" @scroll="handleScroll">
+  <div id="tags-view-container" class="tags-view-container">
+    <scroll-pane ref="scrollPane" class="tags-view-wrapper" @scroll="handleScroll">
       <router-link
         v-for="tag in visitedViews"
         ref="tag"
@@ -228,7 +228,7 @@ export default {
       margin-left: 5px;
       // margin-top: 4px;
       &:first-of-type {
-        margin-left: 15px;
+        // margin-left: 15px;
       }
       &:last-of-type {
         margin-right: 15px;

@@ -3,6 +3,7 @@
     <logo v-if="showLogo" :collapse="isCollapse" />
     <el-scrollbar wrap-class="scrollbar-wrapper">
       <el-menu
+        :default-openeds="['/sys','/dev']"
         :default-active="activeMenu"
         :collapse="isCollapse"
         :background-color="variables.menuBg"
@@ -12,7 +13,12 @@
         :collapse-transition="false"
         mode="vertical"
       >
-        <sidebar-item v-for="route in permission_routes" :key="route.path" :item="route" :base-path="route.path" />
+        <sidebar-item
+          v-for="route in permission_routes"
+          :key="route.path"
+          :item="route"
+          :base-path="route.path"
+        />
       </el-menu>
     </el-scrollbar>
   </div>

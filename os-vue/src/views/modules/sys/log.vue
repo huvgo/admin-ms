@@ -28,8 +28,7 @@
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" header-align="center" align="center" width="50" />
-        <el-table-column label="" prop="id" />
-        <el-table-column label="操作用户ID" prop="operationUserId" />
+        <el-table-column label="操作用户" prop="operationUserId" />
         <el-table-column label="用户操作" prop="operation" />
         <el-table-column label="请求方法" prop="method" />
         <el-table-column label="请求参数" prop="params" />
