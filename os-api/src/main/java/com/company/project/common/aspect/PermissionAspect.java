@@ -60,7 +60,7 @@ public class PermissionAspect {
 
         // 判断用户是否具有该菜单
         Optional<Menu> menuOptional = menuList.stream().filter(menu -> requestPath.equals(menu.getPath())).findFirst();
-        Assert.requireTrue(menuOptional.isPresent(), "您没有此操作的权限，请联系管理员为您添加代码生成的权限");
+        Assert.requireTrue(menuOptional.isPresent(), "您没有此操作的权限，请联系管理员为您添加权限");
         Menu requestMenu = menuOptional.get();
 
         // 判断用户是否具有该权限
