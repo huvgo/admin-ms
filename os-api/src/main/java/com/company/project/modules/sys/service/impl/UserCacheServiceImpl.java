@@ -1,9 +1,10 @@
-package com.company.project.modules.sys.util;
+package com.company.project.modules.sys.service.impl;
 
 import cn.hutool.cache.CacheUtil;
 import cn.hutool.cache.impl.TimedCache;
 import cn.hutool.core.date.DateUnit;
 import com.company.project.modules.sys.entity.User;
+import com.company.project.modules.sys.service.CacheService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -13,31 +14,31 @@ import org.springframework.stereotype.Component;
  */
 @Slf4j
 @Component
-public class UserCache {
+public class UserCacheServiceImpl implements CacheService {
 
-    private final TimedCache<String, User> userTimedCache;
-    private final TimedCache<String, String> timedCache;
+    private final TimedCache<String, User> userCache;
+    private final TimedCache<String, String> tokenCache;
 
 
-    public UserCache() {
+    public UserCacheServiceImpl() {
         //创建缓存，默认一小时过期
-        userTimedCache = CacheUtil.newTimedCache(DateUnit.HOUR.getMillis());
-        timedCache = CacheUtil.newTimedCache(DateUnit.HOUR.getMillis());
+        userCache = CacheUtil.newTimedCache(DateUnit.HOUR.getMillis());
+        tokenCache = CacheUtil.newTimedCache(DateUnit.HOUR.getMillis());
     }
 
     public synchronized void putUser(String token, User user) {
-        userTimedCache.put(token, user);
+        userCache.put(token, user);
     }
 
     public synchronized User getUser(String token) {
-        return userTimedCache.get(token);
+        return userCache.get(token);
     }
 
     public synchronized void putToken(String key, String token) {
-        timedCache.put(key, token);
+        tokenCache.put(key, token);
     }
 
     public synchronized String getToken(String key) {
-        return timedCache.get(key);
+        return tokenCache.get(key);
     }
 }

@@ -6,21 +6,17 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.company.project.common.annotation.Permissions;
-import com.company.project.common.constant.UserConst;
 import com.company.project.core.Assert;
 import com.company.project.core.Result;
-import com.company.project.modules.sys.entity.Menu;
-import com.company.project.modules.sys.entity.Role;
-import com.company.project.modules.sys.service.RoleService;
-import com.company.project.modules.sys.util.UserCache;
 import com.company.project.modules.sys.entity.User;
+import com.company.project.modules.sys.service.CacheService;
 import com.company.project.modules.sys.service.MenuService;
+import com.company.project.modules.sys.service.RoleService;
 import com.company.project.modules.sys.service.UserService;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -36,13 +32,13 @@ public class UserController {
     private final UserService userService;
     private final MenuService menuService;
     private final RoleService roleService;
-    private final UserCache userCache;
+    private final CacheService cacheService;
 
-    public UserController(UserService userService, MenuService menuService, RoleService roleService, UserCache userCache) {
+    public UserController(UserService userService, MenuService menuService, RoleService roleService, CacheService cacheService) {
         this.userService = userService;
         this.menuService = menuService;
         this.roleService = roleService;
-        this.userCache = userCache;
+        this.cacheService = cacheService;
     }
 
     @Permissions
@@ -85,36 +81,21 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public Result<Object> login(@RequestBody User user) throws JsonProcessingException {
-        User currentUser = userService.getByUsernameAndPassword(user.getUsername(), user.getPassword());
-        Assert.requireNonNull(currentUser, "账号或密码不正确");
-
-        // 菜单权限
-        List<Integer> roleIds = currentUser.getRoleIds();
-        List<Menu> menuList = null;
-        if (roleIds.contains(UserConst.SUPER_ADMIN_ROLE_ID)) {
-            menuList = menuService.list();
-        }else {
-            List<Role> roles = roleService.listByIds(roleIds);
-            HashSet<Integer> menuIds = new HashSet<>();
-            roles.forEach(role -> menuIds.addAll(role.getMenuIds()));
-            menuService.list(new QueryWrapper<Menu>().in("id", menuIds));
-        }
-        currentUser.setMenuList(menuList);
-
+    public Result<Object> login(@RequestBody User user) {
+        User currentUser = userService.login(user.getUsername(), user.getPassword());
         // 重新刷新缓存
-        String token = userCache.getToken(currentUser.getUsername());
+        String token = cacheService.getToken(currentUser.getUsername());
         if (token == null) {
-            token = IdUtil.simpleUUID();
-            userCache.putToken(currentUser.getUsername(), token);
+            token = IdUtil.fastSimpleUUID();
+            cacheService.putToken(currentUser.getUsername(), token);
         }
-        userCache.putUser(token, currentUser);
+        cacheService.putUser(token, currentUser);
         return Result.success(Dict.create().set("token", token));
     }
 
     @GetMapping("/token")
     public Result<Object> token(String token) {
-        User user = userCache.getUser(token);
+        User user = cacheService.getUser(token);
         Assert.requireNonNull(user, "登录过期,请重新登陆");
         return Result.success(user);
     }
