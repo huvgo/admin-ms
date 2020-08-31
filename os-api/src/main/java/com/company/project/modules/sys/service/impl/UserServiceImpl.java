@@ -1,5 +1,6 @@
 package com.company.project.modules.sys.service.impl;
 
+import cn.hutool.core.util.IdUtil;
 import cn.hutool.crypto.SecureUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -14,6 +15,8 @@ import com.company.project.modules.sys.service.RoleService;
 import com.company.project.modules.sys.service.UserService;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
@@ -44,6 +47,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
+    @SuppressWarnings("all")
     public User login(String username, String password) {
         User user = this.getByUsername(username);
         Assert.requireNonNull(user, "账号或密码不正确");
@@ -58,9 +62,23 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             List<Role> roles = roleService.listByIds(roleIds);
             HashSet<Integer> menuIds = new HashSet<>();
             roles.forEach(role -> menuIds.addAll(role.getMenuIds()));
-            menuService.list(new QueryWrapper<Menu>().in("id", menuIds));
+            if (!menuIds.isEmpty()) {
+                menuService.list(new QueryWrapper<Menu>().in("id", menuIds));
+            } else {
+                menuList = Collections.EMPTY_LIST;
+            }
         }
         user.setMenuList(menuList);
         return user;
+    }
+
+    @Override
+    public void encodePassword(User user) {
+        String password = user.getPassword();
+        Assert.requireNonNull(password, "密码不能为空");
+        String salt = IdUtil.fastSimpleUUID();
+        password = SecureUtil.md5().setSalt(salt.getBytes()).digestHex(password);
+        user.setPassword(password);
+        user.setSalt(salt);
     }
 }

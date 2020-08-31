@@ -44,6 +44,7 @@ public class UserController {
     @Permissions
     @PostMapping
     public Result<Object> post(@RequestBody User user) {
+        userService.encodePassword(user);
         userService.save(user);
         return Result.success();
     }
@@ -58,6 +59,9 @@ public class UserController {
     @Permissions
     @PutMapping
     public Result<Object> put(@RequestBody User user) {
+        if (StrUtil.isNotBlank(user.getPassword())) {
+            userService.encodePassword(user);
+        }
         userService.updateById(user);
         return Result.success();
     }

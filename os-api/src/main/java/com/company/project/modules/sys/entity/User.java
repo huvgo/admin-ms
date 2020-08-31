@@ -1,10 +1,14 @@
 package com.company.project.modules.sys.entity;
 
+import cn.hutool.core.util.IdUtil;
+import cn.hutool.core.util.RandomUtil;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
 import com.company.project.modules.com.BaseEntity;
 import com.company.project.modules.com.IntegerArray2SplitTypeHandler;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -42,6 +46,7 @@ public class User extends BaseEntity<Integer> {
     /**
      * 密码
      */
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     /**
@@ -53,6 +58,7 @@ public class User extends BaseEntity<Integer> {
     /**
      * 盐
      */
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String salt;
 
     /**
@@ -89,7 +95,7 @@ public class User extends BaseEntity<Integer> {
     /**
      * 创建者ID
      */
-    private Long createUserId;
+    private Integer createUserId;
 
     /**
      * 创建时间
@@ -99,7 +105,7 @@ public class User extends BaseEntity<Integer> {
     /**
      * 更新者ID
      */
-    private Long modifyUserId;
+    private Integer modifyUserId;
 
     /**
      * 更新时间

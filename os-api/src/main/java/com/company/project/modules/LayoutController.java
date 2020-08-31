@@ -1,5 +1,6 @@
 package com.company.project.modules;
 
+import cn.hutool.core.collection.CollUtil;
 import com.company.project.core.Assert;
 import com.company.project.core.Result;
 import com.company.project.modules.sys.entity.Menu;
@@ -37,6 +38,9 @@ public class LayoutController {
         User user = cacheService.getUser(token);
         Assert.requireNonNull(user, "登录过期,请重新登陆");
         List<Menu> menuList = user.getMenuList();
+        if (CollUtil.isEmpty(menuList)) {
+            return Result.success(menuList);
+        }
         // 过滤掉按钮 只保留菜单
         List<Menu> collect = menuList.stream().filter(menu -> menu.getType() != 2).collect(Collectors.toList());
         // 构建tree列表

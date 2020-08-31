@@ -16,4 +16,6 @@ public interface UserService extends IService<User> {
     User getByUsername(String username);
 
     User login(String username, String password);
+
+    void encodePassword(User user);
 }
