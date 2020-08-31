@@ -1,6 +1,6 @@
 package com.company.project.modules.sys.util;
 
-import com.company.project.modules.com.TreeEntity;
+import com.company.project.core.base.TreeEntity;
 
 import java.util.ArrayList;
 import java.util.Comparator;

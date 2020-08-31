@@ -1,11 +1,14 @@
-package com.company.project.common.config;
+package com.company.project.component.config;
 
 import com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.pagination.optimize.JsqlParserCountOptimize;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-//Spring boot方式
+/**
+ * MybatisPlus 配置
+ * 配置了MybatisPlus的分页插件
+ */
 @Configuration
 public class MybatisPlusConfig {
 

@@ -1,14 +1,11 @@
 package com.company.project.modules.sys.entity;
 
-import cn.hutool.core.util.RandomUtil;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
-import com.company.project.modules.com.TreeEntity;
+import com.company.project.core.base.TreeEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-
-import java.util.Map;
 
 /**
  * <p>

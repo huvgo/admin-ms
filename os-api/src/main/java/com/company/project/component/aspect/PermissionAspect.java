@@ -1,4 +1,4 @@
-package com.company.project.common.aspect;
+package com.company.project.component.aspect;
 
 import com.company.project.core.Assert;
 import com.company.project.core.ResultCode;
@@ -21,6 +21,11 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+/**
+ * 权限判断 拦截器
+ * 拦截所有标有注解@Permissions的方法
+ * 将请求的方法名与sys_menu表中的perms字段比较
+ */
 @Profile({"dev", "test", "prod"})
 @Component
 @Aspect
@@ -33,7 +38,7 @@ public class PermissionAspect {
         this.cacheService = cacheService;
     }
 
-    @Pointcut("@annotation(com.company.project.common.annotation.Permissions)")
+    @Pointcut("@annotation(com.company.project.component.annotation.Permissions)")
     public void permissions() {
     }
 

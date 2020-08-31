@@ -1,4 +1,4 @@
-package com.company.project.common;
+package com.company.project.core;
 
 import com.company.project.core.Result;
 import com.company.project.core.ServiceException;

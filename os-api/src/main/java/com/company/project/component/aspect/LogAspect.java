@@ -1,4 +1,4 @@
-package com.company.project.common.aspect;
+package com.company.project.component.aspect;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -16,6 +16,10 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * 请求日志 拦截器
+ * 打印所有RestController请求的请求参数，响应结果，和方法执行时间
+ */
 @Profile({"dev", "test"})
 @Component
 @Aspect

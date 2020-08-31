@@ -1,6 +1,7 @@
-package com.company.project.modules.com;
+package com.company.project.core.base;
 
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.company.project.component.mybatis.IntegerArray2SplitTypeHandler;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 

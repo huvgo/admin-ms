@@ -5,7 +5,7 @@ import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.company.project.common.annotation.Permissions;
+import com.company.project.component.annotation.Permissions;
 import com.company.project.core.Assert;
 import com.company.project.core.Result;
 import com.company.project.modules.sys.entity.User;
@@ -84,6 +84,11 @@ public class UserController {
         return Result.success(page);
     }
 
+    /*
+    密码:111111
+    盐:860effd2852141adad4dd5b256209b4a
+    加密后密码:44944f63ddca4e2d1c77329df9e0d751
+     */
     @PostMapping("/login")
     public Result<Object> login(@RequestBody User user) {
         User currentUser = userService.login(user.getUsername(), user.getPassword());

@@ -4,7 +4,7 @@ import cn.hutool.core.util.IdUtil;
 import cn.hutool.crypto.SecureUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.company.project.common.constant.UserConst;
+import com.company.project.component.constant.UserConst;
 import com.company.project.core.Assert;
 import com.company.project.modules.sys.entity.Menu;
 import com.company.project.modules.sys.entity.Role;
@@ -15,7 +15,6 @@ import com.company.project.modules.sys.service.RoleService;
 import com.company.project.modules.sys.service.UserService;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;

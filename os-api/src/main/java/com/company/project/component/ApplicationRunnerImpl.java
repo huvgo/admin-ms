@@ -1,4 +1,4 @@
-package com.company.project.common;
+package com.company.project.component;
 
 
 import org.springframework.boot.ApplicationArguments;

@@ -2,7 +2,7 @@ package com.company.project.modules.sys.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.company.project.common.annotation.Permissions;
+import com.company.project.component.annotation.Permissions;
 import com.company.project.core.Result;
 import com.company.project.modules.sys.entity.Role;
 import com.company.project.modules.sys.service.RoleService;

@@ -1,7 +1,7 @@
 package com.company.project.modules.dev.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.company.project.common.annotation.Permissions;
+import com.company.project.component.annotation.Permissions;
 import com.company.project.core.Result;
 import com.company.project.modules.dev.entity.code.Table;
 import com.company.project.modules.dev.service.CodeService;

@@ -1,6 +1,6 @@
 package com.company.project.modules.dev.controller;
 
-import com.company.project.common.annotation.Permissions;
+import com.company.project.component.annotation.Permissions;
 import com.company.project.core.Result;
 import com.company.project.modules.dev.entity.oshi.SystemHardwareInfo;
 import org.springframework.web.bind.annotation.GetMapping;

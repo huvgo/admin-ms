@@ -1,4 +1,4 @@
-package com.company.project.modules.com;
+package com.company.project.component.mybatis;
 
 
 import cn.hutool.core.collection.CollUtil;

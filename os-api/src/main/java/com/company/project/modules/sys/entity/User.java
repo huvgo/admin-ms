@@ -1,13 +1,10 @@
 package com.company.project.modules.sys.entity;
 
-import cn.hutool.core.util.IdUtil;
-import cn.hutool.core.util.RandomUtil;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
-import com.company.project.modules.com.BaseEntity;
-import com.company.project.modules.com.IntegerArray2SplitTypeHandler;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.company.project.core.base.BaseEntity;
+import com.company.project.component.mybatis.IntegerArray2SplitTypeHandler;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

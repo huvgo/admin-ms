@@ -1,12 +1,11 @@
 package com.company.project.modules.sys.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.company.project.common.annotation.Permissions;
+import com.company.project.component.annotation.Permissions;
 import com.company.project.core.Result;
 import com.company.project.core.ServiceException;
 import com.company.project.modules.sys.entity.Menu;
 import com.company.project.modules.sys.service.MenuService;
-import com.company.project.modules.sys.util.MenuUtil;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
