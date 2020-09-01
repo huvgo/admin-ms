@@ -5,7 +5,7 @@
       style="line-height: 25px;margin-top: -5px;"
       @click.native="dialogTableVisible=true"
     >
-      <el-button plain style="padding: 8px 10px;" size="small" type="danger">
+      <el-button style="padding: 8px 10px;" size="small" type="danger">
         <svg-icon icon-class="bug" />
       </el-button>
     </el-badge>

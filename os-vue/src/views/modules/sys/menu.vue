@@ -1,56 +1,54 @@
 <template>
   <div class="app-container">
-    <el-card class="box-card">
-      <el-form :inline="true" :model="queryParam" @keyup.enter.native="fetchData()">
-        <el-form-item>
-          <el-button plain type="primary" @click="handleAdd()">新增</el-button>
-        </el-form-item>
-      </el-form>
+    <el-form :inline="true" :model="queryParam" @keyup.enter.native="fetchData()">
+      <el-form-item>
+        <el-button type="primary" @click="handleAdd()">新增</el-button>
+      </el-form-item>
+    </el-form>
 
-      <el-table
-        v-loading="listLoading"
-        :data="treeData"
-        element-loading-text="Loading"
-        border
-        fit
-        highlight-current-row
-        row-key="id"
-        :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
-        @selection-change="handleSelectionChange"
-      >
-        <el-table-column label="ID" prop="id" width="80" align="center" />
-        <el-table-column label="菜单名称" prop="name" />
-        <el-table-column label="菜单URL" prop="path" />
-        <el-table-column label="授权标识" prop="perms">
-          <template slot-scope="scope">{{ scope.row.perms }}</template>
-        </el-table-column>
-        <el-table-column label="类型" prop="type">
-          <template slot-scope="scope">{{ scope.row.type }}</template>
-        </el-table-column>
-        <el-table-column label="菜单图标">
-          <template slot-scope="scope">
-            <i v-if="scope.row.meta.icon.indexOf('el-icon')===0" :class="scope.row.meta.icon"></i>
-            <svg-icon v-else :icon-class="scope.row.meta.icon" />
-          </template>
-        </el-table-column>
-        <el-table-column label="排序" prop="sort" />
-        <el-table-column align="center" label="操作" width="150">
-          <template slot-scope="scope">
-            <el-button plain size="mini" @click="handleEdit(scope)">修改</el-button>
-            <el-button plain type="danger" size="mini" @click="handleDelete(scope)">删除</el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-      <el-pagination
-        :current-page="queryParam.currentPage"
-        :page-sizes="[10, 20, 50, 100]"
-        :page-size="queryParam.pageSize"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="total"
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-      />
-    </el-card>
+    <el-table
+      v-loading="listLoading"
+      :data="treeData"
+      element-loading-text="Loading"
+      border
+      fit
+      highlight-current-row
+      row-key="id"
+      :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
+      @selection-change="handleSelectionChange"
+    >
+      <el-table-column label="ID" prop="id" width="80" align="center" />
+      <el-table-column label="菜单名称" prop="name" />
+      <el-table-column label="菜单URL" prop="path" />
+      <el-table-column label="授权标识" prop="perms">
+        <template slot-scope="scope">{{ scope.row.perms }}</template>
+      </el-table-column>
+      <el-table-column label="类型" prop="type">
+        <template slot-scope="scope">{{ scope.row.type }}</template>
+      </el-table-column>
+      <el-table-column label="菜单图标">
+        <template slot-scope="scope">
+          <i v-if="scope.row.meta.icon.indexOf('el-icon')===0" :class="scope.row.meta.icon"></i>
+          <svg-icon v-else :icon-class="scope.row.meta.icon" />
+        </template>
+      </el-table-column>
+      <el-table-column label="排序" prop="sort" />
+      <el-table-column align="center" label="操作" width="150">
+        <template slot-scope="scope">
+          <el-button size="mini" @click="handleEdit(scope)">修改</el-button>
+          <el-button type="danger" size="mini" @click="handleDelete(scope)">删除</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+    <el-pagination
+      :current-page="queryParam.currentPage"
+      :page-sizes="[10, 20, 50, 100]"
+      :page-size="queryParam.pageSize"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="total"
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+    />
     <el-dialog :visible.sync="dialogVisible" :title="'新增'">
       <el-form ref="dataForm" :model="dataForm" label-width="80px" label-position="left">
         <el-form-item v-show="false" label="ID" prop="id" />
@@ -81,8 +79,8 @@
         </el-form-item>
       </el-form>
       <div style="text-align:right;">
-        <el-button plain type="danger" @click="dialogVisible=false">取消</el-button>
-        <el-button plain type="primary" @click="dataFormSubmit()">确定</el-button>
+        <el-button type="danger" @click="dialogVisible=false">取消</el-button>
+        <el-button type="primary" @click="dataFormSubmit()">确定</el-button>
       </div>
     </el-dialog>
   </div>

@@ -13,10 +13,21 @@
       <template v-if="device!=='mobile'">
         <!-- <search id="header-search" class="right-menu-item" /> -->
 
-        <error-log class="errLog-container right-menu-item hover-effect" />
-
+        <!-- <error-log class="errLog-container right-menu-item hover-effect" /> -->
+        <div class="right-menu-item hover-effect">
+          <i class="el-icon-bell"></i>
+        </div>
+        <div class="right-menu-item hover-effect">
+          <i class="el-icon-headset"></i>
+        </div>
+        <div class="right-menu-item hover-effect" @click.stop="showSettingBarChange(true)">
+          <i class="el-icon-brush"></i>
+        </div>
         <screenfull id="screenfull" class="right-menu-item hover-effect" />
 
+        <div class="right-menu-item hover-effect">
+          <i class="el-icon-refresh"></i>
+        </div>
         <!-- <el-tooltip content="Global Size" effect="dark" placement="bottom">
           <size-select id="size-select" class="right-menu-item hover-effect" />
         </el-tooltip>-->
@@ -54,15 +65,20 @@
 import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
-import ErrorLog from '@/components/ErrorLog'
+// import ErrorLog from '@/components/ErrorLog'
 import Screenfull from '@/components/Screenfull'
 
 export default {
   components: {
     Breadcrumb,
     Hamburger,
-    ErrorLog,
+    // ErrorLog,
     Screenfull
+  },
+  data() {
+    return {
+      show: false
+    }
   },
   computed: {
     ...mapGetters([
@@ -78,6 +94,12 @@ export default {
     async logout() {
       await this.$store.dispatch('user/logout')
       this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+    },
+    showSettingBarChange(val) {
+      this.$store.dispatch('settings/changeSetting', {
+        key: 'showSettingBar',
+        value: val
+      })
     }
   }
 }
@@ -124,7 +146,7 @@ export default {
 
     .right-menu-item {
       display: inline-block;
-      padding: 0 8px;
+      padding: 0 12px;
       height: 100%;
       font-size: 18px;
       color: #5a5e66;

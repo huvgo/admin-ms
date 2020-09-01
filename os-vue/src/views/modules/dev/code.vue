@@ -6,8 +6,8 @@
           <el-input v-model="queryParam.id" placeholder="ID" clearable />
         </el-form-item>
         <el-form-item>
-          <el-button plain @click="fetchData()">查询</el-button>
-          <el-button plain type="primary" @click="dataFormSubmit()">立即生成</el-button>
+          <el-button @click="fetchData()">查询</el-button>
+          <el-button type="primary" @click="dataFormSubmit()">立即生成</el-button>
         </el-form-item>
       </el-form>
 
@@ -26,7 +26,7 @@
         <el-table-column label="修改时间" prop="createTime" />
         <el-table-column align="center" label="操作" width="150">
           <template slot-scope="scope">
-            <el-button plain size="mini" @click="handleEdit(scope)">配置</el-button>
+            <el-button size="mini" @click="handleEdit(scope)">配置</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -68,8 +68,8 @@
         </el-table>
       </el-form>
       <div style="text-align:right;">
-        <el-button plain type="danger" @click="dialogVisible=false">取消</el-button>
-        <el-button plain type="primary" @click="dialogVisible=false">确定</el-button>
+        <el-button type="danger" @click="dialogVisible=false">取消</el-button>
+        <el-button type="primary" @click="dialogVisible=false">确定</el-button>
       </div>
     </el-dialog>
   </div>

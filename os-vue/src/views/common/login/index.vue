@@ -52,7 +52,6 @@
       </el-tooltip>
 
       <el-button
-        plain
         :loading="loading"
         type="primary"
         style="width:100%;margin-bottom:30px;"

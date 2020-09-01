@@ -6,8 +6,8 @@
           <el-input v-model="queryParam.id" placeholder="ID" clearable />
         </el-form-item>
         <el-form-item>
-          <el-button plain @click="fetchData()">查询</el-button>
-          <el-button plain type="primary" @click="handleAdd()">新增</el-button>
+          <el-button @click="fetchData()">查询</el-button>
+          <el-button type="primary" @click="handleAdd()">新增</el-button>
         </el-form-item>
       </el-form>
 
@@ -37,8 +37,8 @@
         <el-table-column label="备注" prop="remarks" />
         <el-table-column align="center" label="操作" width="150">
           <template slot-scope="scope">
-            <el-button plain size="mini" @click="handleEdit(scope)">修改</el-button>
-            <el-button plain type="danger" size="mini" @click="handleDelete(scope)">删除</el-button>
+            <el-button size="mini" @click="handleEdit(scope)">修改</el-button>
+            <el-button type="danger" size="mini" @click="handleDelete(scope)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -71,7 +71,7 @@
           />
         </el-form-item>
         <el-form-item>
-          <el-button plain icon="el-icon-plus" @click="handleAddOption()">添加新选项</el-button>
+          <el-button icon="el-icon-plus" @click="handleAddOption()">添加新选项</el-button>
         </el-form-item>
         <el-form-item :label="'选项'" prop="options" :inline="true">
           <div v-for="(item,index) in dataForm.options" :key="index">
@@ -90,13 +90,13 @@
               placeholder="请输入编码"
               style="width:20%;margin-right:5px;margin-top:10px"
             />
-            <el-button plain type="warn" @click="handleDelOption(index)">删除</el-button>
+            <el-button type="warn" @click="handleDelOption(index)">删除</el-button>
           </div>
         </el-form-item>
       </el-form>
       <div style="text-align:right;">
-        <el-button plain type="danger" @click="dialogVisible=false">取消</el-button>
-        <el-button plain type="primary" @click="dataFormSubmit()">确定</el-button>
+        <el-button type="danger" @click="dialogVisible=false">取消</el-button>
+        <el-button type="primary" @click="dataFormSubmit()">确定</el-button>
       </div>
     </el-dialog>
   </div>

@@ -11,9 +11,9 @@
         <el-input v-model="queryParam.params" placeholder="请求参数" clearable />
       </el-form-item>
       <el-form-item>
-        <el-button plain @click="fetchData()">查询</el-button>
-        <el-button plain type="primary" @click="handleAdd()">新增</el-button>
-        <el-button plain type="danger" :disabled="ids.length <= 0" @click="handleBatchDelete()">批量删除</el-button>
+        <el-button @click="fetchData()">查询</el-button>
+        <el-button type="primary" @click="handleAdd()">新增</el-button>
+        <el-button type="danger" :disabled="ids.length <= 0" @click="handleBatchDelete()">批量删除</el-button>
       </el-form-item>
     </el-form>
 
@@ -36,8 +36,8 @@
       <el-table-column label="创建时间" prop="createDate" />
       <el-table-column align="center" label="操作" width="150">
         <template slot-scope="scope">
-          <el-button plain size="mini" @click="handleEdit(scope)">修改</el-button>
-          <el-button plain type="danger" size="mini" @click="handleDelete(scope)">删除</el-button>
+          <el-button size="mini" @click="handleEdit(scope)">修改</el-button>
+          <el-button type="danger" size="mini" @click="handleDelete(scope)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -83,8 +83,8 @@
         </el-form-item>
       </el-form>
       <div style="text-align:right;">
-        <el-button plain type="danger" @click="dialogVisible=false">取消</el-button>
-        <el-button plain type="primary" @click="dataFormSubmit()">确定</el-button>
+        <el-button type="danger" @click="dialogVisible=false">取消</el-button>
+        <el-button type="primary" @click="dataFormSubmit()">确定</el-button>
       </div>
     </el-dialog>
   </div>
