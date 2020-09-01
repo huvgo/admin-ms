@@ -63,7 +63,7 @@ public class LogAspect {
             params.put("ip", request.getRemoteAddr()); // 获取请求的ip地址
 
             // 输出格式化后的json字符串
-            log.info("\n{} 日志请求参数: \n{}\n", request.getRequestURI(), objectMapper.writeValueAsString(params));
+            log.info("\n{} 日志请求参数: \n{}\n", request.getRequestURI(), params);
         }
     }
 

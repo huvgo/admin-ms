@@ -26,7 +26,7 @@
         <el-card class="box-card">
           <div slot="header" class="clearfix">
             <span>消息</span>
-            <el-button style="float: right; padding: 3px 0" type="text">更多</el-button>
+            <el-button plain style="float: right; padding: 3px 0" type="text">更多</el-button>
           </div>
           <div v-for="o in 2" :key="o" class="text item">{{ '来自123456789@qq.com的邮件 ' }}</div>
         </el-card>

@@ -11,9 +11,10 @@
               <el-input v-model="queryParam.username" placeholder="用户名" clearable />
             </el-form-item>
             <el-form-item>
-              <el-button @click="fetchData()">查询</el-button>
-              <el-button type="primary" @click="handleAdd()">新增</el-button>
+              <el-button plain @click="fetchData()">查询</el-button>
+              <el-button plain type="primary" @click="handleAdd()">新增</el-button>
               <el-button
+                plain
                 type="danger"
                 :disabled="multipleSelection.length <= 0"
                 @click="handleBatchDelete()"
@@ -54,8 +55,8 @@
             </el-table-column>
             <el-table-column align="center" label="操作" width="150">
               <template slot-scope="scope">
-                <el-button size="mini" @click="handleEdit(scope)">修改</el-button>
-                <el-button type="danger" size="mini" @click="handleDelete(scope)">删除</el-button>
+                <el-button plain size="mini" @click="handleEdit(scope)">修改</el-button>
+                <el-button plain type="danger" size="mini" @click="handleDelete(scope)">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -160,8 +161,8 @@
         </el-col>
       </el-row>
       <div style="text-align:right;">
-        <el-button type="danger" @click="dialogVisible=false">取消</el-button>
-        <el-button type="primary" @click="dataFormSubmit()">确定</el-button>
+        <el-button plain type="danger" @click="dialogVisible=false">取消</el-button>
+        <el-button plain type="primary" @click="dataFormSubmit()">确定</el-button>
       </div>
     </el-dialog>
   </div>

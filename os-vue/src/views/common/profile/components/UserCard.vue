@@ -9,8 +9,9 @@
         <pan-thumb :image="user.avatar" :height="'100px'" :width="'100px'" :hoverable="false">
           <el-upload
             class="avatar-uploader"
-            action="https://jsonplaceholder.typicode.com/posts/"
+            :action="uploadUrl"
             :show-file-list="false"
+            multiple
             :on-success="handleAvatarSuccess"
             :before-upload="beforeAvatarUpload"
           >
@@ -79,6 +80,11 @@ export default {
           role: ''
         }
       }
+    }
+  },
+  data() {
+    return {
+      uploadUrl: 'http://localhost:9090/dev-api/com/file/upload?moduleDir=avatar'
     }
   }
 }
