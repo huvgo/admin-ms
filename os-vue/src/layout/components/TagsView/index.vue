@@ -204,6 +204,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "~@/styles/variables.scss";
+
 .tags-view-wrapper >>> .el-scrollbar__wrap {
   margin-bottom: 0 !important;
 }
@@ -239,7 +241,7 @@ export default {
         border-color: #f0f2f5;
         &::before {
           content: "";
-          background: #46a6ff;
+          background: #{$menuActiveText};
           display: inline-block;
           width: 8px;
           height: 8px;
