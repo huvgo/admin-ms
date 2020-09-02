@@ -1,7 +1,5 @@
 package com.company.project.core;
 
-import com.company.project.core.Result;
-import com.company.project.core.ServiceException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;

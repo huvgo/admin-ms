@@ -1,9 +1,9 @@
 package com.company.project.component.aspect;
 
 import cn.hutool.extra.servlet.ServletUtil;
+import com.company.project.cache.UserCacheUtil;
 import com.company.project.modules.sys.entity.Log;
 import com.company.project.modules.sys.service.LogService;
-import com.company.project.util.AdminOSUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -16,7 +16,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
+import java.sql.Timestamp;
 
 @Component
 @Aspect
@@ -27,21 +27,21 @@ public class LogAspect {
     private final LogService logService;
 
     @Autowired
-    public LogAspect(ObjectMapper objectMapper, LogService logService){
+    public LogAspect(ObjectMapper objectMapper, LogService logService) {
         this.objectMapper = objectMapper;
         this.logService = logService;
     }
 
 
     @Pointcut("@annotation(com.company.project.component.annotation.Log2Db)")
-    public void log(){
+    public void log() {
     }
 
     /**
      * 环绕通知  在方法的调用前、后执行
      */
     @Around("log()")
-    public Object doAround(ProceedingJoinPoint point) throws Throwable{
+    public Object doAround(ProceedingJoinPoint point) throws Throwable {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = attributes.getRequest();
         //开始时间
@@ -56,11 +56,11 @@ public class LogAspect {
         log.setIp(ServletUtil.getClientIP(request));
         log.setMethod(request.getMethod());
         log.setParams(objectMapper.writeValueAsString(point.getArgs()));
-        log.setOperator(AdminOSUtil.getCurrentUser().getUsername());
-        log.setOperatorId(AdminOSUtil.getCurrentUser().getId());
+        log.setOperator(UserCacheUtil.getCurrentUser().getUsername());
+        log.setOperatorId(UserCacheUtil.getCurrentUser().getId());
         log.setOperation(request.getRequestURL().toString());
         log.setTime(timeDiff);
-        log.setCreateDate(new Date());
+        log.setCreateDate(new Timestamp(System.currentTimeMillis()));
         logService.save(log);
         return obj;
     }

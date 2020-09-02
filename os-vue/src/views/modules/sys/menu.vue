@@ -75,7 +75,7 @@
           <el-input v-model="dataForm.meta.icon" placeholder="请输入菜单图标" />
         </el-form-item>
         <el-form-item label="排序" prop="orderNum">
-          <el-input v-model="dataForm.orderNum" placeholder="请输入排序" />
+          <el-input v-model="dataForm.sort" placeholder="请输入排序" />
         </el-form-item>
       </el-form>
       <div style="text-align:right;">
@@ -119,13 +119,18 @@ export default {
         },
         perms: '',
         type: '1',
-        orderNum: ''
+        sort: ''
       },
       ids: [],
       treeData: [],
       list: [],
       listLoading: true,
       total: 0
+    }
+  },
+  watch: {
+    'dataForm.name': function(val) {
+      this.dataForm.meta.title = val
     }
   },
   created() {

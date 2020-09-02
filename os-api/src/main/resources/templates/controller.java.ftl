@@ -1,5 +1,6 @@
 package ${package}.controller;
 
+import cn.hutool.core.util.StrUtil;
 import com.company.project.core.Result;
 import org.springframework.web.bind.annotation.*;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -59,7 +60,7 @@ public class ${upperFirstName}Controller {
         Page<${upperFirstName}> page = ${lowerFirstName}Service.page(new Page<>(current, size, true), new QueryWrapper<${upperFirstName}>()
             <#list fields as field>
                 <#if field.condition>
-                .eq(Objects.nonNull(params.get("${field.name}")), "${field.columnName}", params.get("${field.name}"))
+                .eq(StrUtil.isNotBlank((String)params.get("${field.name}")), "${field.columnName}", params.get("${field.name}"))
                 </#if>
             </#list>
         );

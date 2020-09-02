@@ -42,6 +42,12 @@ public class CodeServiceImpl implements CodeService {
         this.tableMapper = tableMapper;
     }
 
+    public static void main(String[] args) {
+        String property = System.getProperty("user.dir");
+        String parent = FileUtil.getParent(property, 1);
+        System.out.println("parent = " + parent);
+    }
+
     @Override
     public Page<Table> page(Integer currentPage, Integer pageSize, Map<String, Object> params) throws SQLException {
         Page<Table> page = new Page<>();
@@ -93,11 +99,11 @@ public class CodeServiceImpl implements CodeService {
                 fileName = StrUtil.lowerFirst(fileName);
             }
             String outputFilePath = outputFileDir + File.separator + fileName + template.getFileSuffix();
-            if (!FileUtil.exist(outputFilePath)) {
+//            if (!FileUtil.exist(outputFilePath)) {
                 freeMarkUtil.writer(objectMap, template.getTemplatePath(), outputFilePath);
-            } else {
-                logger.info("文件存在：{}", outputFilePath);
-            }
+//            } else {
+//                logger.info("文件存在：{}", outputFilePath);
+//            }
         }
     }
 
@@ -110,8 +116,10 @@ public class CodeServiceImpl implements CodeService {
         templateList.add(new Template("/templates/mapper.java.ftl", "mapper", "Mapper.java"));
         templateList.add(new Template("/templates/mapper.xml.ftl", "mapper" + File.separator + "xml", "Mapper.xml"));
 
-        templateList.add(new Template("/templates/page.js.ftl", "abs:D:\\hu\\admin-os\\os-vue\\src\\api", ".js"));
-        templateList.add(new Template("/templates/page.vue.ftl", "abs:D:\\hu\\admin-os\\os-vue\\src\\views\\modules", ".vue"));
+        String property = System.getProperty("user.dir");
+        String parent = FileUtil.getParent(property, 1);
+        templateList.add(new Template("/templates/page.js.ftl", "abs:" + parent + "\\os-vue\\src\\api", ".js"));
+        templateList.add(new Template("/templates/page.vue.ftl", "abs:" + parent + "\\os-vue\\src\\views\\modules", ".vue"));
         return templateList;
     }
 

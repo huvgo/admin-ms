@@ -1,12 +1,12 @@
 package com.company.project.modules;
 
 import cn.hutool.core.collection.CollUtil;
+import com.company.project.cache.UserCacheUtil;
 import com.company.project.core.Assert;
 import com.company.project.core.Result;
 import com.company.project.modules.sys.entity.Menu;
 import com.company.project.modules.sys.entity.User;
 import com.company.project.modules.sys.util.MenuUtil;
-import com.company.project.util.UserCache;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -28,7 +28,7 @@ public class LayoutController {
      */
     @GetMapping("/sidebar")
     public Result<List<Menu>> sidebar(@RequestHeader(value = "X-Token") String token) throws JsonProcessingException {
-        User user = UserCache.getUser(token);
+        User user = UserCacheUtil.getCurrentUser(token);
         Assert.requireNonNull(user, "登录过期,请重新登陆");
         List<Menu> menuList = user.getMenuList();
         if (CollUtil.isEmpty(menuList)) {

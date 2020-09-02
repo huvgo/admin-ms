@@ -2,13 +2,21 @@
   <div class="app-container">
     <el-card class="box-card">
       <el-form :inline="true" :model="queryParam" @keyup.enter.native="fetchData()">
-<#list fields as field>
-<#if field.condition>
         <el-form-item>
-          <el-input v-model="queryParam.${field.name}" placeholder="${field.comment}" clearable />
+          <el-input v-model="queryParam.senderId" placeholder="发送人ID" clearable />
         </el-form-item>
-</#if>
-</#list>
+        <el-form-item>
+          <el-input v-model="queryParam.content" placeholder="消息内容" clearable />
+        </el-form-item>
+        <el-form-item>
+          <el-input v-model="queryParam.createDate" placeholder="创建时间" clearable />
+        </el-form-item>
+        <el-form-item>
+          <el-input v-model="queryParam.type" placeholder="类型" clearable />
+        </el-form-item>
+        <el-form-item>
+          <el-input v-model="queryParam.status" placeholder="状态" clearable />
+        </el-form-item>
         <el-form-item>
           <el-button @click="fetchData()">查询</el-button>
           <el-button type="primary" @click="handleAdd()">新增</el-button>
@@ -26,9 +34,12 @@
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" header-align="center" align="center" width="50" />
-        <#list fields as field>
-        <el-table-column label="${field.comment}" prop="${field.name}" />
-        </#list>
+        <el-table-column label="ID" prop="id" />
+        <el-table-column label="发送人ID" prop="senderId" />
+        <el-table-column label="消息内容" prop="content" />
+        <el-table-column label="创建时间" prop="createDate" />
+        <el-table-column label="类型" prop="type" />
+        <el-table-column label="状态" prop="status" />
         <el-table-column align="center" label="操作" width="150">
           <template slot-scope="scope">
             <el-button size="mini" @click="handleEdit(scope)">修改</el-button>
@@ -49,40 +60,28 @@
     <el-dialog :visible.sync="dialogVisible" :title="'新增'">
       <el-form ref="dataForm" :model="dataForm" label-width="80px" label-position="left">
         <el-form-item v-show="false" label="ID" prop="id" />
-<#list fields as field>
-<#if field.name = "id">
         <el-form-item v-show="false" label="ID" prop="id" />
-<#elseif field.element = "2">
-        <el-form-item label="${field.comment}" prop="${field.name}">
-          <el-select v-model="dataForm.${field.name}" style="width:100%" placeholder="请选择">
-            <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            />
-          </el-select>
+        <el-form-item label="发送人ID" prop="senderId">
+          <el-input v-model="dataForm.senderId" placeholder="请输入发送人ID" />
         </el-form-item>
-<#elseif field.element = "3">
-        <el-form-item label="${field.comment}" prop="${field.name}">
+        <el-form-item label="消息内容" prop="content">
+          <el-input v-model="dataForm.content" placeholder="请输入消息内容" />
+        </el-form-item>
+        <el-form-item label="创建时间" prop="createDate">
           <el-date-picker
-            v-model="dataForm.${field.name}"
+            v-model="dataForm.createDate"
             style="width:100%"
             type="date"
             format="yyyy-MM-dd"
             placeholder="选择用户操作日期"
           />
         </el-form-item>
-<#elseif field.element = "4">
-        <el-form-item label="${field.comment}" prop="${field.name}">
-          <el-switch v-model="dataForm.${field.name}" />
+        <el-form-item label="类型" prop="type">
+          <el-input v-model="dataForm.type" placeholder="请输入类型" />
         </el-form-item>
-<#else>
-        <el-form-item label="${field.comment}" prop="${field.name}">
-          <el-input v-model="dataForm.${field.name}" placeholder="请输入${field.comment}" />
+        <el-form-item label="状态" prop="status">
+          <el-switch v-model="dataForm.status" />
         </el-form-item>
-</#if>
-</#list>
       </el-form>
       <div style="text-align:right;">
         <el-button type="danger" @click="dialogVisible=false">取消</el-button>
@@ -93,7 +92,7 @@
 </template>
 
 <script>
-import { add, del, update, getList } from '@/api/${moduleName}/${lowerFirstName}'
+import { add, del, update, getList } from '@/api/sys/notification'
 
 export default {
   filters: {
@@ -110,18 +109,21 @@ export default {
     return {
       dialogVisible: false,
       queryParam: {
-        <#list fields as field>
-        <#if field.condition>
-        ${field.name}: '',
-        </#if>
-        </#list>
+        senderId: '',
+        content: '',
+        createDate: '',
+        type: '',
+        status: '',
         currentPage: 1,
         pageSize: 10
       },
       dataForm: {
-        <#list fields as field>
-        ${field.name}: ''<#if field_has_next>,</#if>
-        </#list>
+        id: '',
+        senderId: '',
+        content: '',
+        createDate: '',
+        type: '',
+        status: ''
       },
       ids: [],
       list: null,

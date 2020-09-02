@@ -75,6 +75,9 @@ public class TableMapper {
             if ("date".equalsIgnoreCase(javaType)) {
                 entity.setElement("3");
             }
+            if ("boolean".equalsIgnoreCase(javaType)) {
+                entity.setElement("4");
+            }
             entity.setJavaType(javaType);
             entity.setName(StrUtil.toCamelCase(entity.getColumnName()));
         });

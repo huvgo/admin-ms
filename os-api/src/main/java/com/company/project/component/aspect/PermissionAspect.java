@@ -1,15 +1,16 @@
 package com.company.project.component.aspect;
 
+import com.company.project.cache.UserCacheService;
 import com.company.project.core.Assert;
 import com.company.project.core.ResultCode;
 import com.company.project.modules.sys.entity.Menu;
 import com.company.project.modules.sys.entity.User;
-import com.company.project.util.UserCache;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,6 +33,8 @@ import java.util.Optional;
 @Slf4j
 public class PermissionAspect {
 
+    @Autowired
+    private UserCacheService userCacheService;
 
 
     @Pointcut("@annotation(com.company.project.component.annotation.Permissions)")
@@ -46,7 +49,7 @@ public class PermissionAspect {
         // 获取用户信息，获取用户拥有的菜单
         HttpServletRequest request = Objects.requireNonNull((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         String token = request.getHeader("X-Token");
-        User user = UserCache.getUser(token);
+        User user = userCacheService.getUser(token);
         Assert.requireNonNull(user, ResultCode.LOGIN_EXPIRED, "登录过期,请重新登陆");
         List<Menu> menuList = user.getMenuList();
 

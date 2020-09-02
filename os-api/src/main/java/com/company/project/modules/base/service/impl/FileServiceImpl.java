@@ -15,6 +15,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.Objects;
 
 @Slf4j
 @Service
@@ -23,7 +25,15 @@ public class FileServiceImpl implements FileService {
     @Value("${admin-os.domain}")
     private String domain;
 
-    public static final String CLASS_PATH = ClassUtils.getDefaultClassLoader().getResource("").getPath();
+    private static String CLASS_PATH;
+
+    static {
+        try {
+            CLASS_PATH = Objects.requireNonNull(FileServiceImpl.class.getClassLoader().getResource("")).toURI().getPath();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     @Override
     public String upload(MultipartFile file, String moduleDir) {
@@ -35,6 +45,7 @@ public class FileServiceImpl implements FileService {
         String relativePath = "/" + moduleDir + "/" + today + "/" + name + "." + suffix;
         // 目录为: classPath路径/static/moduleDir/今天日期/随机文件名
         File local = new File(rootPath, relativePath);
+        log.info("头像上传路径:{}", local.getPath());
         FileUtil.mkParentDirs(local);
         try {
             file.transferTo(local);

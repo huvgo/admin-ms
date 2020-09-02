@@ -5,6 +5,7 @@ import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.company.project.cache.UserCacheService;
 import com.company.project.component.annotation.Log2Db;
 import com.company.project.component.annotation.Permissions;
 import com.company.project.core.Assert;
@@ -15,8 +16,9 @@ import com.company.project.modules.sys.entity.User;
 import com.company.project.modules.sys.service.MenuService;
 import com.company.project.modules.sys.service.RoleService;
 import com.company.project.modules.sys.service.UserService;
-import com.company.project.util.AdminOSUtil;
-import com.company.project.util.UserCache;
+import com.company.project.cache.UserCacheUtil;
+import com.company.project.cache.UserCacheLocalService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -35,16 +37,14 @@ import java.util.Map;
 @RequestMapping("/sys/user")
 public class UserController extends BaseController {
     private final UserService userService;
-    private final MenuService menuService;
-    private final RoleService roleService;
     private final FileService fileService;
+    private final UserCacheService userCacheService;
 
 
-    public UserController(UserService userService, MenuService menuService, RoleService roleService, FileService fileService){
+    public UserController(UserService userService, FileService fileService, UserCacheService userCacheService){
         this.userService = userService;
-        this.menuService = menuService;
-        this.roleService = roleService;
         this.fileService = fileService;
+        this.userCacheService = userCacheService;
     }
 
     @Permissions
@@ -104,18 +104,18 @@ public class UserController extends BaseController {
     public Result<Object> login(@RequestBody User user){
         User currentUser = userService.login(user.getUsername(), user.getPassword());
         // 重新刷新缓存
-        String token = UserCache.getToken(currentUser.getUsername());
+        String token = userCacheService.getToken(currentUser.getUsername());
         if(token == null){
             token = IdUtil.fastSimpleUUID();
-            UserCache.putToken(currentUser.getUsername(), token);
+            userCacheService.putToken(currentUser.getUsername(), token);
         }
-        UserCache.putUser(token, currentUser);
+        userCacheService.putUser(token, currentUser);
         return Result.success(Dict.create().set("token", token));
     }
 
     @GetMapping("/token")
     public Result<Object> token(String token){
-        User user = UserCache.getUser(token);
+        User user = userCacheService.getUser(token);
         Assert.requireNonNull(user, "登录过期,请重新登陆");
         return Result.success(user);
     }
@@ -131,7 +131,7 @@ public class UserController extends BaseController {
         String moduleDir = "avatar";
         String path = fileService.upload(file, moduleDir);
         User user = new User();
-        user.setId(AdminOSUtil.getCurrentUser().getId());
+        user.setId(UserCacheUtil.getCurrentUser().getId());
         user.setAvatar(path);
         userService.updateById(user);
         return Result.success(path);
