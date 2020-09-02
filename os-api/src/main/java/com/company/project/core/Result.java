@@ -12,6 +12,11 @@ public class Result<T> {
     private static final String DEFAULT_SUCCESS_MESSAGE = "操作成功";
     private static final String DEFAULT_FAIL_MESSAGE = "操作失败";
 
+    private int code;
+    private String message;
+    private T data;
+
+
     public static Result<Object> success() {
         return new Result<>().setCode(ResultCode.SUCCESS).setMessage(DEFAULT_SUCCESS_MESSAGE);
     }
@@ -31,10 +36,6 @@ public class Result<T> {
     public static <T> Result<T> fail(ResultCode resultCode, String msg) {
         return new Result<T>().setCode(resultCode).setMessage(msg);
     }
-
-    private int code;
-    private String message;
-    private T data;
 
     public Result<T> setCode(ResultCode resultCode) {
         this.code = resultCode.code();

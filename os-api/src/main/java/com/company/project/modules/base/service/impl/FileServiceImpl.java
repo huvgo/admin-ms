@@ -1,4 +1,4 @@
-package com.company.project.modules.com.service.impl;
+package com.company.project.modules.base.service.impl;
 
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
@@ -6,7 +6,7 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.IdUtil;
 import com.company.project.core.Assert;
 import com.company.project.core.ServiceException;
-import com.company.project.modules.com.service.FileService;
+import com.company.project.modules.base.service.FileService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -30,9 +30,9 @@ public class FileServiceImpl implements FileService {
         Assert.requireTrue(!file.isEmpty(), "文件上传失败！");
         String rootPath = CLASS_PATH + "static";
         String today = DateUtil.format(new DateTime(), "yyyyMMdd");
-        String name = today + IdUtil.fastSimpleUUID();
+        String name = IdUtil.fastSimpleUUID();
         String suffix = FileUtil.getSuffix(file.getOriginalFilename());
-        String relativePath = File.separator + moduleDir + File.separator + today + File.separator + name + "." + suffix;
+        String relativePath = "/" + moduleDir + "/" + today + "/" + name + "." + suffix;
         // 目录为: classPath路径/static/moduleDir/今天日期/随机文件名
         File local = new File(rootPath, relativePath);
         FileUtil.mkParentDirs(local);
@@ -42,7 +42,8 @@ public class FileServiceImpl implements FileService {
             log.error("文件上传失败", e);
             throw new ServiceException("文件上传失败");
         }
-        return domain + relativePath;
+        String url = domain + relativePath;
+        return url;
     }
 
 }

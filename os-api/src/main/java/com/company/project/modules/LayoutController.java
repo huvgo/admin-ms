@@ -5,8 +5,8 @@ import com.company.project.core.Assert;
 import com.company.project.core.Result;
 import com.company.project.modules.sys.entity.Menu;
 import com.company.project.modules.sys.entity.User;
-import com.company.project.modules.sys.service.CacheService;
 import com.company.project.modules.sys.util.MenuUtil;
+import com.company.project.util.UserCache;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -23,19 +23,12 @@ import java.util.stream.Collectors;
 @RequestMapping("/layout")
 public class LayoutController {
 
-
-    private final CacheService cacheService;
-
-    public LayoutController(CacheService cacheService) {
-        this.cacheService = cacheService;
-    }
-
     /**
      * 侧边栏
      */
     @GetMapping("/sidebar")
     public Result<List<Menu>> sidebar(@RequestHeader(value = "X-Token") String token) throws JsonProcessingException {
-        User user = cacheService.getUser(token);
+        User user = UserCache.getUser(token);
         Assert.requireNonNull(user, "登录过期,请重新登陆");
         List<Menu> menuList = user.getMenuList();
         if (CollUtil.isEmpty(menuList)) {

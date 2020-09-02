@@ -1,4 +1,4 @@
-package com.company.project.modules.com.service;
+package com.company.project.modules.base.service;
 
 import org.springframework.web.multipart.MultipartFile;
 

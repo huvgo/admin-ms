@@ -110,8 +110,8 @@ public class CodeServiceImpl implements CodeService {
         templateList.add(new Template("/templates/mapper.java.ftl", "mapper", "Mapper.java"));
         templateList.add(new Template("/templates/mapper.xml.ftl", "mapper" + File.separator + "xml", "Mapper.xml"));
 
-        templateList.add(new Template("/templates/page.js.ftl", "abs:C:\\Users\\HuWei\\Github Projects\\admin-os\\os-vue\\src\\api", ".js"));
-        templateList.add(new Template("/templates/page.vue.ftl", "abs:C:\\Users\\HuWei\\Github Projects\\admin-os\\os-vue\\src\\views\\modules", ".vue"));
+        templateList.add(new Template("/templates/page.js.ftl", "abs:D:\\hu\\admin-os\\os-vue\\src\\api", ".js"));
+        templateList.add(new Template("/templates/page.vue.ftl", "abs:D:\\hu\\admin-os\\os-vue\\src\\views\\modules", ".vue"));
         return templateList;
     }
 

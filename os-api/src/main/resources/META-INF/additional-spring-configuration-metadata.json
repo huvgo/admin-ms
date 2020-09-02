@@ -1,0 +1,10 @@
+{
+  "properties": [
+    {
+      "name": "admin-os.domain",
+      "type": "java.lang.String",
+      "description": "Description for admin-os.domain.",
+      "defaultValue": "http://127.0.0.1:8080"
+    }
+  ]
+}

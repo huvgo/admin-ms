@@ -9,7 +9,7 @@ import org.apache.ibatis.annotations.Mapper;
  * </p>
  *
  * @author author
- * @since 2020-08-30
+ * @since 2020-09-02
  */
 @Mapper
 public interface LogMapper extends BaseMapper<Log> {

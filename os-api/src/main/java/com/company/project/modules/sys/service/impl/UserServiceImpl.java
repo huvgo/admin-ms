@@ -33,13 +33,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     private final MenuService menuService;
     private final RoleService roleService;
 
-    public UserServiceImpl(MenuService menuService, RoleService roleService) {
+    public UserServiceImpl(MenuService menuService, RoleService roleService){
         this.menuService = menuService;
         this.roleService = roleService;
     }
 
     @Override
-    public User getByUsername(String username) {
+    public User getByUsername(String username){
         QueryWrapper<User> queryWrapper = new QueryWrapper<User>().eq("username", username);
 
         return this.getOne(queryWrapper);
@@ -47,7 +47,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     @SuppressWarnings("all")
-    public User login(String username, String password) {
+    public User login(String username, String password){
         User user = this.getByUsername(username);
         Assert.requireNonNull(user, "账号或密码不正确");
         password = SecureUtil.md5().setSalt(user.getSalt().getBytes()).digestHex(password);
@@ -55,15 +55,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         // 菜单权限
         List<Integer> roleIds = user.getRoleIds();
         List<Menu> menuList = null;
-        if (roleIds.contains(UserConst.SUPER_ADMIN_ROLE_ID)) {
+        if(roleIds.contains(UserConst.SUPER_ADMIN_ROLE_ID)){
             menuList = menuService.list();
-        } else {
+        } else{
             List<Role> roles = roleService.listByIds(roleIds);
             HashSet<Integer> menuIds = new HashSet<>();
             roles.forEach(role -> menuIds.addAll(role.getMenuIds()));
-            if (!menuIds.isEmpty()) {
+            if(!menuIds.isEmpty()){
                 menuService.list(new QueryWrapper<Menu>().in("id", menuIds));
-            } else {
+            } else{
                 menuList = Collections.EMPTY_LIST;
             }
         }
@@ -72,7 +72,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
-    public void encodePassword(User user) {
+    public void encodePassword(User user){
         String password = user.getPassword();
         Assert.requireNonNull(password, "密码不能为空");
         String salt = IdUtil.fastSimpleUUID();

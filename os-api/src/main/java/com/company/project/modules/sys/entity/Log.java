@@ -1,7 +1,7 @@
 package com.company.project.modules.sys.entity;
 
-import com.company.project.core.base.BaseEntity;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.company.project.core.base.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -14,7 +14,7 @@ import java.util.Date;
  * </p>
  *
  * @author author
- * @since 2020-08-30
+ * @since 2020-09-02
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -22,40 +22,45 @@ import java.util.Date;
 @TableName(value = "sys_log")
 public class Log extends BaseEntity<Integer> {
 
-        /**
-        * 操作用户ID
-        */
-        private String operationUserId;
+    /**
+     * 操作人
+     */
+    private String operator;
 
-        /**
-        * 用户操作
-        */
-        private String operation;
+    /**
+     * 操作用户ID
+     */
+    private Integer operatorId;
 
-        /**
-        * 请求方法
-        */
-        private String method;
+    /**
+     * 用户操作
+     */
+    private String operation;
 
-        /**
-        * 请求参数
-        */
-        private String params;
+    /**
+     * 请求方法
+     */
+    private String method;
 
-        /**
-        * 执行时长(毫秒)
-        */
-        private Long time;
+    /**
+     * 请求参数
+     */
+    private String params;
 
-        /**
-        * IP地址
-        */
-        private String ip;
+    /**
+     * 执行时长(毫秒)
+     */
+    private Long time;
 
-        /**
-        * 创建时间
-        */
-        private Date createDate;
+    /**
+     * IP地址
+     */
+    private String ip;
+
+    /**
+     * 创建时间
+     */
+    private Date createDate;
 
 }
 

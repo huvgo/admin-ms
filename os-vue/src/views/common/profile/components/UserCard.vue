@@ -8,6 +8,7 @@
       <div class="box-center">
         <pan-thumb :image="user.avatar" :height="'100px'" :width="'100px'" :hoverable="false">
           <el-upload
+            :headers="{'X-Token':token}"
             class="avatar-uploader"
             :action="uploadUrl"
             :show-file-list="false"
@@ -66,6 +67,7 @@
 
 <script>
 import PanThumb from '@/components/PanThumb'
+import { getToken } from '@/utils/auth'
 
 export default {
   components: { PanThumb },
@@ -84,7 +86,35 @@ export default {
   },
   data() {
     return {
-      uploadUrl: 'http://localhost:9090/dev-api/com/file/upload?moduleDir=avatar'
+      uploadUrl: `http://localhost:9090/dev-api/sys/user/upload`,
+      token: getToken()
+    }
+  },
+  methods: {
+    // 文件上传
+    handleAvatarSuccess(response) {
+      if (response && response.code === 20000) {
+        this.$message.success(response.message)
+      } else {
+        this.$message.error(response.message)
+      }
+    },
+    // 文件上传前校验
+    beforeAvatarUpload(file) {
+      const fileName = file.name
+      const extension = fileName.substr(fileName.lastIndexOf('.') + 1)
+      const isImg = ['png', 'jpg', 'jpeg', 'gif'].includes(extension)
+      if (isImg) {
+        const fileSize = file.size / 1024 / 1024 < 10
+        if (!fileSize) {
+          this.$message.error('上传文件大小不能超过 10MB!')
+          return false
+        }
+        return true
+      } else {
+        this.$message.error('只能上传 jpg、jpeg、png、gif 格式!')
+        return false
+      }
     }
   }
 }

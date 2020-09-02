@@ -12,7 +12,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
  * </p>
  *
  * @author author
- * @since 2020-08-30
+ * @since 2020-09-02
  */
 @Service
 public class LogServiceImpl extends ServiceImpl<LogMapper, Log> implements LogService {
