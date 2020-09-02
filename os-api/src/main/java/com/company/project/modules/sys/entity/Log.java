@@ -2,6 +2,7 @@ package com.company.project.modules.sys.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.company.project.core.base.BaseEntity;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -60,6 +61,7 @@ public class Log extends BaseEntity<Integer> {
     /**
      * 创建时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createDate;
 
 }

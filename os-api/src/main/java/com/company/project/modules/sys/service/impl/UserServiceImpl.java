@@ -62,7 +62,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             HashSet<Integer> menuIds = new HashSet<>();
             roles.forEach(role -> menuIds.addAll(role.getMenuIds()));
             if(!menuIds.isEmpty()){
-                menuService.list(new QueryWrapper<Menu>().in("id", menuIds));
+                menuList = menuService.list(new QueryWrapper<Menu>().in("id", menuIds));
             } else{
                 menuList = Collections.EMPTY_LIST;
             }

@@ -58,7 +58,7 @@ public class LogAspect {
         log.setParams(objectMapper.writeValueAsString(point.getArgs()));
         log.setOperator(AdminOSUtil.getCurrentUser().getUsername());
         log.setOperatorId(AdminOSUtil.getCurrentUser().getId());
-        log.setOperation(point.getSignature().getDeclaringTypeName() + "." + point.getSignature().getName());
+        log.setOperation(request.getRequestURL().toString());
         log.setTime(timeDiff);
         log.setCreateDate(new Date());
         logService.save(log);
