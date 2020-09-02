@@ -23,6 +23,11 @@ public class UserCacheLocalService implements UserCacheService {
         return userCache.get(token);
     }
 
+    @Override
+    public void deleteUser(String token) {
+        userCache.remove(token);
+    }
+
     public synchronized void putToken(String key, String token) {
         tokenCache.put(key, token);
     }

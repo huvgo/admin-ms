@@ -32,6 +32,11 @@ public class UserCacheRedisService implements UserCacheService {
     }
 
     @Override
+    public void deleteUser(String token) {
+        redisTemplate.opsForHash().delete("user", token);
+    }
+
+    @Override
     public void putToken(String key, String token) {
         redisTemplate.setHashValueSerializer(new StringRedisSerializer());
         HashOperations<String, String, String> stringObjectObjectHashOperations = redisTemplate.opsForHash();

@@ -8,6 +8,8 @@ public interface UserCacheService {
 
     User getUser(String token);
 
+    void deleteUser(String token);
+
     void putToken(String key, String token);
 
     String getToken(String key);
