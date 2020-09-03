@@ -1,6 +1,7 @@
 package com.company.project.modules.sys.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.company.project.component.annotation.Log2Db;
 import com.company.project.component.annotation.Permissions;
 import com.company.project.core.Result;
 import com.company.project.core.ServiceException;
@@ -29,6 +30,7 @@ public class MenuController {
 
     @Permissions
     @PostMapping
+    @Log2Db
     public Result<Object> post(@RequestBody Menu menu) {
         if (menu.getParentId() == 0 && menu.getType() != 0) {
             throw new ServiceException("菜单或按钮必须选择上级菜单");
@@ -39,6 +41,7 @@ public class MenuController {
 
     @Permissions
     @DeleteMapping
+    @Log2Db
     public Result<Object> delete(@RequestBody List<Long> ids) {
         menuService.removeByIds(ids);
         return Result.success();
@@ -46,6 +49,7 @@ public class MenuController {
 
     @Permissions
     @PutMapping
+    @Log2Db
     public Result<Object> put(@RequestBody Menu menu) {
         menuService.updateById(menu);
         return Result.success();

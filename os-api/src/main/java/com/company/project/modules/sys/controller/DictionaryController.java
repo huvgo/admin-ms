@@ -1,7 +1,9 @@
 package com.company.project.modules.sys.controller;
 
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.company.project.component.annotation.Log2Db;
 import com.company.project.core.Result;
 import com.company.project.modules.sys.entity.Dictionary;
 import com.company.project.modules.sys.entity.Option;
@@ -11,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * <p>
@@ -26,47 +27,50 @@ import java.util.Objects;
 public class DictionaryController {
     private final DictionaryService dictionaryService;
 
-    public DictionaryController(DictionaryService dictionaryService) {
+    public DictionaryController(DictionaryService dictionaryService){
         this.dictionaryService = dictionaryService;
     }
 
     @PostMapping
-    public Result<?> post(@RequestBody Dictionary dictionary) {
+    @Log2Db
+    public Result<?> post(@RequestBody Dictionary dictionary){
         dictionaryService.save(dictionary);
         return Result.success();
     }
 
     @DeleteMapping
-    public Result<?> delete(@RequestBody List<Long> ids) {
+    @Log2Db
+    public Result<?> delete(@RequestBody List<Long> ids){
         dictionaryService.removeByIds(ids);
         return Result.success();
     }
 
     @PutMapping
-    public Result<?> put(@RequestBody Dictionary dictionary) {
+    @Log2Db
+    public Result<?> put(@RequestBody Dictionary dictionary){
         dictionaryService.updateById(dictionary);
         return Result.success();
     }
 
     @GetMapping("/{id}")
-    public Result<Dictionary> get(@PathVariable Integer id) {
+    public Result<Dictionary> get(@PathVariable Integer id){
         Dictionary dictionary = dictionaryService.getById(id);
         return Result.success(dictionary);
     }
 
     @GetMapping
-    public Result<Page<Dictionary>> get(@RequestParam(defaultValue = "0") Integer current, @RequestParam(defaultValue = "10") Integer size, @RequestParam Map<String, Object> params) {
+    public Result<Page<Dictionary>> get(@RequestParam(defaultValue = "0") Integer current, @RequestParam(defaultValue = "10") Integer size, @RequestParam Map<String, Object> params){
         Page<Dictionary> page = dictionaryService.page(new Page<>(current, size, true), new QueryWrapper<Dictionary>()
-                .eq(Objects.nonNull(params.get("key")), "key", params.get("key"))
+                .like(!StrUtil.isBlankIfStr(params.get("name")), "name", params.get("name"))
         );
         return Result.success(page);
     }
 
     @GetMapping("/option")
-    public Result<HashMap<String, List<Option>>> option(@RequestParam String codes) {
+    public Result<HashMap<String, List<Option>>> option(@RequestParam String codes){
         String[] codeArray = codes.split(",");
         HashMap<String, List<Option>> map = new HashMap<>();
-        for (String code : codeArray) {
+        for(String code : codeArray){
             Dictionary dictionary = dictionaryService.getByCode(code);
             List<Option> options = dictionary.getOptions();
             map.put(code + "Options", options);

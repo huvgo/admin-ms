@@ -47,9 +47,14 @@ service.interceptors.response.use(
 
     // if the custom code is not 20000, it is judged as an error.
     if (res.code !== 20000) {
+      debugger
+      let type = 'error'
+      if (res.code.toString().indexOf('5000') === 0) {
+        type = 'warning'
+      }
       Message({
         message: res.message || 'Error',
-        type: 'error',
+        type: type,
         duration: 5 * 1000
       })
 

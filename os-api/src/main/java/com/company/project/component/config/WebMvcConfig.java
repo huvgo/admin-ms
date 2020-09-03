@@ -82,7 +82,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
             ServletUtil.write(response, objectMapper.writeValueAsString(fail), "application/json;charset=UTF-8");
             return false;
         } else {
-            User user = UserCacheUtil.getCurrentUser(token);
+            User user = UserCacheUtil.getUser(token);
             if (user == null) {
                 Result<Object> fail = Result.fail(ResultCode.LOGIN_EXPIRED, "您的登录已过期,请重新登陆");
                 ServletUtil.write(response, objectMapper.writeValueAsString(fail), "application/json;charset=UTF-8");

@@ -39,7 +39,7 @@ public class UserController extends BaseController {
     private final UserCacheService userCacheService;
 
 
-    public UserController(UserService userService, FileService fileService, UserCacheService userCacheService) {
+    public UserController(UserService userService, FileService fileService, UserCacheService userCacheService){
         this.userService = userService;
         this.fileService = fileService;
         this.userCacheService = userCacheService;
@@ -48,7 +48,7 @@ public class UserController extends BaseController {
     @Permissions
     @PostMapping
     @Log2Db
-    public Result<Object> post(@RequestBody User user) {
+    public Result<Object> post(@RequestBody User user){
         userService.encodePassword(user);
         userService.save(user);
         return Result.success();
@@ -57,7 +57,7 @@ public class UserController extends BaseController {
     @Permissions
     @DeleteMapping
     @Log2Db
-    public Result<Object> delete(@RequestBody List<Long> ids) {
+    public Result<Object> delete(@RequestBody List<Long> ids){
         userService.removeByIds(ids);
         return Result.success();
     }
@@ -65,13 +65,19 @@ public class UserController extends BaseController {
     @Permissions
     @PutMapping
     @Log2Db
-    public Result<Object> put(@RequestBody User user, @RequestHeader("X-Token") String token) {
-        if (StrUtil.isNotBlank(user.getPassword())) {
+    public Result<Object> put(@RequestBody User user){
+        if(StrUtil.isNotBlank(user.getPassword())){
             userService.encodePassword(user);
         }
         // 冻结状态
-        if (!user.getStatus()) {
-            userCacheService.deleteUser(token);
+        boolean status = user.getStatus();
+        if(!status){
+            boolean isNotOwn = !user.getId().equals(UserCacheUtil.getCurrentUser().getId());
+            Assert.requireTrue(isNotOwn, ResultCode.WARNING, "您不能冻结自己的账号");
+            String token = userCacheService.getToken(user.getUsername());
+            if(token != null){
+                userCacheService.deleteUser(token);
+            }
         }
         userService.updateById(user);
         return Result.success();
@@ -79,20 +85,23 @@ public class UserController extends BaseController {
 
     @Permissions
     @GetMapping("/{id}")
-    @Log2Db
-    public Result<User> get(@PathVariable Integer id) {
+    public Result<User> get(@PathVariable Integer id){
         User user = userService.getById(id);
         return Result.success(user);
     }
 
     @Permissions
     @GetMapping
-    @Log2Db
-    public Result<Page<User>> get(@RequestParam(defaultValue = "0") Integer currentPage, @RequestParam(defaultValue = "10") Integer pageSize, @RequestParam Map<String, Object> params) {
-        boolean deptIdCondition = StrUtil.isNotEmpty((String) params.get("deptId"));
+    public Result<Page<User>> get(@RequestParam(defaultValue = "0") Integer currentPage, @RequestParam(defaultValue = "10") Integer pageSize, @RequestParam Map<String, Object> params){
 
-        QueryWrapper<User> queryWrapper = new QueryWrapper<User>().eq(deptIdCondition, "dept_Id", params.get("deptId")).or()
-                .apply(deptIdCondition, "FIND_IN_SET({0},dept_Ids)", params.get("deptId"));
+        boolean deptIdCondition = StrUtil.isNotEmpty((String) params.get("deptId"));
+        boolean usernameCondition = StrUtil.isNotEmpty((String) params.get("username"));
+        boolean mobileCondition = StrUtil.isNotEmpty((String) params.get("mobile"));
+
+        QueryWrapper<User> queryWrapper = new QueryWrapper<User>()
+                .like(usernameCondition, "username", params.get("username"))
+                .eq(mobileCondition, "mobile", params.get("mobile"))
+                .and(deptIdCondition, i -> i.eq("dept_Id", params.get("deptId")).or().apply("FIND_IN_SET({0},dept_Ids)", params.get("deptId")));
         Page<User> page = userService.page(new Page<>(currentPage, pageSize, true), queryWrapper);
         return Result.success(page);
     }
@@ -103,14 +112,15 @@ public class UserController extends BaseController {
     加密后密码:44944f63ddca4e2d1c77329df9e0d751
      */
     @PostMapping("/login")
-    public Result<Object> login(@RequestBody User user) {
+    public Result<Object> login(@RequestBody User user){
         User currentUser = userService.login(user.getUsername(), user.getPassword());
-        if (!currentUser.getStatus()) {
-            throw new ServiceException(ResultCode.FAIL, "您的账号因异常情况被冻结，请联系管理员");
+        boolean status = currentUser.getStatus();
+        if(!status){
+            throw new ServiceException(ResultCode.WARNING, "您的账号因异常情况被冻结，请联系管理员");
         }
         // 重新刷新缓存
         String token = userCacheService.getToken(currentUser.getUsername());
-        if (token == null) {
+        if(token == null){
             token = IdUtil.fastSimpleUUID();
             userCacheService.putToken(currentUser.getUsername(), token);
         }
@@ -119,20 +129,20 @@ public class UserController extends BaseController {
     }
 
     @GetMapping("/token")
-    public Result<Object> token(String token) {
+    public Result<Object> token(String token){
         User user = userCacheService.getUser(token);
         Assert.requireNonNull(user, "登录过期,请重新登陆");
         return Result.success(user);
     }
 
     @PostMapping("/logout")
-    public Result<Object> logout() {
+    public Result<Object> logout(){
         return Result.success();
     }
 
 
     @PostMapping("/upload")
-    public Result<Object> upload(@RequestParam("file") MultipartFile file) {
+    public Result<Object> upload(@RequestParam("file") MultipartFile file){
         String moduleDir = "avatar";
         String path = fileService.upload(file, moduleDir);
         User user = new User();

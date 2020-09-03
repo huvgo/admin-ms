@@ -57,13 +57,13 @@ public class ${upperFirstName}Controller {
 
     @GetMapping
     public Result<Page<${upperFirstName}>> get(@RequestParam(defaultValue = "0") Integer current, @RequestParam(defaultValue = "10") Integer size, @RequestParam Map<String, Object> params) {
-        Page<${upperFirstName}> page = ${lowerFirstName}Service.page(new Page<>(current, size, true), new QueryWrapper<${upperFirstName}>()
-            <#list fields as field>
-                <#if field.condition>
+        QueryWrapper<${upperFirstName}> queryWrapper = new QueryWrapper<>()
+        <#list fields as field>
+            <#if field.condition>
                 .eq(StrUtil.isNotBlank((String)params.get("${field.name}")), "${field.columnName}", params.get("${field.name}"))
-                </#if>
-            </#list>
-        );
+            </#if>
+        </#list>
+        Page<${upperFirstName}> page = ${lowerFirstName}Service.page(new Page<>(current, size, true), queryWrapper);
         return Result.success(page);
     }
 }

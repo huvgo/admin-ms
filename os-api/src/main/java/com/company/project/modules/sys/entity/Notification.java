@@ -2,11 +2,12 @@ package com.company.project.modules.sys.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.company.project.core.base.BaseEntity;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
-import java.security.Timestamp;
+import java.util.Date;
 
 /**
  * <p>
@@ -25,6 +26,11 @@ public class Notification extends BaseEntity {
     /**
      * 发送人ID
      */
+    private String sender;
+
+    /**
+     * 发送人ID
+     */
     private Integer senderId;
 
     /**
@@ -35,7 +41,8 @@ public class Notification extends BaseEntity {
     /**
      * 创建时间
      */
-    private Timestamp createDate;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    private Date createDate;
 
     /**
      * 类型

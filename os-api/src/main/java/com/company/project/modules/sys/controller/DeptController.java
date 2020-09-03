@@ -26,45 +26,49 @@ import java.util.Map;
 public class DeptController {
     private final DeptService deptService;
 
-    public DeptController(DeptService deptService) {
+    public DeptController(DeptService deptService){
         this.deptService = deptService;
     }
 
     @PostMapping
-    public Result<?> post(@RequestBody Dept dept) {
+    public Result<?> post(@RequestBody Dept dept){
         deptService.save(dept);
         return Result.success();
     }
 
     @DeleteMapping
-    public Result<?> delete(@RequestBody List<Long> ids) {
+    public Result<?> delete(@RequestBody List<Long> ids){
         deptService.removeByIds(ids);
         return Result.success();
     }
 
     @PutMapping
-    public Result<?> put(@RequestBody Dept dept) {
+    public Result<?> put(@RequestBody Dept dept){
         deptService.updateById(dept);
         return Result.success();
     }
 
     @GetMapping("/{id}")
-    public Result<Dept> get(@PathVariable Integer id) {
+    public Result<Dept> get(@PathVariable Integer id){
         Dept dept = deptService.getById(id);
         return Result.success(dept);
     }
 
     @GetMapping
-    public Result<Page<Dept>> get(@RequestParam(defaultValue = "0") Integer current, @RequestParam(defaultValue = "10") Integer size, @RequestParam Map<String, Object> params) {
+    public Result<Page<Dept>> get(@RequestParam(defaultValue = "0") Integer current, @RequestParam(defaultValue = "10") Integer size, @RequestParam Map<String, Object> params){
         boolean deptIdCondition = StrUtil.isNotEmpty((String) params.get("deptId"));
-        Page<Dept> page = deptService.page(new Page<>(current, size, true), new QueryWrapper<Dept>().eq(deptIdCondition, "id", params.get("deptId")).or()
-                .apply(deptIdCondition, "FIND_IN_SET({0},parent_ids)", params.get("deptId"))
-        );
+        boolean nameCondition = StrUtil.isNotEmpty((String) params.get("name"));
+
+        QueryWrapper<Dept> queryWrapper = new QueryWrapper<Dept>()
+                .like(nameCondition, "name", params.get("name"))
+                .and(deptIdCondition, i -> i.eq("id", params.get("deptId")).or().apply("FIND_IN_SET({0},parent_ids)", params.get("deptId")));
+
+        Page<Dept> page = deptService.page(new Page<>(current, size, true), queryWrapper);
         return Result.success(page);
     }
 
     @GetMapping("/tree")
-    public Result<List<Dept>> get() {
+    public Result<List<Dept>> get(){
         List<Dept> list = deptService.list();
         List<Dept> tree = MenuUtil.buildTree(list, 0);
         return Result.success(tree);
@@ -72,10 +76,10 @@ public class DeptController {
 
 
     @GetMapping("/map")
-    public Result<Map<Integer, String>> option() {
+    public Result<Map<Integer, String>> option(){
         Map<Integer, String> map = new HashMap<>();
         List<Dept> list = deptService.list(new QueryWrapper<Dept>().select("id", "name"));
-        for (Dept dept : list) {
+        for(Dept dept : list){
             map.put(dept.getId(), dept.getName());
         }
         return Result.success(map);

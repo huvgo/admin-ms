@@ -3,13 +3,7 @@
     <el-card class="box-card">
       <el-form :inline="true" :model="queryParam" @keyup.enter.native="fetchData()">
         <el-form-item>
-          <el-input v-model="queryParam.senderId" placeholder="发送人ID" clearable />
-        </el-form-item>
-        <el-form-item>
-          <el-input v-model="queryParam.content" placeholder="消息内容" clearable />
-        </el-form-item>
-        <el-form-item>
-          <el-input v-model="queryParam.createDate" placeholder="创建时间" clearable />
+          <el-input v-model="queryParam.sender" placeholder="发送人" clearable />
         </el-form-item>
         <el-form-item>
           <el-input v-model="queryParam.type" placeholder="类型" clearable />
@@ -35,11 +29,20 @@
       >
         <el-table-column type="selection" header-align="center" align="center" width="50" />
         <el-table-column label="ID" prop="id" />
-        <el-table-column label="发送人ID" prop="senderId" />
+        <el-table-column label="发送人" prop="sender" />
         <el-table-column label="消息内容" prop="content" />
         <el-table-column label="创建时间" prop="createDate" />
         <el-table-column label="类型" prop="type" />
-        <el-table-column label="状态" prop="status" />
+        <el-table-column label="状态" align="center" prop="status" width="150">
+          <template slot-scope="{row}">
+            <!-- <el-tag :type="row.status | statusFilter">{{ row.status?'正常':'冻结' }}</el-tag> -->
+            <el-switch
+              v-model="row.status"
+              :active-icon-class="row.status?'el-icon-success':'el-icon-error'"
+              @change="handleSwitchChange(row)"
+            />
+          </template>
+        </el-table-column>
         <el-table-column align="center" label="操作" width="150">
           <template slot-scope="scope">
             <el-button size="mini" @click="handleEdit(scope)">修改</el-button>
@@ -61,20 +64,8 @@
       <el-form ref="dataForm" :model="dataForm" label-width="80px" label-position="left">
         <el-form-item v-show="false" label="ID" prop="id" />
         <el-form-item v-show="false" label="ID" prop="id" />
-        <el-form-item label="发送人ID" prop="senderId">
-          <el-input v-model="dataForm.senderId" placeholder="请输入发送人ID" />
-        </el-form-item>
         <el-form-item label="消息内容" prop="content">
           <el-input v-model="dataForm.content" placeholder="请输入消息内容" />
-        </el-form-item>
-        <el-form-item label="创建时间" prop="createDate">
-          <el-date-picker
-            v-model="dataForm.createDate"
-            style="width:100%"
-            type="date"
-            format="yyyy-MM-dd"
-            placeholder="选择用户操作日期"
-          />
         </el-form-item>
         <el-form-item label="类型" prop="type">
           <el-input v-model="dataForm.type" placeholder="请输入类型" />
@@ -109,9 +100,7 @@ export default {
     return {
       dialogVisible: false,
       queryParam: {
-        senderId: '',
-        content: '',
-        createDate: '',
+        sender: '',
         type: '',
         status: '',
         currentPage: 1,
@@ -123,7 +112,7 @@ export default {
         content: '',
         createDate: '',
         type: '',
-        status: ''
+        status: true
       },
       ids: [],
       list: null,
@@ -192,6 +181,16 @@ export default {
     handleSelectionChange(ids) {
       this.ids = ids.map(item => {
         return item.id
+      })
+    },
+    handleSwitchChange(row) {
+      update(row).then((response) => {
+        this.dialogVisible = false
+        this.fetchData()
+        this.$message({ message: response.message, type: 'success' })
+      }, (err) => {
+        console.log(err)
+        row.status = true
       })
     }
   }

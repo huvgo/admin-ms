@@ -11,6 +11,9 @@
               <el-input v-model="queryParam.username" placeholder="用户名" clearable />
             </el-form-item>
             <el-form-item>
+              <el-input v-model="queryParam.mobile" placeholder="手机号" clearable />
+            </el-form-item>
+            <el-form-item>
               <el-button @click="fetchData()">查询</el-button>
               <el-button type="primary" @click="handleAdd()">新增</el-button>
               <el-button
@@ -50,10 +53,15 @@
             </el-table-column>
             <el-table-column label="状态" align="center" prop="status" width="150">
               <template slot-scope="{row}">
-                <el-tag :type="row.status | statusFilter">{{ row.status?'正常':'冻结' }}</el-tag>
+                <!-- <el-tag :type="row.status | statusFilter">{{ row.status?'正常':'冻结' }}</el-tag> -->
+                <el-switch
+                  v-model="row.status"
+                  :active-icon-class="row.status?'el-icon-success':'el-icon-error'"
+                  @change="handleSwitchChange(row)"
+                />
               </template>
             </el-table-column>
-            <el-table-column align="center" label="操作" width="150">
+            <el-table-column align="center" label="操作" width="250">
               <template slot-scope="scope">
                 <el-button size="mini" @click="handleEdit(scope)">修改</el-button>
                 <el-button type="danger" size="mini" @click="handleDelete(scope)">删除</el-button>
@@ -100,11 +108,7 @@
                   />
                 </el-form-item>
                 <el-form-item label="状态" size="mini" prop="status">
-                  <el-switch
-                    v-model="dataForm.status"
-                    active-color="#13ce66"
-                    inactive-color="#ff4949"
-                  />
+                  <el-switch v-model="dataForm.status" />
                 </el-form-item>
                 <el-form-item label="角色配置" prop="roleIds">
                   <el-select
@@ -189,7 +193,9 @@ export default {
     return {
       dialogVisible: false,
       queryParam: {
+        username: '',
         deptId: '',
+        mobile: '',
         currentPage: 1,
         pageSize: 10
       },
@@ -301,6 +307,16 @@ export default {
       const parentId = val[val.length - 1]
       this.dataForm.deptId = parentId
       this.dataForm.deptIds = val
+    },
+    handleSwitchChange(row) {
+      update(row).then((response) => {
+        this.dialogVisible = false
+        this.fetchData()
+        this.$message({ message: response.message, type: 'success' })
+      }, (err) => {
+        console.log(err)
+        row.status = true
+      })
     }
   }
 }

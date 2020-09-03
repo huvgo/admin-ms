@@ -1,7 +1,9 @@
 package com.company.project.modules.sys.controller;
 
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.company.project.component.annotation.Log2Db;
 import com.company.project.component.annotation.Permissions;
 import com.company.project.core.Result;
 import com.company.project.modules.sys.entity.Role;
@@ -25,50 +27,53 @@ import java.util.Objects;
 public class RoleController {
     private final RoleService roleService;
 
-    public RoleController(RoleService roleService) {
+    public RoleController(RoleService roleService){
         this.roleService = roleService;
     }
 
     @Permissions
     @PostMapping
-    public Result<?> post(@RequestBody Role role) {
+    @Log2Db
+    public Result<?> post(@RequestBody Role role){
         roleService.save(role);
         return Result.success();
     }
 
     @Permissions
     @DeleteMapping
-    public Result<?> delete(@RequestBody List<Long> ids) {
+    @Log2Db
+    public Result<?> delete(@RequestBody List<Long> ids){
         roleService.removeByIds(ids);
         return Result.success();
     }
 
     @Permissions
     @PutMapping
-    public Result<?> put(@RequestBody Role role) {
+    @Log2Db
+    public Result<?> put(@RequestBody Role role){
         roleService.updateById(role);
         return Result.success();
     }
 
     @Permissions
     @GetMapping("/{id}")
-    public Result<Role> get(@PathVariable Integer id) {
+    public Result<Role> get(@PathVariable Integer id){
         Role role = roleService.getById(id);
         return Result.success(role);
     }
 
     @Permissions
     @GetMapping
-    public Result<Page<Role>> get(@RequestParam(defaultValue = "0") Integer current, @RequestParam(defaultValue = "10") Integer size, @RequestParam Map<String, Object> params) {
-        Page<Role> page = roleService.page(new Page<>(current, size, true), new QueryWrapper<Role>()
-                .eq(Objects.nonNull(params.get("id")), "id", params.get("id"))
-        );
+    public Result<Page<Role>> get(@RequestParam(defaultValue = "0") Integer current, @RequestParam(defaultValue = "10") Integer size, @RequestParam Map<String, Object> params){
+        QueryWrapper<Role> queryWrapper = new QueryWrapper<Role>()
+                .like(!StrUtil.isBlankIfStr(params.get("name")), "name", params.get("name"));
+        Page<Role> page = roleService.page(new Page<>(current, size, true), queryWrapper);
         return Result.success(page);
     }
 
     @GetMapping("/option")
-    public Result<List<Role>> option() {
-        List<Role> list = roleService.list(new QueryWrapper<Role>().select("id","name"));
+    public Result<List<Role>> option(){
+        List<Role> list = roleService.list(new QueryWrapper<Role>().select("id", "name"));
         return Result.success(list);
     }
 }

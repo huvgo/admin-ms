@@ -23,7 +23,7 @@ public class UserCacheUtil {
         return userCacheService.getUser(token);
     }
 
-    public static User getCurrentUser(String token) {
+    public static User getUser(String token) {
         return userCacheService.getUser(token);
     }
 

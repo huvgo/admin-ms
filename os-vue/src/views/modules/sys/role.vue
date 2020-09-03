@@ -3,7 +3,7 @@
     <el-card class="box-card">
       <el-form :inline="true" :model="queryParam" @keyup.enter.native="fetchData()">
         <el-form-item>
-          <el-input v-model="queryParam.id" placeholder="ID" clearable />
+          <el-input v-model="queryParam.name" placeholder="角色名称" clearable />
         </el-form-item>
         <el-form-item>
           <el-button @click="fetchData()">查询</el-button>
@@ -112,6 +112,7 @@ export default {
     return {
       dialogVisible: false,
       queryParam: {
+        name: '',
         currentPage: 1,
         pageSize: 10
       },

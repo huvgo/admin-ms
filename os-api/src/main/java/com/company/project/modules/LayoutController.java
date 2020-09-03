@@ -28,7 +28,7 @@ public class LayoutController {
      */
     @GetMapping("/sidebar")
     public Result<List<Menu>> sidebar(@RequestHeader(value = "X-Token") String token) throws JsonProcessingException {
-        User user = UserCacheUtil.getCurrentUser(token);
+        User user = UserCacheUtil.getUser(token);
         Assert.requireNonNull(user, "登录过期,请重新登陆");
         List<Menu> menuList = user.getMenuList();
         if (CollUtil.isEmpty(menuList)) {

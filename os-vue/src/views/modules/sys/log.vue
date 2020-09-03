@@ -1,58 +1,64 @@
 <template>
   <div class="app-container">
-    <el-form :inline="true" :model="queryParam" @keyup.enter.native="fetchData()">
-      <el-form-item>
-        <el-input v-model="queryParam.operator" placeholder="操作人" clearable />
-      </el-form-item>
-      <el-form-item>
-        <el-input v-model="queryParam.operation" placeholder="用户操作" clearable />
-      </el-form-item>
-      <el-form-item>
-        <el-input v-model="queryParam.method" placeholder="请求方法" clearable />
-      </el-form-item>
-      <el-form-item>
-        <el-input v-model="queryParam.params" placeholder="请求参数" clearable />
-      </el-form-item>
-      <el-form-item>
-        <el-button @click="fetchData()">查询</el-button>
-        <el-button type="primary" @click="handleAdd()">新增</el-button>
-        <el-button type="danger" :disabled="ids.length <= 0" @click="handleBatchDelete()">批量删除</el-button>
-      </el-form-item>
-    </el-form>
+    <el-card class="box-card">
+      <el-form :inline="true" :model="queryParam" @keyup.enter.native="fetchData()">
+        <el-form-item>
+          <el-input v-model="queryParam.operator" placeholder="操作人" clearable />
+        </el-form-item>
+        <el-form-item>
+          <el-select v-model="queryParam.method" clearable placeholder="请求方法">
+            <el-option
+              v-for="item in ['DELETE','POST','PUT']"
+              :key="item"
+              :label="item"
+              :value="item"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-input v-model="queryParam.params" placeholder="请求参数" clearable />
+        </el-form-item>
+        <el-form-item>
+          <el-button @click="fetchData()">查询</el-button>
+          <el-button type="primary" @click="handleAdd()">新增</el-button>
+          <el-button type="danger" :disabled="ids.length <= 0" @click="handleBatchDelete()">批量删除</el-button>
+        </el-form-item>
+      </el-form>
 
-    <el-table
-      v-loading="listLoading"
-      :data="list"
-      element-loading-text="Loading"
-      border
-      fit
-      highlight-current-row
-      @selection-change="handleSelectionChange"
-    >
-      <el-table-column type="selection" header-align="center" align="center" width="50" />
-      <el-table-column label="操作人" prop="operator" width="100" />
-      <el-table-column label="用户操作" prop="operation" />
-      <el-table-column label="请求方法" prop="method" width="100" />
-      <el-table-column label="请求参数" prop="params" />
-      <el-table-column label="执行时长(毫秒)" prop="time" width="100" />
-      <el-table-column label="IP地址" prop="ip" width="140" />
-      <el-table-column label="创建时间" prop="createDate" width="180" />
-      <el-table-column align="center" label="操作" width="150">
-        <template slot-scope="scope">
-          <el-button size="mini" @click="handleEdit(scope)">修改</el-button>
-          <el-button type="danger" size="mini" @click="handleDelete(scope)">删除</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-    <el-pagination
-      :current-page="queryParam.currentPage"
-      :page-sizes="[10, 20, 50, 100]"
-      :page-size="queryParam.pageSize"
-      layout="total, sizes, prev, pager, next, jumper"
-      :total="total"
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
-    />
+      <el-table
+        v-loading="listLoading"
+        :data="list"
+        element-loading-text="Loading"
+        border
+        fit
+        highlight-current-row
+        @selection-change="handleSelectionChange"
+      >
+        <el-table-column type="selection" header-align="center" align="center" width="50" />
+        <el-table-column label="操作人" prop="operator" width="100" />
+        <el-table-column label="用户操作" prop="url" />
+        <el-table-column label="请求方法" prop="method" width="100" />
+        <el-table-column label="请求参数" prop="params" />
+        <el-table-column label="执行时长(毫秒)" prop="time" width="100" />
+        <el-table-column label="IP地址" prop="ip" width="140" />
+        <el-table-column label="创建时间" prop="createDate" width="180" />
+        <el-table-column align="center" label="操作" width="150">
+          <template slot-scope="scope">
+            <el-button size="mini" @click="handleEdit(scope)">修改</el-button>
+            <el-button type="danger" size="mini" @click="handleDelete(scope)">删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <el-pagination
+        :current-page="queryParam.currentPage"
+        :page-sizes="[10, 20, 50, 100]"
+        :page-size="queryParam.pageSize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="total"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+      />
+    </el-card>
     <el-dialog :visible.sync="dialogVisible" :title="'新增'">
       <el-form ref="dataForm" :model="dataForm" label-width="80px" label-position="left">
         <el-form-item v-show="false" label="ID" prop="id" />
@@ -63,8 +69,8 @@
         <el-form-item label="操作用户ID" prop="operatorId">
           <el-input v-model="dataForm.operatorId" placeholder="请输入操作用户ID" />
         </el-form-item>
-        <el-form-item label="用户操作" prop="operation">
-          <el-input v-model="dataForm.operation" placeholder="请输入用户操作" />
+        <el-form-item label="请求URL" prop="url">
+          <el-input v-model="dataForm.url" placeholder="请输入请求URL" />
         </el-form-item>
         <el-form-item label="请求方法" prop="method">
           <el-input v-model="dataForm.method" placeholder="请输入请求方法" />
@@ -115,9 +121,11 @@ export default {
       dialogVisible: false,
       queryParam: {
         operator: '',
-        operation: '',
+        url: '',
         method: '',
         params: '',
+        ip: '',
+        createDate: '',
         currentPage: 1,
         pageSize: 10
       },
@@ -125,7 +133,7 @@ export default {
         id: '',
         operator: '',
         operatorId: '',
-        operation: '',
+        url: '',
         method: '',
         params: '',
         time: '',
@@ -146,7 +154,6 @@ export default {
       this.listLoading = true
       getList(this.queryParam).then((response) => {
         this.list = response.data.records
-        console.log(this.list)
         this.total = response.data.total
         this.listLoading = false
       })
