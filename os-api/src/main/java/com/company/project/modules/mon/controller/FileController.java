@@ -14,7 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
  */
 @Slf4j
 @RestController
-@RequestMapping("/com/file")
+@RequestMapping("/mon/file")
 public class FileController {
 
     private final FileService fileService;
