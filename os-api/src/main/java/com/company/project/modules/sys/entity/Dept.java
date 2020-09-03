@@ -1,7 +1,7 @@
 package com.company.project.modules.sys.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.company.project.modules.base.base.TreeEntity;
+import com.company.project.modules.base.entity.TreeEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
