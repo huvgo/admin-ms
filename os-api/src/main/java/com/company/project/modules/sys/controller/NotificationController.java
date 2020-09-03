@@ -4,7 +4,7 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.company.project.cache.UserCacheUtil;
-import com.company.project.component.annotation.Log2Db;
+import com.company.project.component.annotation.Log2DB;
 import com.company.project.core.Result;
 import com.company.project.modules.sys.entity.Notification;
 import com.company.project.modules.sys.entity.User;
@@ -33,7 +33,7 @@ public class NotificationController {
     }
 
     @PostMapping
-    @Log2Db
+    @Log2DB
     public Result<?> post(@RequestBody Notification notification){
         User user = UserCacheUtil.getCurrentUser();
         notification.setSenderId(user.getId());
@@ -44,14 +44,14 @@ public class NotificationController {
     }
 
     @DeleteMapping
-    @Log2Db
+    @Log2DB
     public Result<?> delete(@RequestBody List<Long> ids){
         notificationService.removeByIds(ids);
         return Result.success();
     }
 
     @PutMapping
-    @Log2Db
+    @Log2DB
     public Result<?> put(@RequestBody Notification notification){
         notificationService.updateById(notification);
         return Result.success();

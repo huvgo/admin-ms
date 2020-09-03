@@ -1,4 +1,4 @@
-package com.company.project.core.base;
+package com.company.project.modules.base.base;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;

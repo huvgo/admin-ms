@@ -7,12 +7,15 @@ import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.stereotype.Service;
 
+/**
+ * 用户信息缓存接口的Redis缓存实现类
+ */
 @Service
-public class UserCacheRedisService implements UserCacheService {
+public class RedisUserCache implements UserCache {
 
     private final RedisTemplate<String, String> redisTemplate;
 
-    public UserCacheRedisService(RedisTemplate<String, String> redisTemplate) {
+    public RedisUserCache(RedisTemplate<String, String> redisTemplate) {
         this.redisTemplate = redisTemplate;
     }
 

@@ -3,7 +3,7 @@ package com.company.project.modules.sys.controller;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.company.project.component.annotation.Log2Db;
+import com.company.project.component.annotation.Log2DB;
 import com.company.project.component.annotation.Permissions;
 import com.company.project.core.Result;
 import com.company.project.modules.sys.entity.Role;
@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * <p>
@@ -33,7 +32,7 @@ public class RoleController {
 
     @Permissions
     @PostMapping
-    @Log2Db
+    @Log2DB
     public Result<?> post(@RequestBody Role role){
         roleService.save(role);
         return Result.success();
@@ -41,7 +40,7 @@ public class RoleController {
 
     @Permissions
     @DeleteMapping
-    @Log2Db
+    @Log2DB
     public Result<?> delete(@RequestBody List<Long> ids){
         roleService.removeByIds(ids);
         return Result.success();
@@ -49,7 +48,7 @@ public class RoleController {
 
     @Permissions
     @PutMapping
-    @Log2Db
+    @Log2DB
     public Result<?> put(@RequestBody Role role){
         roleService.updateById(role);
         return Result.success();

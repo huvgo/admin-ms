@@ -1,7 +1,5 @@
 package com.company.project;
 
-import cn.hutool.core.util.IdUtil;
-import cn.hutool.crypto.SecureUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -33,7 +33,7 @@ public class LogAspect {
     }
 
 
-    @Pointcut("@annotation(com.company.project.component.annotation.Log2Db)")
+    @Pointcut("@annotation(com.company.project.component.annotation.Log2DB)")
     public void log(){
     }
 

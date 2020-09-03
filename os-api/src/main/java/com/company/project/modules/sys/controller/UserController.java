@@ -5,16 +5,16 @@ import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.company.project.cache.UserCacheService;
+import com.company.project.cache.UserCache;
 import com.company.project.cache.UserCacheUtil;
-import com.company.project.component.annotation.Log2Db;
+import com.company.project.component.annotation.Log2DB;
 import com.company.project.component.annotation.Permissions;
 import com.company.project.core.Assert;
 import com.company.project.core.Result;
 import com.company.project.core.ResultCode;
 import com.company.project.core.ServiceException;
 import com.company.project.modules.base.controller.BaseController;
-import com.company.project.modules.base.service.FileService;
+import com.company.project.modules.mon.service.FileService;
 import com.company.project.modules.sys.entity.User;
 import com.company.project.modules.sys.service.UserService;
 import org.springframework.web.bind.annotation.*;
@@ -36,18 +36,18 @@ import java.util.Map;
 public class UserController extends BaseController {
     private final UserService userService;
     private final FileService fileService;
-    private final UserCacheService userCacheService;
+    private final UserCache userCache;
 
 
-    public UserController(UserService userService, FileService fileService, UserCacheService userCacheService){
+    public UserController(UserService userService, FileService fileService, UserCache userCache){
         this.userService = userService;
         this.fileService = fileService;
-        this.userCacheService = userCacheService;
+        this.userCache = userCache;
     }
 
     @Permissions
     @PostMapping
-    @Log2Db
+    @Log2DB
     public Result<Object> post(@RequestBody User user){
         userService.encodePassword(user);
         userService.save(user);
@@ -56,7 +56,7 @@ public class UserController extends BaseController {
 
     @Permissions
     @DeleteMapping
-    @Log2Db
+    @Log2DB
     public Result<Object> delete(@RequestBody List<Long> ids){
         userService.removeByIds(ids);
         return Result.success();
@@ -64,7 +64,7 @@ public class UserController extends BaseController {
 
     @Permissions
     @PutMapping
-    @Log2Db
+    @Log2DB
     public Result<Object> put(@RequestBody User user){
         if(StrUtil.isNotBlank(user.getPassword())){
             userService.encodePassword(user);
@@ -74,9 +74,9 @@ public class UserController extends BaseController {
         if(!status){
             boolean isNotOwn = !user.getId().equals(UserCacheUtil.getCurrentUser().getId());
             Assert.requireTrue(isNotOwn, ResultCode.WARNING, "您不能冻结自己的账号");
-            String token = userCacheService.getToken(user.getUsername());
+            String token = userCache.getToken(user.getUsername());
             if(token != null){
-                userCacheService.deleteUser(token);
+                userCache.deleteUser(token);
             }
         }
         userService.updateById(user);
@@ -119,18 +119,18 @@ public class UserController extends BaseController {
             throw new ServiceException(ResultCode.WARNING, "您的账号因异常情况被冻结，请联系管理员");
         }
         // 重新刷新缓存
-        String token = userCacheService.getToken(currentUser.getUsername());
+        String token = userCache.getToken(currentUser.getUsername());
         if(token == null){
             token = IdUtil.fastSimpleUUID();
-            userCacheService.putToken(currentUser.getUsername(), token);
+            userCache.putToken(currentUser.getUsername(), token);
         }
-        userCacheService.putUser(token, currentUser);
+        userCache.putUser(token, currentUser);
         return Result.success(Dict.create().set("token", token));
     }
 
     @GetMapping("/token")
     public Result<Object> token(String token){
-        User user = userCacheService.getUser(token);
+        User user = userCache.getUser(token);
         Assert.requireNonNull(user, "登录过期,请重新登陆");
         return Result.success(user);
     }

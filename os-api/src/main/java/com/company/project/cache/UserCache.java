@@ -2,7 +2,10 @@ package com.company.project.cache;
 
 import com.company.project.modules.sys.entity.User;
 
-public interface UserCacheService {
+/**
+ * 用户信息缓存 接口
+ */
+public interface UserCache {
 
     void putUser(String token, User user);
 

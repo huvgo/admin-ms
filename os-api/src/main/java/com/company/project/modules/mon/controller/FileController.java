@@ -1,7 +1,7 @@
-package com.company.project.modules.base.controller;
+package com.company.project.modules.mon.controller;
 
 import com.company.project.core.Result;
-import com.company.project.modules.base.service.FileService;
+import com.company.project.modules.mon.service.FileService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
