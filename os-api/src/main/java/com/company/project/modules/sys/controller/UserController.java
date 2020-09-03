@@ -159,6 +159,11 @@ public class UserController extends BaseController {
     @RequestMapping("/notice")
     public Result<List<Notice>> notice() {
         List<Notice> list = noticeService.list();
+        for (Notice notice : list) {
+            Integer senderId = notice.getSenderId();
+            User sender = userService.getById(senderId);
+            notice.setOther(Dict.create().set("senderAvatar", sender.getAvatar()));
+        }
         return Result.success(list);
     }
 }

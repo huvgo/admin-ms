@@ -1,23 +1,23 @@
 <template>
-  <el-popover placement="bottom" trigger="click">
-    <el-tabs>
+  <el-popover placement="bottom" width="350" trigger="click">
+    <el-tabs :stretch="true">
       <el-tab-pane label="通告">
-        <el-table
-          v-loading="listLoading"
-          :data="list"
-          element-loading-text="Loading"
-          border
-          fit
-          stripe="true"
-          highlight-current-row
-          :show-header="false"
-        >
-          <el-table-column prop="sender" width="60" />
-          <el-table-column prop="content" />
+        <el-table :data="list" fit highlight-current-row :show-header="false">
+          <el-table-column width="60">
+            <template slot-scope="scope">
+              <el-avatar :src="scope.row.other.senderAvatar" />
+            </template>
+          </el-table-column>
+          <el-table-column prop="content">
+            <template slot-scope="scope">
+              <span style="font-size:14px;font-width:500">{{ scope.row.content }}</span>
+              <br />
+              <span style="font-size:10px">{{ scope.row.createDate }}</span>
+            </template>
+          </el-table-column>
         </el-table>
       </el-tab-pane>
-      <el-tab-pane label="配置管理">消息</el-tab-pane>
-      <el-tab-pane label="角色管理">代办清单</el-tab-pane>
+      <el-tab-pane label="消息">消息</el-tab-pane>
     </el-tabs>
 
     <div slot="reference">
@@ -65,9 +65,14 @@ export default {
       if (screenfull.enabled) {
         screenfull.on('change', this.change)
       }
+      this.getNotice()
+      setInterval(() => {
+        this.getNotice()
+      }, 10000)
+    },
+    getNotice() {
       notice().then((response) => {
         this.list = response.data
-        console.log(response)
       })
     },
     destroy() {
@@ -90,5 +95,17 @@ export default {
 }
 .bell-badge >>> .el-badge__content.is-fixed {
   top: 10px;
+}
+</style>
+<style>
+.el-popover {
+  height: 500px;
+  overflow: auto;
+}
+.admin-clear-box {
+  font-size: 16px;
+  bottom: 0;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 </style>

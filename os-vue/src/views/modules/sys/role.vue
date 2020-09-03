@@ -21,7 +21,6 @@
         v-loading="listLoading"
         :data="list"
         element-loading-text="Loading"
-        border
         fit
         highlight-current-row
         @selection-change="handleSelectionChange"
