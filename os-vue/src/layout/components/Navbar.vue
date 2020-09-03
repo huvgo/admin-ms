@@ -14,7 +14,7 @@
         <!-- <search id="header-search" class="right-menu-item" /> -->
 
         <!-- <error-log class="errLog-container right-menu-item hover-effect" /> -->
-        <notification class="right-menu-item hover-effect" />
+        <message-bell class="right-menu-item hover-effect" />
         <div class="right-menu-item hover-effect">
           <i class="el-icon-headset"></i>
         </div>
@@ -65,7 +65,7 @@ import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
 // import ErrorLog from '@/components/ErrorLog'
 import Screenfull from '@/components/Screenfull'
-import Notification from '@/components/Notification'
+import MessageBell from '@/components/MessageBell'
 
 export default {
   components: {
@@ -73,7 +73,7 @@ export default {
     Hamburger,
     // ErrorLog,
     Screenfull,
-    Notification
+    MessageBell
   },
   data() {
     return {

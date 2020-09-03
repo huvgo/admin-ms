@@ -1,22 +1,30 @@
 import request from '@/utils/request'
+const url = '/sys/user'
+export function notice(data) {
+  return request({
+    url: url + '/notice',
+    method: 'post',
+    data
+  })
+}
 
 export function login(data) {
   return request({
-    url: '/sys/user/login',
+    url: url + '/login',
     method: 'post',
     data
   })
 }
 export function logout() {
   return request({
-    url: '/sys/user/logout',
+    url: url + '/logout',
     method: 'post'
   })
 }
 
 export function getInfo(token) {
   return request({
-    url: '/sys/user/token',
+    url: url + '/token',
     method: 'get',
     params: { token }
   })
@@ -24,7 +32,7 @@ export function getInfo(token) {
 
 export function getList(data) {
   return request({
-    url: '/sys/user',
+    url: url,
     method: 'get',
     params: data
   })
@@ -32,7 +40,7 @@ export function getList(data) {
 
 export function add(data) {
   return request({
-    url: '/sys/user',
+    url: url,
     method: 'post',
     headers: {
       'Content-Type': 'application/json; charset=utf-8'
@@ -43,7 +51,7 @@ export function add(data) {
 
 export function del(data) {
   return request({
-    url: '/sys/user',
+    url: url,
     method: 'delete',
     headers: {
       'Content-Type': 'application/json; charset=utf-8'
@@ -54,7 +62,7 @@ export function del(data) {
 
 export function update(data) {
   return request({
-    url: '/sys/user',
+    url: url,
     method: 'put',
     headers: {
       'Content-Type': 'application/json; charset=utf-8'

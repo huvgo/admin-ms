@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 
-const url = '/sys/notification'
+const url = '/sys/notice'
 
 export function getList(data) {
   return request({

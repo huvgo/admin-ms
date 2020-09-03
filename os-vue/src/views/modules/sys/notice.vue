@@ -83,7 +83,7 @@
 </template>
 
 <script>
-import { add, del, update, getList } from '@/api/sys/notification'
+import { add, del, update, getList } from '@/api/sys/notice'
 
 export default {
   filters: {

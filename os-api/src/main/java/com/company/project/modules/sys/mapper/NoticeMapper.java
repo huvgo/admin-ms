@@ -1,6 +1,6 @@
 package com.company.project.modules.sys.mapper;
 
-import com.company.project.modules.sys.entity.Notification;
+import com.company.project.modules.sys.entity.Notice;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 /**
@@ -12,6 +12,6 @@ import org.apache.ibatis.annotations.Mapper;
  * @since 2020-09-02
  */
 @Mapper
-public interface NotificationMapper extends BaseMapper<Notification> {
+public interface NoticeMapper extends BaseMapper<Notice> {
 
 }

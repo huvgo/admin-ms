@@ -20,8 +20,8 @@ import java.util.Date;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
-@TableName(value = "sys_notification")
-public class Notification extends BaseEntity {
+@TableName(value = "sys_notice")
+public class Notice extends BaseEntity {
 
     /**
      * 发送人ID

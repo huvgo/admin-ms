@@ -6,9 +6,9 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.company.project.cache.UserCacheUtil;
 import com.company.project.component.annotation.Log2DB;
 import com.company.project.core.Result;
-import com.company.project.modules.sys.entity.Notification;
+import com.company.project.modules.sys.entity.Notice;
 import com.company.project.modules.sys.entity.User;
-import com.company.project.modules.sys.service.NotificationService;
+import com.company.project.modules.sys.service.NoticeService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -24,48 +24,48 @@ import java.util.Map;
  * @since 2020-09-02
  */
 @RestController
-@RequestMapping("sys/notification")
-public class NotificationController {
-    private final NotificationService notificationService;
+@RequestMapping("sys/notice")
+public class NoticeController {
+    private final NoticeService noticeService;
 
-    public NotificationController(NotificationService notificationService){
-        this.notificationService = notificationService;
+    public NoticeController(NoticeService noticeService){
+        this.noticeService = noticeService;
     }
 
     @PostMapping
     @Log2DB
-    public Result<?> post(@RequestBody Notification notification){
+    public Result<?> post(@RequestBody Notice notice){
         User user = UserCacheUtil.getCurrentUser();
-        notification.setSenderId(user.getId());
-        notification.setSender(user.getUsername());
-        notification.setCreateDate(new Date());
-        notificationService.save(notification);
+        notice.setSenderId(user.getId());
+        notice.setSender(user.getUsername());
+        notice.setCreateDate(new Date());
+        noticeService.save(notice);
         return Result.success();
     }
 
     @DeleteMapping
     @Log2DB
     public Result<?> delete(@RequestBody List<Long> ids){
-        notificationService.removeByIds(ids);
+        noticeService.removeByIds(ids);
         return Result.success();
     }
 
     @PutMapping
     @Log2DB
-    public Result<?> put(@RequestBody Notification notification){
-        notificationService.updateById(notification);
+    public Result<?> put(@RequestBody Notice notice){
+        noticeService.updateById(notice);
         return Result.success();
     }
 
     @GetMapping("/{id}")
-    public Result<Notification> get(@PathVariable Integer id){
-        Notification notification = notificationService.getById(id);
-        return Result.success(notification);
+    public Result<Notice> get(@PathVariable Integer id){
+        Notice notice = noticeService.getById(id);
+        return Result.success(notice);
     }
 
     @GetMapping
-    public Result<Page<Notification>> get(@RequestParam(defaultValue = "0") Integer current, @RequestParam(defaultValue = "10") Integer size, @RequestParam Map<String, Object> params){
-        Page<Notification> page = notificationService.page(new Page<>(current, size, true), new QueryWrapper<Notification>()
+    public Result<Page<Notice>> get(@RequestParam(defaultValue = "0") Integer current, @RequestParam(defaultValue = "10") Integer size, @RequestParam Map<String, Object> params){
+        Page<Notice> page = noticeService.page(new Page<>(current, size, true), new QueryWrapper<Notice>()
                 .like(StrUtil.isNotBlank((String) params.get("sender")), "sender", params.get("sender"))
                 .eq(StrUtil.isNotBlank((String) params.get("content")), "content", params.get("content"))
                 .eq(StrUtil.isNotBlank((String) params.get("createDate")), "create_date", params.get("createDate"))

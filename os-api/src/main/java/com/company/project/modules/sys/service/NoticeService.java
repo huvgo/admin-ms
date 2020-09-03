@@ -1,6 +1,6 @@
 package com.company.project.modules.sys.service;
 
-import com.company.project.modules.sys.entity.Notification;
+import com.company.project.modules.sys.entity.Notice;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
@@ -11,6 +11,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @author author
  * @since 2020-09-02
  */
-public interface NotificationService extends IService<Notification> {
+public interface NoticeService extends IService<Notice> {
 
 }
