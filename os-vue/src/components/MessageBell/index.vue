@@ -16,6 +16,9 @@
             </template>
           </el-table-column>
         </el-table>
+        <div class="admin-os-item">
+          清空消息
+        </div>
       </el-tab-pane>
       <el-tab-pane label="消息">消息</el-tab-pane>
     </el-tabs>
@@ -107,5 +110,22 @@ export default {
   bottom: 0;
   left: 50%;
   transform: translate(-50%, -50%);
+}
+
+.admin-os-item{
+background: #1a59b7;
+color:#ffffff;
+overflow: hidden;
+z-index: 9999;
+position: relative;
+padding:5px;
+text-align:center;
+width: 175px;
+height: 22px;
+border-bottom-left-radius: 4px;
+border-bottom-right-radius: 4px;
+border-top-left-radius: 4px;
+border-top-right-radius: 4px;
+bottom:10px
 }
 </style>
