@@ -2,22 +2,24 @@
   <el-popover placement="bottom" width="350" trigger="click">
     <el-tabs :stretch="true">
       <el-tab-pane label="通告">
-        <el-table :data="list" fit highlight-current-row :show-header="false">
-          <el-table-column width="60">
-            <template slot-scope="scope">
-              <el-avatar :src="scope.row.other.senderAvatar" />
-            </template>
-          </el-table-column>
-          <el-table-column prop="content">
-            <template slot-scope="scope">
-              <span style="font-size:14px;font-width:500">{{ scope.row.content }}</span>
-              <br />
-              <span style="font-size:10px">{{ scope.row.createDate }}</span>
-            </template>
-          </el-table-column>
-        </el-table>
-        <div class="admin-os-item">
-          清空消息
+        <div style="height: 420px;">
+          <el-table :data="list" fit highlight-current-row :show-header="false">
+            <el-table-column width="60">
+              <template slot-scope="scope">
+                <el-avatar :src="scope.row.other.senderAvatar" />
+              </template>
+            </el-table-column>
+            <el-table-column prop="content">
+              <template slot-scope="scope">
+                <span style="font-size:14px;font-width:500">{{ scope.row.content }}</span>
+                <br />
+                <span style="font-size:10px">{{ scope.row.createDate }}</span>
+              </template>
+            </el-table-column>
+          </el-table>
+          <div class="admin-os-item">
+            清空消息
+          </div>
         </div>
       </el-tab-pane>
       <el-tab-pane label="消息">消息</el-tab-pane>
@@ -117,7 +119,7 @@ background: #1a59b7;
 color:#ffffff;
 overflow: hidden;
 z-index: 9999;
-position: relative;
+position: absolute;
 padding:5px;
 text-align:center;
 width: 175px;
