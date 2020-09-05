@@ -19,7 +19,7 @@
               <template slot-scope="scope">
                 <span style="font-size:14px;font-width:500">{{ scope.row.content }}</span>
                 <br />
-                <span style="font-size:10px">{{ scope.row.createDate }}</span>
+                <span style="font-size:10px">{{ scope.row.pushTime }}</span>
               </template>
             </el-table-column>
           </el-table>

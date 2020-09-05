@@ -40,7 +40,7 @@
         <el-table-column label="请求参数" prop="params" />
         <el-table-column label="执行时长(毫秒)" prop="time" width="120" />
         <el-table-column label="IP地址" prop="ip" width="140" />
-        <el-table-column label="创建时间" prop="createDate" width="180" />
+        <el-table-column label="创建时间" prop="createTime" width="180" />
         <el-table-column align="center" label="操作" width="150">
           <template slot-scope="scope">
             <el-button size="mini" @click="handleEdit(scope)">修改</el-button>
@@ -83,9 +83,9 @@
         <el-form-item label="IP地址" prop="ip">
           <el-input v-model="dataForm.ip" placeholder="请输入IP地址" />
         </el-form-item>
-        <el-form-item label="创建时间" prop="createDate">
+        <el-form-item label="创建时间" prop="createTime">
           <el-date-picker
-            v-model="dataForm.createDate"
+            v-model="dataForm.createTime"
             style="width:100%"
             type="date"
             format="yyyy-MM-dd"
@@ -124,7 +124,7 @@ export default {
         method: '',
         params: '',
         ip: '',
-        createDate: '',
+        createTime: '',
         currentPage: 1,
         pageSize: 10
       },
@@ -137,7 +137,7 @@ export default {
         params: '',
         time: '',
         ip: '',
-        createDate: ''
+        createTime: ''
       },
       ids: [],
       list: null,

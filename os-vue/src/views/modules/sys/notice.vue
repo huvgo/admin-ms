@@ -30,7 +30,7 @@
         <el-table-column label="ID" prop="id" />
         <el-table-column label="发送人" prop="sender" />
         <el-table-column label="消息内容" prop="content" />
-        <el-table-column label="创建时间" prop="createDate" />
+        <el-table-column label="推送时间" prop="pushTime" />
         <el-table-column label="类型" prop="type" />
         <el-table-column label="状态" align="center" prop="enabled" width="150">
           <template slot-scope="{row}">
@@ -65,12 +65,12 @@
         <el-form-item label="消息内容" prop="content">
           <el-input v-model="dataForm.content" placeholder="请输入消息内容" />
         </el-form-item>
-        <el-form-item label="发布时间" prop="createDate">
+        <el-form-item label="推送时间" prop="pushTime">
           <el-date-picker
-            v-model="dataForm.createDate"
+            v-model="dataForm.pushTime"
             type="datetime"
             value-format="yyyy-MM-dd HH:mm:ss"
-            placeholder="选择日期时间"
+            placeholder="请选择推送时间"
             style="width:100%"
           />
         </el-form-item>
@@ -114,7 +114,7 @@ export default {
         id: '',
         senderId: '',
         content: '',
-        createDate: '',
+        pushTime: '',
         type: '1',
         enabled: true
       },
