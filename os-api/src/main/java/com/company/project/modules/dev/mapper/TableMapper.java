@@ -10,7 +10,7 @@ import cn.hutool.db.handler.NumberHandler;
 import cn.hutool.db.sql.SqlExecutor;
 import com.company.project.modules.dev.entity.code.Column;
 import com.company.project.modules.dev.entity.code.Table;
-import com.company.project.modules.dev.util.Convert;
+import com.company.project.modules.dev.util.CodeUtils;
 import com.company.project.util.JDBCUtils;
 import org.springframework.stereotype.Component;
 
@@ -71,7 +71,7 @@ public class TableMapper {
         DbUtil.close(conn);
 
         columnList.forEach(entity -> {
-            String javaType = Convert.jdbcType2JavaType(entity.getDataType());
+            String javaType = CodeUtils.jdbcType2JavaType(entity.getDataType());
             if ("date".equalsIgnoreCase(javaType)) {
                 entity.setElement("3");
             }

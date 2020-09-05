@@ -10,14 +10,3 @@ export function getList(data) {
   })
 }
 
-export function generator(data) {
-  return request({
-    url: url + '/generator',
-    method: 'post',
-    headers: {
-      'Content-Type': 'application/json; charset=utf-8'
-    },
-    data: JSON.stringify(data)
-  })
-}
-

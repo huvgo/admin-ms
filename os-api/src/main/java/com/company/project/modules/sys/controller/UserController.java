@@ -16,7 +16,6 @@ import com.company.project.core.ResultCode;
 import com.company.project.core.ServiceException;
 import com.company.project.modules.base.controller.BaseController;
 import com.company.project.modules.base.entity.BaseEntity;
-import com.company.project.modules.mon.service.FileService;
 import com.company.project.modules.sys.entity.Notice;
 import com.company.project.modules.sys.entity.User;
 import com.company.project.modules.sys.entity.UserNotice;
@@ -44,15 +43,13 @@ import java.util.stream.Collectors;
 @RequestMapping("/sys/user")
 public class UserController extends BaseController {
     private final UserService userService;
-    private final FileService fileService;
     private final UserCache userCache;
     private final NoticeService noticeService;
     private final UserNoticeService userNoticeService;
 
 
-    public UserController(UserService userService, FileService fileService, UserCache userCache, NoticeService noticeService, UserNoticeService userNoticeService) {
+    public UserController(UserService userService, UserCache userCache, NoticeService noticeService, UserNoticeService userNoticeService) {
         this.userService = userService;
-        this.fileService = fileService;
         this.userCache = userCache;
         this.noticeService = noticeService;
         this.userNoticeService = userNoticeService;
@@ -83,7 +80,7 @@ public class UserController extends BaseController {
             userService.encodePassword(user);
         }
         // 冻结状态
-        boolean status = user.getStatus();
+        boolean status = user.getEnabled();
         if (!status) {
             boolean isNotOwn = !user.getId().equals(UserCacheUtil.getCurrentUser().getId());
             Assert.requireTrue(isNotOwn, ResultCode.WARNING, "您不能冻结自己的账号");
@@ -127,7 +124,7 @@ public class UserController extends BaseController {
     @PostMapping("/login")
     public Result<Object> login(@RequestBody User user) {
         User currentUser = userService.login(user.getUsername(), user.getPassword());
-        boolean status = currentUser.getStatus();
+        boolean status = currentUser.getEnabled();
         if (!status) {
             throw new ServiceException(ResultCode.WARNING, "您的账号因异常情况被冻结，请联系管理员");
         }
@@ -157,7 +154,7 @@ public class UserController extends BaseController {
     @PostMapping("/upload")
     public Result<Object> upload(@RequestParam("file") MultipartFile file) {
         String moduleDir = "avatar";
-        String path = fileService.upload(file, moduleDir);
+        String path = userService.upload(file, moduleDir);
         User user = new User();
         user.setId(UserCacheUtil.getCurrentUser().getId());
         user.setAvatar(path);
@@ -182,11 +179,11 @@ public class UserController extends BaseController {
         UserNotice finalUserNotice = userNotice;
         if (userNotice != null) {
             // 为了把用户上次拉取的未读消息也要查询出来
-            updateDate = userNotice.getUpdateDate();
+            updateDate = userNotice.getUpdateTime();
             Date finalUpdateDate = updateDate;
-            queryWrapper.eq("status", "1").and(c -> c.in(CollUtil.isNotEmpty(finalUserNotice.getNoticeIds()), "id", finalUserNotice.getNoticeIds()).or().gt("create_date", finalUpdateDate).le("create_date", now));
+            queryWrapper.eq("is_enabled", "1").and(c -> c.in(CollUtil.isNotEmpty(finalUserNotice.getNoticeIds()), "id", finalUserNotice.getNoticeIds()).or().gt("push_time", finalUpdateDate).le("push_time", now));
         } else {
-            queryWrapper.eq("status", "1").gt("create_date", updateDate).le("create_date", now);
+            queryWrapper.eq("is_enabled", "1").gt("push_time", updateDate).le("push_time", now);
         }
         List<Notice> list = noticeService.list(queryWrapper);
         List<Integer> noticeIds = list.stream().map(BaseEntity<Integer>::getId).collect(Collectors.toList());
@@ -196,14 +193,9 @@ public class UserController extends BaseController {
             userNotice = new UserNotice();
         }
         userNotice.setUserId(currentUser.getId());
-        userNotice.setUpdateDate(now);
+        userNotice.setUpdateTime(now);
         userNotice.setNoticeIds(noticeIds);
-        if (Objects.isNull(userNotice.getId())) {
-            userNoticeService.save(userNotice);
-        } else if (!userNotice.equals(finalUserNotice)) {
-            //有变动才去更新
-            userNoticeService.updateById(userNotice);
-        }
+        userNoticeService.saveOrUpdate(userNotice);
         return Result.success(list);
     }
 

@@ -67,7 +67,7 @@ public class LogController {
                 .eq(StrUtil.isNotBlank((String)params.get("operator")), "operator", params.get("operator"))
                 .eq(StrUtil.isNotBlank((String)params.get("method")), "method", params.get("method"))
                 .like(StrUtil.isNotBlank((String)params.get("params")), "params", params.get("params"))
-                .orderByDesc("create_date")
+                .orderByDesc("create_time")
         );
         return Result.success(page);
     }

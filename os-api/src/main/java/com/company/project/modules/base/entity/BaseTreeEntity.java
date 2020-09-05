@@ -1,7 +1,7 @@
 package com.company.project.modules.base.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.company.project.component.mybatis.IntegerArray2SplitTypeHandler;
+import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -12,7 +12,7 @@ import java.util.List;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class TreeEntity<E> extends BaseEntity<Integer> {
+public class BaseTreeEntity<E> extends BaseEntity<Integer> {
 
     /**
      * 上级ID，一级ID为0
@@ -23,7 +23,7 @@ public class TreeEntity<E> extends BaseEntity<Integer> {
      * 所有上级ID
      * 子类 设置autoResultMap = true   例如 ：@TableName(value = "sys_dept", autoResultMap = true)
      */
-    @TableField(typeHandler = IntegerArray2SplitTypeHandler.class)
+    @TableField(typeHandler = JacksonTypeHandler.class)
     private List<Integer> parentIds;
 
     /**

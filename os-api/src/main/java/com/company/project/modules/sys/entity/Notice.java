@@ -1,8 +1,8 @@
 package com.company.project.modules.sys.entity;
 
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.company.project.modules.base.entity.BaseEntity;
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -14,17 +14,17 @@ import java.util.Date;
  * 系统通知
  * </p>
  *
- * @author author
- * @since 2020-09-02
+ * @author codeGenerator
+ * @since 2020-09-06
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
 @TableName(value = "sys_notice")
-public class Notice extends BaseEntity {
+public class Notice extends BaseEntity<Integer> {
 
     /**
-     * 发送人ID
+     * 发送人
      */
     private String sender;
 
@@ -44,10 +44,9 @@ public class Notice extends BaseEntity {
     private String content;
 
     /**
-     * 创建时间
+     * 推送日期时间
      */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    private Date createDate;
+    private Date pushTime;
 
     /**
      * 类型
@@ -55,9 +54,16 @@ public class Notice extends BaseEntity {
     private Integer type;
 
     /**
-     * 状态
+     * 是否启用
      */
-    private Boolean status;
+    @TableField("is_enabled")
+    private Boolean enabled;
+
+    /**
+     * 是否删除
+     */
+    @TableField("is_deleted")
+    private Boolean deleted;
 
 }
 

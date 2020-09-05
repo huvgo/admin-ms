@@ -76,9 +76,11 @@
 </template>
 
 <script>
-import { getList, generator } from '@/api/dev/code'
+import { getList } from '@/api/dev/code'
 import { option } from '@/api/sys/dictionary'
 import TreePopover from './../sys/components/TreePopover'
+import { downLoadZip } from '@/utils/zipdownload'
+
 export default {
   components: { TreePopover },
   filters: {
@@ -136,11 +138,7 @@ export default {
       })
     },
     dataFormSubmit() {
-      generator(this.list).then((response) => {
-        this.dialogVisible = false
-        this.fetchData()
-        this.$message({ message: response.message, type: 'success' })
-      })
+      downLoadZip('/dev/code/generate', this.list)
     },
     handleSizeChange(pageSize) {
       this.queryParam.pageSize = pageSize
@@ -177,6 +175,26 @@ export default {
     },
     handleTreePopoverClick(val) {
       this.dataForm.parentMenuId = val
+    },
+    /**
+ * 解析blob响应内容并下载
+ * @param {*} res blob响应内容
+ * @param {String} mimeType MIME类型
+ */
+    resolveBlob(res, mimeType) {
+      const aLink = document.createElement('a')
+      var blob = new Blob([res.data], { type: mimeType })
+      // //从response的headers中获取filename, 后端response.setHeader("Content-disposition", "attachment; filename=xxxx.docx") 设置的文件名;
+      var patt = new RegExp('filename=([^;]+\\.[^\\.;]+);*')
+      var contentDisposition = decodeURI(res.headers['content-disposition'])
+      var result = patt.exec(contentDisposition)
+      var fileName = result[1]
+      fileName = fileName.replace(/\"/g, '')
+      aLink.href = URL.createObjectURL(blob)
+      aLink.setAttribute('download', fileName) // 设置下载文件名称
+      document.body.appendChild(aLink)
+      aLink.click()
+      document.body.appendChild(aLink)
     }
   }
 }

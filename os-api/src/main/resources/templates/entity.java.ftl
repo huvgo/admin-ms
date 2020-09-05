@@ -9,6 +9,7 @@ import lombok.experimental.Accessors;
 <#list fields as field>
     <#if field.javaType = "Date">
 import java.util.Date;
+        <#break>
     </#if>
 </#list>
 

@@ -1,32 +1,34 @@
 package com.company.project.modules.sys.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
 import com.company.project.modules.base.entity.BaseEntity;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.experimental.Accessors;
 
+import java.util.Date;
 import java.util.List;
-
 
 /**
  * <p>
  * 数据字典
  * </p>
  *
- * @author root
- * @since 2020-08-28
+ * @author codeGenerator
+ * @since 2020-09-06
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
+@Accessors(chain = true)
 @TableName(value = "sys_dictionary", autoResultMap = true)
 public class Dictionary extends BaseEntity<Integer> {
 
     /**
-     * 上级ID，一级ID为0
+     * 上级节点ID
      */
-    private Integer parentId = 0;
+    private Integer parentId;
 
     /**
      * 编码
@@ -39,22 +41,27 @@ public class Dictionary extends BaseEntity<Integer> {
     private String name;
 
     /**
-     * 备注
-     */
-    private String remark;
-
-    /**
      * 选项
      */
     @TableField(typeHandler = JacksonTypeHandler.class)
     private List<Option> options;
 
     /**
-     * 逻辑删除
+     * 排序
      */
-    private Integer deleted;
+    private Integer sort;
+
+    /**
+     * 备注
+     */
+    private String remark;
+
+
+    /**
+     * 是否删除
+     */
+    @TableField("is_deleted")
+    private Boolean deleted;
 
 }
-
-
 

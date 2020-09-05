@@ -1,51 +1,34 @@
 package com.company.project.modules.dev.service.impl;
 
-import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.lang.Dict;
 import cn.hutool.core.util.StrUtil;
-import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.company.project.modules.dev.entity.code.Table;
-import com.company.project.modules.dev.entity.oshi.Template;
+import com.company.project.modules.dev.entity.code.Template;
 import com.company.project.modules.dev.mapper.TableMapper;
 import com.company.project.modules.dev.service.CodeService;
-import com.company.project.modules.dev.util.FreeMarkUtil;
+import com.company.project.modules.dev.util.CodeUtils;
+import com.company.project.modules.dev.util.FreeMarkUtils;
 import freemarker.template.TemplateException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.zip.ZipOutputStream;
 
+@Slf4j
 @Service
 public class CodeServiceImpl implements CodeService {
-    private static final Logger logger = LoggerFactory.getLogger(CodeServiceImpl.class);
+
     private final TableMapper tableMapper;
-    // 包名
-    private static final String packageName = "com.company.project.modules";
-
-    private static final String AUTHOR = "author";
-
-    // 文件输出路径 相对路径 eg. src\main\java\com\company\project\modules
-    private static final String RELATIVE_OUTPUT_PATH = File.separator + "src" + File.separator + "main" + File.separator + "java" + File.separator + packageName.replaceAll("\\.", StringPool.BACK_SLASH + File.separator);
-    // 代码输出路径 绝对路径 eg. C:\admin-os\os-api\src\main\java\com\company\project\modules
-    public static final String ABSOLUTE_OUTPUT_PATH = System.getProperty("user.dir") + RELATIVE_OUTPUT_PATH;
 
     public CodeServiceImpl(TableMapper tableMapper) {
-
         this.tableMapper = tableMapper;
-    }
-
-    public static void main(String[] args) {
-        String property = System.getProperty("user.dir");
-        String parent = FileUtil.getParent(property, 1);
-        System.out.println("parent = " + parent);
     }
 
     @Override
@@ -56,71 +39,37 @@ public class CodeServiceImpl implements CodeService {
         return page;
     }
 
-    public void generator(Table table, boolean local) throws IOException, TemplateException, SQLException {
-        int parentMenuId = table.getParentMenuId();
-        // todo 生成菜单栏
+    @Override
+    public byte[] generate(List<Table> tableList) throws IOException, TemplateException {
+        try (ByteArrayOutputStream baos = new ByteArrayOutputStream(); ZipOutputStream zipOut = new ZipOutputStream(baos)) {
+            for (Table table : tableList) {
+                if (table.isGenerator()) {
+                    int parentMenuId = table.getParentMenuId();
+                    // todo 生成菜单栏
 
+                    // 为了获取模板类型
+                    List<Template> templateList = CodeUtils.getTemplates();
 
-        List<Template> templateList = getTemplate();
-        String tableName = table.getName();
+                    // 为了获取填充模板的数据模型
+                    Dict dataModel = CodeUtils.getDataModel(table);
 
-        // 表前缀为模块名称
-        int i = tableName.indexOf("_");
-        String moduleName = tableName.substring(0, i);
-        // 移除表前缀 转换驼峰实体名称
-        String fileName = StrUtil.toCamelCase(tableName.substring(i));
-
-        // 整理模板需要的数据
-        Map<String, Object> objectMap = new HashMap<>();
-        objectMap.put("fields", table.getColumns());
-        objectMap.put("table", table);
-        objectMap.put("moduleName", moduleName);
-        objectMap.put("lowerFirstName", StrUtil.lowerFirst(fileName));
-        objectMap.put("upperFirstName", StrUtil.upperFirst(fileName));
-        objectMap.put("package", packageName + "." + moduleName);
-        objectMap.put("author", AUTHOR);
-        objectMap.put("date", DateUtil.date().toDateStr());
-
-        // 输出模板
-        FreeMarkUtil freeMarkUtil = new FreeMarkUtil();
-        for (Template template : templateList) {
-            String outputFileDir;
-            if (template.getDirectory().startsWith("abs:")) {
-                outputFileDir = StrUtil.removePrefix(template.getDirectory(), "abs:") + File.separator + moduleName;
-            } else {
-                outputFileDir = ABSOLUTE_OUTPUT_PATH + File.separator + moduleName + File.separator + template.getDirectory();
+                    // 输出模板
+                    FreeMarkUtils freeMarkUtils = new FreeMarkUtils();
+                    for (Template template : templateList) {
+                        String fileName = dataModel.getStr("lowerFirstName");
+                        if (template.isUpperFirstName()) {
+                            fileName = dataModel.getStr("upperFirstName");
+                        }
+                        String outputPath = StrUtil.join(File.separator, template.getRootPath(), dataModel.getStr("moduleName")
+                                , template.getClassifyPath(), fileName + template.getFileSuffix());
+                        String writer = freeMarkUtils.writer(dataModel, template.getTemplatePath());
+                        CodeUtils.zip(zipOut, writer.getBytes(), outputPath);
+                    }
+                }
             }
-            FileUtil.mkdir(outputFileDir);
-            String fileSuffix = template.getFileSuffix();
-            String sub = StrUtil.sub(fileSuffix, fileSuffix.lastIndexOf(".") + 1, fileSuffix.length());
-            if ("java".equals(sub) || "xml".equals(sub)) {
-                fileName = StrUtil.upperFirst(fileName);
-            } else {
-                fileName = StrUtil.lowerFirst(fileName);
-            }
-            String outputFilePath = outputFileDir + File.separator + fileName + template.getFileSuffix();
-//            if (!FileUtil.exist(outputFilePath)) {
-                freeMarkUtil.writer(objectMap, template.getTemplatePath(), outputFilePath);
-//            } else {
-//                logger.info("文件存在：{}", outputFilePath);
-//            }
+            zipOut.close();
+            baos.close();
+            return baos.toByteArray();
         }
     }
-
-    private List<Template> getTemplate() {
-        List<Template> templateList = new ArrayList<>();
-        templateList.add(new Template("/templates/controller.java.ftl", "controller", "Controller.java"));
-        templateList.add(new Template("/templates/entity.java.ftl", "entity", ".java"));
-        templateList.add(new Template("/templates/service.java.ftl", "service", "Service.java"));
-        templateList.add(new Template("/templates/serviceImpl.java.ftl", "service" + File.separator + "impl", "ServiceImpl.java"));
-        templateList.add(new Template("/templates/mapper.java.ftl", "mapper", "Mapper.java"));
-        templateList.add(new Template("/templates/mapper.xml.ftl", "mapper" + File.separator + "xml", "Mapper.xml"));
-
-        String property = System.getProperty("user.dir");
-        String parent = FileUtil.getParent(property, 1);
-        templateList.add(new Template("/templates/page.js.ftl", "abs:" + parent + "\\os-vue\\src\\api", ".js"));
-        templateList.add(new Template("/templates/page.vue.ftl", "abs:" + parent + "\\os-vue\\src\\views\\modules", ".vue"));
-        return templateList;
-    }
-
 }

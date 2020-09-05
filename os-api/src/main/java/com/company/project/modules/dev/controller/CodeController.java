@@ -1,14 +1,14 @@
 package com.company.project.modules.dev.controller;
 
+import cn.hutool.core.io.IoUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.company.project.component.annotation.Permissions;
 import com.company.project.core.Result;
 import com.company.project.modules.dev.entity.code.Table;
 import com.company.project.modules.dev.service.CodeService;
-import freemarker.template.TemplateException;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
+import javax.servlet.http.HttpServletResponse;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
@@ -37,15 +37,18 @@ public class CodeController {
         return Result.success(page);
     }
 
-    @PostMapping("/generator")
-    @Permissions
-    public Result<Object> generator(@RequestBody List<Table> tableList) throws SQLException, IOException, TemplateException {
-        for (Table table : tableList) {
-            if (table.isGenerator()) {
-                codeService.generator(table, true);
-            }
-        }
-        return Result.success();
+
+    @PostMapping("/generate")
+    public void generate(@RequestBody List<Table> tableList, HttpServletResponse response) throws Exception {
+        byte[] bytes = codeService.generate(tableList);
+        response.reset();
+        response.addHeader("Access-Control-Allow-Origin", "*");
+        response.addHeader("Access-Control-Expose-Headers", "Content-Disposition");
+        response.setHeader("Content-Disposition", "attachment; filename=\"admin-os.zip\"");
+        response.addIntHeader("Content-Length", bytes.length);
+        response.setContentType("application/octet-stream; charset=UTF-8");
+        IoUtil.write(response.getOutputStream(), false, bytes);
     }
+
 
 }

@@ -60,7 +60,7 @@ public class LogAspect {
         log.setOperatorId(UserCacheUtil.getCurrentUser().getId());
         log.setUrl(request.getRequestURL().toString());
         log.setTime(timeDiff);
-        log.setCreateDate(new Timestamp(System.currentTimeMillis()));
+//        log.setCreateDate(new Timestamp(System.currentTimeMillis()));
         logService.save(log);
         return obj;
     }

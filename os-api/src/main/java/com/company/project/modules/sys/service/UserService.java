@@ -2,6 +2,7 @@ package com.company.project.modules.sys.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.company.project.modules.sys.entity.User;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * <p>
@@ -18,4 +19,6 @@ public interface UserService extends IService<User> {
     User login(String username, String password);
 
     void encodePassword(User user);
+
+    String upload(MultipartFile file, String moduleDir);
 }

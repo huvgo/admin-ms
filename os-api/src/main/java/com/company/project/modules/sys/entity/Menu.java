@@ -1,26 +1,30 @@
 package com.company.project.modules.sys.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
-import com.company.project.modules.base.entity.TreeEntity;
+import com.company.project.modules.base.entity.BaseEntity;
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.company.project.modules.base.entity.BaseTreeEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.experimental.Accessors;
+
+import java.util.Date;
 
 /**
  * <p>
  * 菜单管理
  * </p>
  *
- * @author root
- * @since 2020-08-11
+ * @author codeGenerator
+ * @since 2020-09-06
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
+@Accessors(chain = true)
 @TableName(value = "sys_menu", autoResultMap = true)
-public class Menu extends TreeEntity<Menu> {
+public class Menu extends BaseTreeEntity<Menu> {
 
-    private static final long serialVersionUID = 1L;
 
     /**
      * 菜单名称
@@ -32,11 +36,14 @@ public class Menu extends TreeEntity<Menu> {
      */
     private String path;
 
+    /**
+     *
+     */
     @TableField(typeHandler = JacksonTypeHandler.class)
     private Meta meta;
 
     /**
-     * 授权(多个用逗号分隔，如：user:list,user:create)
+     * 授权
      */
     private String perms;
 
@@ -45,4 +52,6 @@ public class Menu extends TreeEntity<Menu> {
      */
     private Integer type;
 
+
 }
+

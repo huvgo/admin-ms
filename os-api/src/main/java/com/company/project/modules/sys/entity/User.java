@@ -3,13 +3,13 @@ package com.company.project.modules.sys.entity;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
-import com.company.project.modules.base.entity.BaseEntity;
 import com.company.project.component.mybatis.IntegerArray2SplitTypeHandler;
+import com.company.project.modules.base.entity.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.experimental.Accessors;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -17,23 +17,19 @@ import java.util.List;
  * 系统用户
  * </p>
  *
- * @author root
- * @since 2020-08-12
+ * @author codeGenerator
+ * @since 2020-09-06
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
+@Accessors(chain = true)
 @TableName(value = "sys_user", autoResultMap = true)
 public class User extends BaseEntity<Integer> {
 
-    private static final long serialVersionUID = 1L;
-
     /**
-     * 真实姓名
+     * 手机号
      */
-    private String name;
-
-
-    private String introduction;
+    private String mobile;
 
     /**
      * 用户名
@@ -59,24 +55,29 @@ public class User extends BaseEntity<Integer> {
     private String salt;
 
     /**
+     * 头像
+     */
+    private String avatar;
+
+    /**
+     * 真实姓名
+     */
+    private String name;
+
+    /**
      * 身份证号码
      */
     private String idNumber;
 
     /**
+     * 个人介绍
+     */
+    private String introduction;
+
+    /**
      * 邮箱
      */
     private String email;
-
-    /**
-     * 手机号
-     */
-    private String mobile;
-
-    /**
-     * 状态  0：禁用   1：正常
-     */
-    private Boolean status;
 
     /**
      * 部门ID
@@ -86,7 +87,7 @@ public class User extends BaseEntity<Integer> {
     /**
      * 所有上级部门ID
      */
-    @TableField(typeHandler = IntegerArray2SplitTypeHandler.class)
+    @TableField(typeHandler = JacksonTypeHandler.class)
     private List<Integer> deptIds;
 
     /**
@@ -94,32 +95,26 @@ public class User extends BaseEntity<Integer> {
      */
     private Integer createUserId;
 
-    /**
-     * 创建时间
-     */
-    private Date createTime;
 
     /**
      * 更新者ID
      */
-    private Integer modifyUserId;
+    private Integer updateUserId;
+
 
     /**
-     * 更新时间
+     * 是否启用
      */
-    private Date modifyTime;
+    @TableField("is_enabled")
+    private Boolean enabled;
 
     /**
      * 是否删除
      */
-    private Integer delFlag;
-
-    /**
-     * 头像
-     */
-    private String avatar;
+    @TableField("is_deleted")
+    private Boolean deleted;
 
     @TableField(exist = false)
     private List<Menu> menuList;
-
 }
+

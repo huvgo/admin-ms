@@ -42,9 +42,9 @@ public class NoticeController {
         notice.setSenderId(user.getId());
         notice.setSender(user.getUsername());
         notice.setSenderAvatar(user.getAvatar());
-        if (Objects.isNull(notice.getCreateDate())) {
-            notice.setCreateDate(new Date());
-        }
+//        if (Objects.isNull(notice.getCreateDate())) {
+//            notice.setCreateDate(new Date());
+//        }
         noticeService.save(notice);
         return Result.success();
     }
