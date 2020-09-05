@@ -4,6 +4,7 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.company.project.component.annotation.Log2DB;
+import com.company.project.component.annotation.Permissions;
 import com.company.project.core.Result;
 import com.company.project.modules.sys.entity.Dictionary;
 import com.company.project.modules.sys.entity.Option;
@@ -33,6 +34,7 @@ public class DictionaryController {
 
     @PostMapping
     @Log2DB
+    @Permissions
     public Result<?> post(@RequestBody Dictionary dictionary){
         dictionaryService.save(dictionary);
         return Result.success();
@@ -40,6 +42,7 @@ public class DictionaryController {
 
     @DeleteMapping
     @Log2DB
+    @Permissions
     public Result<?> delete(@RequestBody List<Long> ids){
         dictionaryService.removeByIds(ids);
         return Result.success();
@@ -47,20 +50,23 @@ public class DictionaryController {
 
     @PutMapping
     @Log2DB
+    @Permissions
     public Result<?> put(@RequestBody Dictionary dictionary){
         dictionaryService.updateById(dictionary);
         return Result.success();
     }
 
     @GetMapping("/{id}")
+    @Permissions
     public Result<Dictionary> get(@PathVariable Integer id){
         Dictionary dictionary = dictionaryService.getById(id);
         return Result.success(dictionary);
     }
 
     @GetMapping
-    public Result<Page<Dictionary>> get(@RequestParam(defaultValue = "0") Integer current, @RequestParam(defaultValue = "10") Integer size, @RequestParam Map<String, Object> params){
-        Page<Dictionary> page = dictionaryService.page(new Page<>(current, size, true), new QueryWrapper<Dictionary>()
+    @Permissions
+    public Result<Page<Dictionary>> get(@RequestParam(defaultValue = "0") Integer currentPage, @RequestParam(defaultValue = "10") Integer pageSize, @RequestParam Map<String, Object> params){
+        Page<Dictionary> page = dictionaryService.page(new Page<>(currentPage, pageSize, true), new QueryWrapper<Dictionary>()
                 .like(!StrUtil.isBlankIfStr(params.get("name")), "name", params.get("name"))
         );
         return Result.success(page);

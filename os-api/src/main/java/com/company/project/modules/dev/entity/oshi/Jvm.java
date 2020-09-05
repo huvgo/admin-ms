@@ -15,7 +15,7 @@ import java.util.Date;
  * @Date 2019-07-13 13:42
  */
 @Setter
-public class JvmInfo {
+public class Jvm {
     /**
      * 当前JVM占用的内存总数(M)
      */

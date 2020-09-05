@@ -25,34 +25,34 @@ import java.util.Properties;
  * @Date 2019-07-13 13:42
  */
 @Data
-public class SystemHardwareInfo {
+public class Server {
 
     private static final int OSHI_WAIT_SECOND = 1000;
 
     /**
      * CPU相关信息
      */
-    private CpuInfo cpu = new CpuInfo();
+    private Cpu cpu = new Cpu();
 
     /**
      * 內存相关信息
      */
-    private MemInfo mem = new MemInfo();
+    private Mem mem = new Mem();
 
     /**
      * JVM相关信息
      */
-    private JvmInfo jvm = new JvmInfo();
+    private Jvm jvm = new Jvm();
 
     /**
      * 服务器相关信息
      */
-    private SysInfo sys = new SysInfo();
+    private Sys sys = new Sys();
 
     /**
      * 磁盘相关信息
      */
-    private List<SysFileInfo> sysFiles = new LinkedList<>();
+    private List<SysFile> sysFiles = new LinkedList<>();
 
     public void copyTo() {
         SystemInfo si = new SystemInfo();
@@ -132,12 +132,12 @@ public class SystemHardwareInfo {
      */
     private void setSysFiles(OperatingSystem os) {
         FileSystem fileSystem = os.getFileSystem();
-        OSFileStore[] fsArray = fileSystem.getFileStores();
-        for (OSFileStore fs : fsArray) {
+        List<OSFileStore> fileStores = fileSystem.getFileStores();
+        for (OSFileStore fs : fileStores) {
             long free = fs.getUsableSpace();
             long total = fs.getTotalSpace();
             long used = total - free;
-            SysFileInfo sysFile = new SysFileInfo();
+            SysFile sysFile = new SysFile();
             sysFile.setDirName(fs.getMount());
             sysFile.setSysTypeName(fs.getType());
             sysFile.setTypeName(fs.getName());

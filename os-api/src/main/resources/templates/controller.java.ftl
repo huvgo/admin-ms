@@ -56,7 +56,7 @@ public class ${upperFirstName}Controller {
     }
 
     @GetMapping
-    public Result<Page<${upperFirstName}>> get(@RequestParam(defaultValue = "0") Integer current, @RequestParam(defaultValue = "10") Integer size, @RequestParam Map<String, Object> params) {
+    public Result<Page<${upperFirstName}>> get(@RequestParam(defaultValue = "0") Integer currentPage, @RequestParam(defaultValue = "10") Integer pageSize, @RequestParam Map<String, Object> params) {
         QueryWrapper<${upperFirstName}> queryWrapper = new QueryWrapper<>()
         <#list fields as field>
             <#if field.condition>

@@ -17,7 +17,7 @@
         :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
         @selection-change="handleSelectionChange"
       >
-        <el-table-column label="ID" prop="id" width="80" align="center" />
+        <el-table-column label="ID" prop="id" width="180" />
         <el-table-column label="菜单名称" prop="name" />
         <el-table-column label="菜单URL" prop="path" />
         <el-table-column label="授权标识" prop="perms">

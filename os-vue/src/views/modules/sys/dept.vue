@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-row :gutter="10">
       <el-col :span="4">
-        <menu-tree :data="treeData" @tree-click="handleTreeClick" />
+        <tree-card :data="treeData" @tree-click="handleTreeClick" />
       </el-col>
       <el-col :span="20">
         <el-card class="box-card">
@@ -12,6 +12,7 @@
             </el-form-item>
             <el-form-item>
               <el-button @click="fetchData()">查询</el-button>
+              <el-button type="info" @click="resetQueryFields()">重置</el-button>
               <el-button type="primary" @click="handleAdd()">新增</el-button>
               <el-button
                 plain
@@ -35,7 +36,6 @@
             <el-table-column label="上级部门" prop="parentIds">
               <template slot-scope="scope">{{ scope.row.parentIds |arrayFilter(list) }}</template>
             </el-table-column>
-            <el-table-column label="机构类型" prop="type" width="150" />
             <el-table-column label="排序" prop="sort" width="150" />
             <el-table-column align="center" label="操作" width="150">
               <template slot-scope="scope">
@@ -76,9 +76,6 @@
           />
         </el-form-item>
 
-        <el-form-item label="机构类型" prop="type">
-          <el-input v-model="dataForm.type" placeholder="请输入机构类型" />
-        </el-form-item>
         <el-form-item label="排序" prop="sort">
           <el-input v-model="dataForm.sort" placeholder="请输入排序" />
         </el-form-item>
@@ -94,9 +91,9 @@
 <script>
 import { add, del, update, getList } from '@/api/sys/dept'
 import { getTree } from '@/api/sys/dept'
-import MenuTree from './components/MenuTree'
+import TreeCard from './components/TreeCard'
 export default {
-  components: { MenuTree },
+  components: { TreeCard },
   filters: {
     statusFilter(status) {
       const statusMap = {
@@ -121,15 +118,9 @@ export default {
         parentId: 0,
         parentIds: [],
         name: '',
-        type: '',
         sort: '',
         mobile: '',
-        status: '',
-        createUserId: '',
-        createTime: '',
-        modifyUserId: '',
-        modifyTime: '',
-        deleted: ''
+        status: ''
       },
       treeData: [],
       ids: [],
@@ -139,20 +130,26 @@ export default {
     }
   },
   created() {
+    this.fetchDeptTreeData()
     this.fetchData()
   },
   methods: {
     fetchData() {
       this.listLoading = true
-      getTree().then((response) => {
-        this.treeData = response.data
-      })
-
       getList(this.queryParam).then((response) => {
         this.list = response.data.records
         this.total = response.data.total
         this.listLoading = false
       })
+    },
+    fetchDeptTreeData() {
+      getTree().then((response) => {
+        this.treeData = response.data
+      })
+    },
+    resetQueryFields() {
+      this.queryParam = {}
+      this.fetchData()
     },
     dataFormSubmit() {
       let request

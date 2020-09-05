@@ -1,9 +1,18 @@
 import request from '@/utils/request'
 const url = '/sys/user'
-export function notice(data) {
+
+export function cleearNotice(data) {
   return request({
     url: url + '/notice',
-    method: 'post',
+    method: 'delete',
+    data
+  })
+}
+
+export function getNotice(data) {
+  return request({
+    url: url + '/notice',
+    method: 'get',
     data
   })
 }

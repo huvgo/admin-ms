@@ -63,10 +63,10 @@ public class RoleController {
 
     @Permissions
     @GetMapping
-    public Result<Page<Role>> get(@RequestParam(defaultValue = "0") Integer current, @RequestParam(defaultValue = "10") Integer size, @RequestParam Map<String, Object> params){
+    public Result<Page<Role>> get(@RequestParam(defaultValue = "0") Integer currentPage, @RequestParam(defaultValue = "10") Integer pageSize, @RequestParam Map<String, Object> params){
         QueryWrapper<Role> queryWrapper = new QueryWrapper<Role>()
                 .like(!StrUtil.isBlankIfStr(params.get("name")), "name", params.get("name"));
-        Page<Role> page = roleService.page(new Page<>(current, size, true), queryWrapper);
+        Page<Role> page = roleService.page(new Page<>(currentPage, pageSize, true), queryWrapper);
         return Result.success(page);
     }
 

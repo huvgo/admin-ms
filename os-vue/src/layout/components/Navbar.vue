@@ -11,24 +11,11 @@
 
     <div class="right-menu">
       <template v-if="device!=='mobile'">
-        <!-- <search id="header-search" class="right-menu-item" /> -->
-
-        <!-- <error-log class="errLog-container right-menu-item hover-effect" /> -->
         <message-bell class="right-menu-item hover-effect" />
-        <div class="right-menu-item hover-effect">
-          <i class="el-icon-headset"></i>
-        </div>
         <div class="right-menu-item hover-effect" @click.stop="showSettingBarChange(true)">
           <i class="el-icon-brush"></i>
         </div>
         <screenfull id="screenfull" class="right-menu-item hover-effect" />
-
-        <div class="right-menu-item hover-effect">
-          <i class="el-icon-refresh"></i>
-        </div>
-        <!-- <el-tooltip content="Global Size" effect="dark" placement="bottom">
-          <size-select id="size-select" class="right-menu-item hover-effect" />
-        </el-tooltip>-->
       </template>
 
       <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">

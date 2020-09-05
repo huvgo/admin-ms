@@ -26,10 +26,10 @@ import com.company.project.modules.sys.service.UserService;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -50,7 +50,7 @@ public class UserController extends BaseController {
     private final UserNoticeService userNoticeService;
 
 
-    public UserController(UserService userService, FileService fileService, UserCache userCache, NoticeService noticeService, UserNoticeService userNoticeService){
+    public UserController(UserService userService, FileService fileService, UserCache userCache, NoticeService noticeService, UserNoticeService userNoticeService) {
         this.userService = userService;
         this.fileService = fileService;
         this.userCache = userCache;
@@ -61,7 +61,7 @@ public class UserController extends BaseController {
     @Permissions
     @PostMapping
     @Log2DB
-    public Result<Object> post(@RequestBody User user){
+    public Result<Object> post(@RequestBody User user) {
         userService.encodePassword(user);
         userService.save(user);
         return Result.success();
@@ -70,7 +70,7 @@ public class UserController extends BaseController {
     @Permissions
     @DeleteMapping
     @Log2DB
-    public Result<Object> delete(@RequestBody List<Long> ids){
+    public Result<Object> delete(@RequestBody List<Long> ids) {
         userService.removeByIds(ids);
         return Result.success();
     }
@@ -78,17 +78,17 @@ public class UserController extends BaseController {
     @Permissions
     @PutMapping
     @Log2DB
-    public Result<Object> put(@RequestBody User user){
-        if(StrUtil.isNotBlank(user.getPassword())){
+    public Result<Object> put(@RequestBody User user) {
+        if (StrUtil.isNotBlank(user.getPassword())) {
             userService.encodePassword(user);
         }
         // 冻结状态
         boolean status = user.getStatus();
-        if(!status){
+        if (!status) {
             boolean isNotOwn = !user.getId().equals(UserCacheUtil.getCurrentUser().getId());
             Assert.requireTrue(isNotOwn, ResultCode.WARNING, "您不能冻结自己的账号");
             String token = userCache.getToken(user.getUsername());
-            if(token != null){
+            if (token != null) {
                 userCache.deleteUser(token);
             }
         }
@@ -98,14 +98,14 @@ public class UserController extends BaseController {
 
     @Permissions
     @GetMapping("/{id}")
-    public Result<User> get(@PathVariable Integer id){
+    public Result<User> get(@PathVariable Integer id) {
         User user = userService.getById(id);
         return Result.success(user);
     }
 
     @Permissions
     @GetMapping
-    public Result<Page<User>> get(@RequestParam(defaultValue = "0") Integer currentPage, @RequestParam(defaultValue = "10") Integer pageSize, @RequestParam Map<String, Object> params){
+    public Result<Page<User>> get(@RequestParam(defaultValue = "0") Integer currentPage, @RequestParam(defaultValue = "10") Integer pageSize, @RequestParam Map<String, Object> params) {
 
         boolean deptIdCondition = StrUtil.isNotEmpty((String) params.get("deptId"));
         boolean usernameCondition = StrUtil.isNotEmpty((String) params.get("username"));
@@ -125,15 +125,15 @@ public class UserController extends BaseController {
     加密后密码:44944f63ddca4e2d1c77329df9e0d751
      */
     @PostMapping("/login")
-    public Result<Object> login(@RequestBody User user){
+    public Result<Object> login(@RequestBody User user) {
         User currentUser = userService.login(user.getUsername(), user.getPassword());
         boolean status = currentUser.getStatus();
-        if(!status){
+        if (!status) {
             throw new ServiceException(ResultCode.WARNING, "您的账号因异常情况被冻结，请联系管理员");
         }
         // 重新刷新缓存
         String token = userCache.getToken(currentUser.getUsername());
-        if(token == null){
+        if (token == null) {
             token = IdUtil.fastSimpleUUID();
             userCache.putToken(currentUser.getUsername(), token);
         }
@@ -142,20 +142,20 @@ public class UserController extends BaseController {
     }
 
     @GetMapping("/token")
-    public Result<Object> token(String token){
+    public Result<Object> token(String token) {
         User user = userCache.getUser(token);
         Assert.requireNonNull(user, "登录过期,请重新登陆");
         return Result.success(user);
     }
 
     @PostMapping("/logout")
-    public Result<Object> logout(){
+    public Result<Object> logout() {
         return Result.success();
     }
 
 
     @PostMapping("/upload")
-    public Result<Object> upload(@RequestParam("file") MultipartFile file){
+    public Result<Object> upload(@RequestParam("file") MultipartFile file) {
         String moduleDir = "avatar";
         String path = fileService.upload(file, moduleDir);
         User user = new User();
@@ -165,35 +165,55 @@ public class UserController extends BaseController {
         return Result.success(path);
     }
 
-    @RequestMapping("/notice")
-    public Result<List<Notice>> notice(){
+    /**
+     * 用户通知
+     */
+    @GetMapping("/notice")
+    public Result<List<Notice>> getNotice() {
         User currentUser = UserCacheUtil.getCurrentUser();
-
-        UserNotice userNotice = userNoticeService.getByUserId(currentUser.getId());
         Date now = new Date();
-        Date updateDate;
-        QueryWrapper<Notice> queryWrapper = new QueryWrapper<Notice>();
-        if(userNotice == null){
-            // 用户第一次登陆系统获取通知
-            updateDate = currentUser.getCreateTime();
-            userNotice = new UserNotice();
-            userNotice.setUserId(currentUser.getId());
-        } else{
-            // 用户不是第一次登录
+        // 用户上次获取消息的时间,如果没有则默认为创建用户的时间
+        Date updateDate = currentUser.getCreateTime();
+
+        // 为了获取用户上次从sys_notice表拉取的消息
+        UserNotice userNotice = userNoticeService.getByUserId(currentUser.getId());
+        // 构造查询条件
+        QueryWrapper<Notice> queryWrapper = new QueryWrapper<>();
+        UserNotice finalUserNotice = userNotice;
+        if (userNotice != null) {
+            // 为了把用户上次拉取的未读消息也要查询出来
             updateDate = userNotice.getUpdateDate();
-            queryWrapper.in(CollUtil.isNotEmpty(userNotice.getNoticeIds()), "id", userNotice.getNoticeIds()).or();
+            Date finalUpdateDate = updateDate;
+            queryWrapper.eq("status", "1").and(c -> c.in(CollUtil.isNotEmpty(finalUserNotice.getNoticeIds()), "id", finalUserNotice.getNoticeIds()).or().gt("create_date", finalUpdateDate).le("create_date", now));
+        } else {
+            queryWrapper.eq("status", "1").gt("create_date", updateDate).le("create_date", now);
         }
-        queryWrapper.gt("create_date", updateDate).le("create_date", now);
         List<Notice> list = noticeService.list(queryWrapper);
-        userNotice.setUpdateDate(now);
         List<Integer> noticeIds = list.stream().map(BaseEntity<Integer>::getId).collect(Collectors.toList());
+
+        // 更新用户通知信息
+        if (userNotice == null) {
+            userNotice = new UserNotice();
+        }
+        userNotice.setUserId(currentUser.getId());
+        userNotice.setUpdateDate(now);
         userNotice.setNoticeIds(noticeIds);
-        userNoticeService.saveOrUpdate(userNotice);
-        for(Notice notice : list){
-            Integer senderId = notice.getSenderId();
-            User sender = userService.getById(senderId);
-            notice.setOther(Dict.create().set("senderAvatar", sender.getAvatar()));
+        if (Objects.isNull(userNotice.getId())) {
+            userNoticeService.save(userNotice);
+        } else if (!userNotice.equals(finalUserNotice)) {
+            //有变动才去更新
+            userNoticeService.updateById(userNotice);
         }
         return Result.success(list);
+    }
+
+
+    @DeleteMapping("/notice")
+    public Result<Object> clearNotice() {
+        User currentUser = UserCacheUtil.getCurrentUser();
+        UserNotice userNotice = userNoticeService.getByUserId(currentUser.getId());
+        userNotice.getNoticeIds().clear();
+        userNoticeService.updateById(userNotice);
+        return Result.success();
     }
 }

@@ -34,6 +34,11 @@ public class Notice extends BaseEntity {
     private Integer senderId;
 
     /**
+     * 发送人头像
+     */
+    private String senderAvatar;
+
+    /**
      * 消息内容
      */
     private String content;

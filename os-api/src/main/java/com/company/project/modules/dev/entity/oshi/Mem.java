@@ -10,7 +10,7 @@ import lombok.Setter;
  * @Date 2019-07-13 13:42
  */
 @Setter
-public class MemInfo {
+public class Mem {
     /**
      * 内存总量
      */

@@ -38,7 +38,7 @@
         <el-table-column label="用户操作" prop="url" />
         <el-table-column label="请求方法" prop="method" width="100" />
         <el-table-column label="请求参数" prop="params" />
-        <el-table-column label="执行时长(毫秒)" prop="time" width="100" />
+        <el-table-column label="执行时长(毫秒)" prop="time" width="120" />
         <el-table-column label="IP地址" prop="ip" width="140" />
         <el-table-column label="创建时间" prop="createDate" width="180" />
         <el-table-column align="center" label="操作" width="150">

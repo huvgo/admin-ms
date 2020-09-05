@@ -69,12 +69,4 @@ public class MenuController {
         return Result.success(list);
     }
 
-/*    @Permissions
-    @GetMapping("/tree")
-    public Result<List<Menu>> tree(@RequestParam(value = "nonButton", required = false) boolean nonButton) {
-        List<Menu> list = menuService.list(new QueryWrapper<Menu>().ne(nonButton, "type", 2));
-        List<Menu> tree = MenuUtil.buildTree(list, 0);
-        return Result.success(tree);
-    }*/
-
 }

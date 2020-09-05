@@ -66,8 +66,14 @@
         <el-form-item label="消息内容" prop="content">
           <el-input v-model="dataForm.content" placeholder="请输入消息内容" />
         </el-form-item>
-        <el-form-item label="类型" prop="type">
-          <el-input v-model="dataForm.type" placeholder="请输入类型" />
+        <el-form-item label="发布时间" prop="createDate">
+          <el-date-picker
+            v-model="dataForm.createDate"
+            type="datetime"
+            value-format="yyyy-MM-dd HH:mm:ss"
+            placeholder="选择日期时间"
+            style="width:100%"
+          />
         </el-form-item>
         <el-form-item label="状态" prop="status">
           <el-switch v-model="dataForm.status" />
@@ -110,7 +116,7 @@ export default {
         senderId: '',
         content: '',
         createDate: '',
-        type: '',
+        type: '1',
         status: true
       },
       ids: [],

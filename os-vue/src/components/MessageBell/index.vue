@@ -3,10 +3,16 @@
     <el-tabs :stretch="true">
       <el-tab-pane label="通告">
         <div style="height: 420px;">
-          <el-table :data="list" fit highlight-current-row :show-header="false">
+          <el-table
+            v-show="list.length>0"
+            :data="list"
+            fit
+            highlight-current-row
+            :show-header="false"
+          >
             <el-table-column width="60">
               <template slot-scope="scope">
-                <el-avatar :src="scope.row.other.senderAvatar" />
+                <el-avatar :src="scope.row.senderAvatar" />
               </template>
             </el-table-column>
             <el-table-column prop="content">
@@ -17,12 +23,11 @@
               </template>
             </el-table-column>
           </el-table>
-          <div class="admin-os-item">
-            清空消息
-          </div>
+          <a v-show="list.length>0">
+            <div class="admin-notice-clear" @click="clearNotice()">清空通告</div>
+          </a>
         </div>
       </el-tab-pane>
-      <el-tab-pane label="消息">消息</el-tab-pane>
     </el-tabs>
 
     <div slot="reference">
@@ -36,7 +41,7 @@
 
 <script>
 import screenfull from 'screenfull'
-import { notice } from '@/api/sys/user'
+import { getNotice, cleearNotice } from '@/api/sys/user'
 
 export default {
   name: 'Screenfull',
@@ -73,11 +78,18 @@ export default {
       this.getNotice()
       setInterval(() => {
         this.getNotice()
-      }, 10000)
+      }, 30000)
     },
     getNotice() {
-      notice().then((response) => {
+      getNotice().then((response) => {
         this.list = response.data
+      })
+    },
+    clearNotice() {
+      cleearNotice().then((response) => {
+        if (response.code === 20000) {
+          this.list = []
+        }
       })
     },
     destroy() {
@@ -107,27 +119,21 @@ export default {
   height: 500px;
   overflow: auto;
 }
-.admin-clear-box {
-  font-size: 16px;
-  bottom: 0;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
 
-.admin-os-item{
-background: #1a59b7;
-color:#ffffff;
-overflow: hidden;
-z-index: 9999;
-position: absolute;
-padding:5px;
-text-align:center;
-width: 175px;
-height: 22px;
-border-bottom-left-radius: 4px;
-border-bottom-right-radius: 4px;
-border-top-left-radius: 4px;
-border-top-right-radius: 4px;
-bottom:10px
+.admin-notice-clear{
+  background: #fff;
+  color:#586cb1;
+  font-size: 14px;
+  font-weight: 500;
+  overflow: hidden;
+  z-index: 9999;
+  position: absolute;
+  padding:5px;
+  text-align:center;
+  width: 100%;
+  height: 28px;
+  border-top: 1px solid #f0f0f0;
+  bottom: 0;
+  line-height: 28px;
 }
 </style>

@@ -6,6 +6,7 @@
       :default-expand-all="true"
       :expand-on-click-node="false"
       :props="defaultProps"
+      :highlight-current="true"
       @node-click="handleNodeClick"
     />
   </el-card>

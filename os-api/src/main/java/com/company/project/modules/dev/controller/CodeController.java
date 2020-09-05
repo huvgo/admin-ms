@@ -38,6 +38,7 @@ public class CodeController {
     }
 
     @PostMapping("/generator")
+    @Permissions
     public Result<Object> generator(@RequestBody List<Table> tableList) throws SQLException, IOException, TemplateException {
         for (Table table : tableList) {
             if (table.isGenerator()) {

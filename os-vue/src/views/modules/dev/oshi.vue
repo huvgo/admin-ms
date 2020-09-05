@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <el-row :gutter="15">
-      <el-col :span="12">
+      <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
         <el-card class="box-card">
           <div slot="header" class="clearfix">
             <span>CPU信息</span>
@@ -32,7 +32,7 @@
           </div>
         </el-card>
       </el-col>
-      <el-col :span="12">
+      <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
         <el-card class="box-card">
           <div slot="header" class="clearfix">
             <span>内存信息</span>
@@ -111,7 +111,7 @@
             <span>服务器信息</span>
           </div>
           <div class="component-item">
-            <table v-loading="listLoading" class="table table-striped table-bordered">
+            <table v-loading="listLoading" class="table table-striped table-bordered table-min">
               <tr>
                 <td class="column">服务器名称</td>
                 <td class="value">{{ data.sys.computerName }}</td>
@@ -137,7 +137,7 @@
             <span>磁盘信息</span>
           </div>
           <div class="component-item">
-            <table v-loading="listLoading" class="table table-striped table-bordered">
+            <table v-loading="listLoading" class="table table-striped table-bordered table-min">
               <tr>
                 <td class="column">盘符路径</td>
                 <td class="column">文件系统</td>
@@ -197,11 +197,20 @@ export default {
 </script>
 
 <style scoped>
+::-webkit-scrollbar {
+/*隐藏滚轮*/
+display: none;
+}
 .line {
   text-align: center;
 }
-.el-row {
+.el-col {
   margin-bottom: 20px;
+}
+.component-item{
+  width: 100%;
+  min-width:300px;
+  overflow:scroll;
 }
 .table {
   border-collapse: collapse;
@@ -209,8 +218,10 @@ export default {
   background-color: transparent;
   display: table;
   width: 100%;
-  max-width: 100%;
   margin: 0 auto;
+}
+.table-min{
+   min-width: 488px;
 }
 .table td {
   text-align: left;

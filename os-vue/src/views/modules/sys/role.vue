@@ -58,8 +58,26 @@
         <el-form-item label="角色名称" prop="name">
           <el-input v-model="dataForm.name" placeholder="请输入角色名称" />
         </el-form-item>
-        <el-form-item label="数据权限" prop="dataScope">
-          <el-input v-model="dataForm.dataScope" placeholder="请输入数据权限范围" />
+        <el-form-item label="权限范围" prop="dataScope">
+          <el-select v-model="dataForm.dataScope " placeholder="请选择权限范围" style="width:100%">
+            <el-option
+              v-for="item in dataScopeOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item v-show="dataForm.dataScope == 2" label="数据权限">
+          <el-tree
+            ref="dept"
+            :data="treeData"
+            show-checkbox
+            default-expand-all
+            node-key="id"
+            empty-text="加载中，请稍后"
+            :props="defaultProps"
+          />
         </el-form-item>
         <el-form-item label="菜单权限" prop="menuIds">
           <el-tree
@@ -94,6 +112,7 @@
 <script>
 import { add, del, update, getList } from '@/api/sys/role'
 import { getList as getMenuList } from '@/api/sys/menu'
+import { getTree } from '@/api/sys/dept'
 import { treeDataTranslate } from '@/utils'
 
 export default {
@@ -124,16 +143,45 @@ export default {
         createUserId: '',
         createTime: ''
       },
+      // 数据范围选项
+      dataScopeOptions: [
+        {
+          value: '1',
+          label: '全部数据权限'
+        },
+        {
+          value: '2',
+          label: '自定数据权限'
+        },
+        {
+          value: '3',
+          label: '本部门数据权限'
+        },
+        {
+          value: '4',
+          label: '本部门及以下数据权限'
+        },
+        {
+          value: '5',
+          label: '仅本人数据权限'
+        }
+      ],
       ids: [],
+      treeData: [],
       list: null,
       menuList: null,
       listLoading: true,
-      total: 0
+      total: 0,
+      defaultProps: {
+        children: 'children',
+        label: 'name'
+      }
     }
   },
   created() {
     this.fetchData()
     this.fetchMenuData()
+    this.fetchDeptTreeData()
   },
   methods: {
     fetchData() {
@@ -147,6 +195,11 @@ export default {
     fetchMenuData() {
       getMenuList(this.queryParam).then((response) => {
         this.menuList = treeDataTranslate(response.data, 'id')
+      })
+    },
+    fetchDeptTreeData() {
+      getTree().then((response) => {
+        this.treeData = response.data
       })
     },
     dataFormSubmit() {

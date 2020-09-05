@@ -9,7 +9,7 @@ import lombok.Data;
  * @Date 2019-07-13 13:42
  */
 @Data
-public class SysInfo {
+public class Sys {
 
     /**
      * 服务器名称

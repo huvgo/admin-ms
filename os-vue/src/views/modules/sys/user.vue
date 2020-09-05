@@ -2,19 +2,25 @@
   <div class="app-container">
     <el-row :gutter="10">
       <el-col :span="4">
-        <menu-tree :data="treeData" @tree-click="handleTreeClick" />
+        <tree-card :data="treeData" @tree-click="handleTreeClick" />
       </el-col>
       <el-col :span="20">
         <el-card class="box-card">
-          <el-form :inline="true" :model="queryParam" @keyup.enter.native="fetchData()">
+          <el-form
+            ref="queryParam"
+            :inline="true"
+            :model="queryParam"
+            @keyup.enter.native="fetchData()"
+          >
             <el-form-item>
-              <el-input v-model="queryParam.username" placeholder="用户名" clearable />
+              <el-input v-model="queryParam.username" prop="username" placeholder="用户名" clearable />
             </el-form-item>
             <el-form-item>
-              <el-input v-model="queryParam.mobile" placeholder="手机号" clearable />
+              <el-input v-model="queryParam.mobile" prop="mobile" placeholder="手机号" clearable />
             </el-form-item>
             <el-form-item>
               <el-button @click="fetchData()">查询</el-button>
+              <el-button type="info" @click="resetQueryFields()">重置</el-button>
               <el-button type="primary" @click="handleAdd()">新增</el-button>
               <el-button
                 plain
@@ -175,9 +181,9 @@
 import { add, del, update, getList } from '@/api/sys/user'
 import { option } from '@/api/sys/role'
 import { getTree, getMap } from '@/api/sys/dept'
-import MenuTree from './components/MenuTree'
+import TreeCard from './components/TreeCard'
 export default {
-  components: { MenuTree },
+  components: { TreeCard },
   filters: {
     statusFilter(status) {
       const statusMap = {
@@ -245,6 +251,10 @@ export default {
       option().then((response) => {
         this.roleOptions = response.data
       })
+    },
+    resetQueryFields() {
+      this.queryParam = {}
+      this.fetchData()
     },
     dataFormSubmit() {
       let request

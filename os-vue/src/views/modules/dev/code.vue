@@ -131,7 +131,7 @@ export default {
       })
     },
     fetchOptionData() {
-      option({ codes: 'ymys' }).then((response) => {
+      option({ codes: 'pageStyle' }).then((response) => {
         this.ymysOptions = response.data.ymysOptions
       })
     },
