@@ -7,7 +7,6 @@ import cn.hutool.core.util.IdUtil;
 import cn.hutool.crypto.SecureUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.company.project.component.constant.UserConst;
 import com.company.project.core.Assert;
 import com.company.project.core.ServiceException;
 import com.company.project.modules.sys.entity.Menu;
@@ -66,7 +65,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         // 菜单权限
         List<Integer> roleIds = user.getRoleIds();
         List<Menu> menuList = null;
-        if(roleIds.contains(UserConst.SUPER_ADMIN_ROLE_ID)){
+        if(user.isSuperAdmin()){
             menuList = menuService.list();
         } else{
             List<Role> roles = roleService.listByIds(roleIds);

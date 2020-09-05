@@ -6,7 +6,7 @@ package com.company.project.component.constant;
 public interface UserConst {
 
     // 超级管理员角色
-    int SUPER_ADMIN_ROLE_ID = 1;
+    int SUPER_ADMIN_ID = 1;
 
 
 }
