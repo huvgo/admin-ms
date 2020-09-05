@@ -1,4 +1,5 @@
 import request from '@/utils/request'
+import { downLoadZip } from '@/utils/zipdownload'
 
 const url = '/dev/code'
 
@@ -10,3 +11,6 @@ export function getList(data) {
   })
 }
 
+export function generate(data) {
+  downLoadZip(url + '/generate', data)
+}

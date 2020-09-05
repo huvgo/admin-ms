@@ -25,7 +25,7 @@ import java.util.Date;
 @EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
 @TableName(value = "${table.name}")
-public class ${upperFirstName} extends BaseEntity {
+public class ${upperFirstName} extends BaseEntity<Integer> {
 
 <#list fields as field>
     <#if field.name != "id">

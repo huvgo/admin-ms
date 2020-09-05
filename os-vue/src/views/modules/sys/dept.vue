@@ -120,7 +120,7 @@ export default {
         name: '',
         sort: '',
         mobile: '',
-        status: ''
+        enabled: ''
       },
       treeData: [],
       ids: [],

@@ -9,7 +9,7 @@
           <el-input v-model="queryParam.type" placeholder="类型" clearable />
         </el-form-item>
         <el-form-item>
-          <el-input v-model="queryParam.status" placeholder="状态" clearable />
+          <el-input v-model="queryParam.enabled" placeholder="状态" clearable />
         </el-form-item>
         <el-form-item>
           <el-button @click="fetchData()">查询</el-button>
@@ -32,12 +32,11 @@
         <el-table-column label="消息内容" prop="content" />
         <el-table-column label="创建时间" prop="createDate" />
         <el-table-column label="类型" prop="type" />
-        <el-table-column label="状态" align="center" prop="status" width="150">
+        <el-table-column label="状态" align="center" prop="enabled" width="150">
           <template slot-scope="{row}">
-            <!-- <el-tag :type="row.status | statusFilter">{{ row.status?'正常':'冻结' }}</el-tag> -->
             <el-switch
-              v-model="row.status"
-              :active-icon-class="row.status?'el-icon-success':'el-icon-error'"
+              v-model="row.enabled"
+              :active-icon-class="row.enabled?'el-icon-success':'el-icon-error'"
               @change="handleSwitchChange(row)"
             />
           </template>
@@ -75,8 +74,8 @@
             style="width:100%"
           />
         </el-form-item>
-        <el-form-item label="状态" prop="status">
-          <el-switch v-model="dataForm.status" />
+        <el-form-item label="状态" prop="enabled">
+          <el-switch v-model="dataForm.enabled" />
         </el-form-item>
       </el-form>
       <div style="text-align:right;">
@@ -107,7 +106,7 @@ export default {
       queryParam: {
         sender: '',
         type: '',
-        status: '',
+        enabled: '',
         currentPage: 1,
         pageSize: 10
       },
@@ -117,7 +116,7 @@ export default {
         content: '',
         createDate: '',
         type: '1',
-        status: true
+        enabled: true
       },
       ids: [],
       list: null,
@@ -195,7 +194,7 @@ export default {
         this.$message({ message: response.message, type: 'success' })
       }, (err) => {
         console.log(err)
-        row.status = true
+        row.enabled = true
       })
     }
   }

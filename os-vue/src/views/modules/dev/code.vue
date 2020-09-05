@@ -76,10 +76,9 @@
 </template>
 
 <script>
-import { getList } from '@/api/dev/code'
+import { getList, generate } from '@/api/dev/code'
 import { option } from '@/api/sys/dictionary'
 import TreePopover from './../sys/components/TreePopover'
-import { downLoadZip } from '@/utils/zipdownload'
 
 export default {
   components: { TreePopover },
@@ -138,7 +137,7 @@ export default {
       })
     },
     dataFormSubmit() {
-      downLoadZip('/dev/code/generate', this.list)
+      generate(this.list)
     },
     handleSizeChange(pageSize) {
       this.queryParam.pageSize = pageSize

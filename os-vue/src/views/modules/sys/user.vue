@@ -56,12 +56,11 @@
                 </el-image>
               </template>
             </el-table-column>
-            <el-table-column label="状态" align="center" prop="status" width="150">
+            <el-table-column label="状态" align="center" prop="enabled" width="150">
               <template slot-scope="{row}">
-                <!-- <el-tag :type="row.status | statusFilter">{{ row.status?'正常':'冻结' }}</el-tag> -->
                 <el-switch
-                  v-model="row.status"
-                  :active-icon-class="row.status?'el-icon-success':'el-icon-error'"
+                  v-model="row.enabled"
+                  :active-icon-class="row.enabled?'el-icon-success':'el-icon-error'"
                   @change="handleSwitchChange(row)"
                 />
               </template>
@@ -112,8 +111,8 @@
                     placeholder="确认密码"
                   />
                 </el-form-item>
-                <el-form-item label="状态" size="mini" prop="status">
-                  <el-switch v-model="dataForm.status" />
+                <el-form-item label="状态" size="mini" prop="enabled">
+                  <el-switch v-model="dataForm.enabled" />
                 </el-form-item>
                 <el-form-item label="角色配置" prop="roleIds">
                   <el-select
@@ -210,7 +209,7 @@ export default {
         mobile: '',
         password: '',
         comfirmPassword: '',
-        status: true,
+        enabled: true,
         roleIds: [],
         name: '',
         idNumber: '',
@@ -324,7 +323,7 @@ export default {
         this.$message({ message: response.message, type: 'success' })
       }, (err) => {
         console.log(err)
-        row.status = true
+        row.enabled = true
       })
     }
   }
