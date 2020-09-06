@@ -94,9 +94,9 @@ export default {
     // 文件上传
     handleAvatarSuccess(response) {
       if (response && response.code === 20000) {
-        this.$message.success(response.message)
+        this.$message.success(response.userTips)
       } else {
-        this.$message.error(response.message)
+        this.$message.error(response.userTips)
       }
     },
     // 文件上传前校验

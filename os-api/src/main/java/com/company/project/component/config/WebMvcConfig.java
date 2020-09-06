@@ -3,7 +3,6 @@ package com.company.project.component.config;
 import cn.hutool.extra.servlet.ServletUtil;
 import com.company.project.cache.UserCacheUtil;
 import com.company.project.core.Result;
-import com.company.project.core.ResultCode;
 import com.company.project.modules.sys.entity.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
@@ -78,13 +77,13 @@ public class WebMvcConfig implements WebMvcConfigurer {
         // 获取用户信息，获取用户拥有的菜单
         String token = request.getHeader("X-Token");
         if (token == null) {
-            Result<Object> fail = Result.fail(ResultCode.NOT_LOGIN, "您需要先进行登录操作");
+            Result<Object> fail = Result.warning("您需要先进行登录操作");
             ServletUtil.write(response, objectMapper.writeValueAsString(fail), "application/json;charset=UTF-8");
             return false;
         } else {
             User user = UserCacheUtil.getUser(token);
             if (user == null) {
-                Result<Object> fail = Result.fail(ResultCode.LOGIN_EXPIRED, "您的登录已过期,请重新登陆");
+                Result<Object> fail = Result.warning("您的登录已过期,请重新登陆");
                 ServletUtil.write(response, objectMapper.writeValueAsString(fail), "application/json;charset=UTF-8");
                 return false;
             }

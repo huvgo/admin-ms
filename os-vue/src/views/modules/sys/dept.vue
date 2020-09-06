@@ -161,7 +161,7 @@ export default {
       request.then((response) => {
         this.dialogVisible = false
         this.fetchData()
-        this.$message({ message: response.message, type: 'success' })
+        this.$message({ message: response.userTips, type: 'success' })
       })
     },
     handleSizeChange(pageSize) {
@@ -181,13 +181,13 @@ export default {
     handleDelete({ $index, row }) {
       del([row.id]).then((response) => {
         this.fetchData()
-        this.$message({ message: response.message, type: 'success' })
+        this.$message({ message: response.userTips, type: 'success' })
       })
     },
     handleBatchDelete() {
       del(this.ids).then((response) => {
         this.fetchData()
-        this.$message({ message: response.message, type: 'success' })
+        this.$message({ message: response.userTips, type: 'success' })
       })
     },
     handleEdit(scope) {

@@ -12,39 +12,51 @@ public class Result<T> {
     private static final String DEFAULT_SUCCESS_MESSAGE = "操作成功";
     private static final String DEFAULT_FAIL_MESSAGE = "操作失败";
 
-    private int code;
-    private String message;
-
+    private boolean success;
+    private String errorCode;
+    private String errorMessage;
+    private String userTips;
     private T data;
 
 
     public static Result<Object> success() {
-        return new Result<>().setCode(ResultCode.SUCCESS).setMessage(DEFAULT_SUCCESS_MESSAGE);
+        return new Result<>().setSuccess(true).setUserTips(DEFAULT_SUCCESS_MESSAGE);
     }
 
     public static <T> Result<T> success(T data) {
-        return new Result<T>().setCode(ResultCode.SUCCESS).setMessage(DEFAULT_SUCCESS_MESSAGE).setData(data);
+        return new Result<T>().setSuccess(true).setUserTips(DEFAULT_SUCCESS_MESSAGE).setData(data);
     }
 
-    public static <T> Result<T> fail() {
-        return new Result<T>().setCode(ResultCode.FAIL).setMessage(DEFAULT_FAIL_MESSAGE);
+    public static <T> Result<T> warning(String userTips) {
+        return new Result<T>().setSuccess(false).setUserTips(userTips);
     }
 
-    public static <T> Result<T> fail(ResultCode resultCode) {
-        return new Result<T>().setCode(resultCode).setMessage(DEFAULT_FAIL_MESSAGE);
+    public static <T> Result<T> warning(ErrorCode errorCode, String userTips) {
+        return new Result<T>().setSuccess(false).setErrorCode(errorCode.value()).setUserTips(userTips);
     }
 
-    public static <T> Result<T> fail(ResultCode resultCode, String msg) {
-        return new Result<T>().setCode(resultCode).setMessage(msg);
+    public static <T> Result<T> error(ErrorCode errorCode, String userTips, String errorMessage) {
+        return new Result<T>().setSuccess(false).setErrorCode(errorCode.value()).setUserTips(userTips).setErrorMessage(errorMessage);
     }
 
-    public Result<T> setCode(ResultCode resultCode) {
-        this.code = resultCode.code();
+
+    public Result<T> setSuccess(boolean success) {
+        this.success = success;
         return this;
     }
 
-    public Result<T> setMessage(String message) {
-        this.message = message;
+    public Result<T> setErrorCode(String errorCode) {
+        this.errorCode = errorCode;
+        return this;
+    }
+
+    public Result<T> setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
+        return this;
+    }
+
+    public Result<T> setUserTips(String userTips) {
+        this.userTips = userTips;
         return this;
     }
 

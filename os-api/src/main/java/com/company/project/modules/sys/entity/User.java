@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
 import com.company.project.modules.base.entity.BaseEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -116,6 +117,7 @@ public class User extends BaseEntity<Integer> {
     @TableField(exist = false)
     private List<Menu> menuList;
 
+    @JsonIgnore
     public boolean isSuperAdmin() {
         return this.getId().equals(1);
     }

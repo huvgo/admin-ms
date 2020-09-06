@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.company.project.component.annotation.Log2DB;
 import com.company.project.component.annotation.Permissions;
 import com.company.project.core.Result;
-import com.company.project.core.ServiceException;
 import com.company.project.modules.sys.entity.Menu;
 import com.company.project.modules.sys.service.MenuService;
 import org.springframework.web.bind.annotation.*;
@@ -33,7 +32,7 @@ public class MenuController {
     @Log2DB
     public Result<Object> post(@RequestBody Menu menu) {
         if (menu.getParentId() == 0 && menu.getType() != 0) {
-            throw new ServiceException("菜单或按钮必须选择上级菜单");
+            return Result.warning("菜单或按钮必须选择上级菜单");
         }
         menuService.save(menu);
         return Result.success();

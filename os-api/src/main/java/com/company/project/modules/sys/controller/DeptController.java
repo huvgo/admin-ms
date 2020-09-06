@@ -67,7 +67,7 @@ public class DeptController {
 
         QueryWrapper<Dept> queryWrapper = new QueryWrapper<Dept>()
                 .like(nameCondition, "name", params.get("name"))
-                .and(deptIdCondition, i -> i.eq("id", params.get("deptId")).or().apply("FIND_IN_SET({0},parent_ids)", params.get("deptId")));
+                .and(deptIdCondition, i -> i.eq("id", params.get("deptId")).or().apply("JSON_CONTAINS(parent_ids,{0})", params.get("deptId")));
 
         Page<Dept> page = deptService.page(new Page<>(currentPage, pageSize, true), queryWrapper);
         return Result.success(page);

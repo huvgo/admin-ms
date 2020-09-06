@@ -146,23 +146,23 @@ export default {
       // 数据范围选项
       dataScopeOptions: [
         {
-          value: '1',
+          value: 1,
           label: '全部数据权限'
         },
         {
-          value: '2',
+          value: 2,
           label: '自定数据权限'
         },
         {
-          value: '3',
+          value: 3,
           label: '本部门数据权限'
         },
         {
-          value: '4',
+          value: 4,
           label: '本部门及以下数据权限'
         },
         {
-          value: '5',
+          value: 5,
           label: '仅本人数据权限'
         }
       ],
@@ -212,7 +212,7 @@ export default {
       request.then((response) => {
         this.dialogVisible = false
         this.fetchData()
-        this.$message({ message: response.message, type: 'success' })
+        this.$message({ message: response.userTips, type: 'success' })
       })
     },
     handleSizeChange(pageSize) {
@@ -233,13 +233,13 @@ export default {
     handleDelete({ $index, row }) {
       del([row.id]).then((response) => {
         this.fetchData()
-        this.$message({ message: response.message, type: 'success' })
+        this.$message({ message: response.userTips, type: 'success' })
       })
     },
     handleBatchDelete() {
       del(this.ids).then((response) => {
         this.fetchData()
-        this.$message({ message: response.message, type: 'success' })
+        this.$message({ message: response.userTips, type: 'success' })
       })
     },
     handleEdit(scope) {

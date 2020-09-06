@@ -46,19 +46,20 @@ service.interceptors.response.use(
     const res = response.data
 
     // if the custom code is not 20000, it is judged as an error.
-    if (res.code !== 20000) {
-      let type = 'error'
-      if (res.code.toString().indexOf('5000') === 0) {
-        type = 'warning'
+    if (!res.success) {
+      let type = 'warning'
+      if (res.errorCode != null) {
+        type = 'error'
+        console.log(res.errorMessage)
       }
       Message({
-        message: res.message || 'Error',
+        message: res.userTips || 'Error',
         type: type,
         duration: 5 * 1000
       })
 
       // 50008: Illegal token; 50012: Other clients logged in; 50014: Token expired;
-      if (res.code === 50008 || res.code === 50012 || res.code === 50014) {
+      if (res.errorCode === 'A0001' || res.errorCode === 'A0002' || res.errorCode === '"A0003"') {
         // to re-login
         MessageBox.confirm(res.message, '登录过期', {
           confirmButtonText: '重新登录',

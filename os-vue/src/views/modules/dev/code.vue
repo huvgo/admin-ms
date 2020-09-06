@@ -77,7 +77,6 @@
 
 <script>
 import { getList, generate } from '@/api/dev/code'
-import { option } from '@/api/sys/dictionary'
 import TreePopover from './../sys/components/TreePopover'
 
 export default {
@@ -107,7 +106,7 @@ export default {
         currentPage: 1,
         pageSize: 10
       },
-      ymysOptions: [],
+      ymysOptions: [{ 'code': 'input', 'label': 'Input 输入框', 'value': '1' }, { 'code': 'select', 'label': 'Select 选择器', 'value': '2' }, { 'code': 'date', 'label': 'Date 日期选择器', 'value': '3' }, { 'code': 'switch', 'label': 'Switch 开关', 'value': '4' }],
       list: null,
       listLoading: true,
       total: 0,
@@ -120,7 +119,6 @@ export default {
   },
   created() {
     this.fetchData()
-    this.fetchOptionData()
   },
   methods: {
     fetchData() {
@@ -129,11 +127,6 @@ export default {
         this.list = response.data.records
         this.total = response.data.total
         this.listLoading = false
-      })
-    },
-    fetchOptionData() {
-      option({ codes: 'pageStyle' }).then((response) => {
-        this.ymysOptions = response.data.ymysOptions
       })
     },
     dataFormSubmit() {

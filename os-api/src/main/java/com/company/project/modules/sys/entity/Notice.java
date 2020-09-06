@@ -3,6 +3,7 @@ package com.company.project.modules.sys.entity;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.company.project.modules.base.entity.BaseEntity;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -46,6 +47,7 @@ public class Notice extends BaseEntity<Integer> {
     /**
      * 推送日期时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date pushTime;
 
     /**

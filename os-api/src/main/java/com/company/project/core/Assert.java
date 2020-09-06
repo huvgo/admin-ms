@@ -5,24 +5,15 @@ package com.company.project.core;
  */
 public class Assert {
 
-    public static <T> void requireNonNull(T obj, String errorMsgTemplate) {
+    public static <T> void requireNonNull(T obj, String userTips) {
         if (obj == null)
-            throw new ServiceException(errorMsgTemplate);
+            throw new ServiceException(Result.warning(userTips));
     }
 
-    public static <T> void requireNonNull(T obj, ResultCode resultCode, String errorMsgTemplate) {
-        if (obj == null)
-            throw new ServiceException(resultCode, errorMsgTemplate);
-    }
 
-    public static void requireTrue(boolean expression, String errorMsgTemplate) {
+    public static void requireTrue(boolean expression, String userTips) {
         if (!expression)
-            throw new ServiceException(errorMsgTemplate);
+            throw new ServiceException(Result.warning(userTips));
     }
 
-
-    public static void requireTrue(boolean expression, ResultCode resultCode, String errorMsgTemplate) {
-        if (!expression)
-            throw new ServiceException(resultCode, errorMsgTemplate);
-    }
 }

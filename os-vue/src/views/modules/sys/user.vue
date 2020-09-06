@@ -265,7 +265,7 @@ export default {
       request.then((response) => {
         this.dialogVisible = false
         this.fetchData()
-        this.$message({ message: response.message, type: 'success' })
+        this.$message({ message: response.userTips, type: 'success' })
       })
     },
     handleSizeChange(pageSize) {
@@ -287,14 +287,14 @@ export default {
     handleDelete({ $index, row }) {
       del([row.id]).then((response) => {
         this.fetchData()
-        this.$message({ message: response.message, type: 'success' })
+        this.$message({ message: response.userTips, type: 'success' })
       })
     },
     handleBatchDelete() {
       const ids = this.multipleSelection.map(item => { return item.id })
       del(ids).then((response) => {
         this.fetchData()
-        this.$message({ message: response.message, type: 'success' })
+        this.$message({ message: response.userTips, type: 'success' })
       })
     },
     handleEdit(scope) {
@@ -320,7 +320,7 @@ export default {
       update(row).then((response) => {
         this.dialogVisible = false
         this.fetchData()
-        this.$message({ message: response.message, type: 'success' })
+        this.$message({ message: response.userTips, type: 'success' })
       }, (err) => {
         console.log(err)
         row.enabled = true

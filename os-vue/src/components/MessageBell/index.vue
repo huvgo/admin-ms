@@ -87,9 +87,7 @@ export default {
     },
     clearNotice() {
       cleearNotice().then((response) => {
-        if (response.code === 20000) {
-          this.list = []
-        }
+        this.list = []
       })
     },
     destroy() {

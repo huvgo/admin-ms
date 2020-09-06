@@ -12,8 +12,6 @@ import com.company.project.component.annotation.Log2DB;
 import com.company.project.component.annotation.Permissions;
 import com.company.project.core.Assert;
 import com.company.project.core.Result;
-import com.company.project.core.ResultCode;
-import com.company.project.core.ServiceException;
 import com.company.project.modules.base.controller.BaseController;
 import com.company.project.modules.base.entity.BaseEntity;
 import com.company.project.modules.sys.entity.Notice;
@@ -28,7 +26,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -83,7 +80,7 @@ public class UserController extends BaseController {
         boolean status = user.getEnabled();
         if (!status) {
             boolean isNotOwn = !user.getId().equals(UserCacheUtil.getCurrentUser().getId());
-            Assert.requireTrue(isNotOwn, ResultCode.WARNING, "您不能冻结自己的账号");
+            Assert.requireTrue(isNotOwn, "您不能冻结自己的账号");
             String token = userCache.getToken(user.getUsername());
             if (token != null) {
                 userCache.deleteUser(token);
@@ -111,7 +108,7 @@ public class UserController extends BaseController {
         QueryWrapper<User> queryWrapper = new QueryWrapper<User>()
                 .like(usernameCondition, "username", params.get("username"))
                 .eq(mobileCondition, "mobile", params.get("mobile"))
-                .and(deptIdCondition, i -> i.eq("dept_Id", params.get("deptId")).or().apply("FIND_IN_SET({0},dept_Ids)", params.get("deptId")));
+                .and(deptIdCondition, i -> i.eq("dept_Id", params.get("deptId")).or().apply("JSON_CONTAINS(dept_Ids,{0})", params.get("deptId")));
         Page<User> page = userService.page(new Page<>(currentPage, pageSize, true), queryWrapper);
         return Result.success(page);
     }
@@ -125,9 +122,7 @@ public class UserController extends BaseController {
     public Result<Object> login(@RequestBody User user) {
         User currentUser = userService.login(user.getUsername(), user.getPassword());
         boolean status = currentUser.getEnabled();
-        if (!status) {
-            throw new ServiceException(ResultCode.WARNING, "您的账号因异常情况被冻结，请联系管理员");
-        }
+        Assert.requireTrue(status, "您的账号因异常情况被冻结，请联系管理员");
         // 重新刷新缓存
         String token = userCache.getToken(currentUser.getUsername());
         if (token == null) {
@@ -181,9 +176,9 @@ public class UserController extends BaseController {
             // 为了把用户上次拉取的未读消息也要查询出来
             updateDate = userNotice.getUpdateTime();
             Date finalUpdateDate = updateDate;
-            queryWrapper.eq("is_enabled", "1").and(c -> c.in(CollUtil.isNotEmpty(finalUserNotice.getNoticeIds()), "id", finalUserNotice.getNoticeIds()).or().gt("push_time", finalUpdateDate).le("push_time", now));
+            queryWrapper.eq("is_enabled", true).and(c -> c.in(CollUtil.isNotEmpty(finalUserNotice.getNoticeIds()), "id", finalUserNotice.getNoticeIds()).or().gt("push_time", finalUpdateDate).le("push_time", now));
         } else {
-            queryWrapper.eq("is_enabled", "1").gt("push_time", updateDate).le("push_time", now);
+            queryWrapper.eq("is_enabled", true).gt("push_time", updateDate).le("push_time", now);
         }
         List<Notice> list = noticeService.list(queryWrapper);
         List<Integer> noticeIds = list.stream().map(BaseEntity<Integer>::getId).collect(Collectors.toList());
