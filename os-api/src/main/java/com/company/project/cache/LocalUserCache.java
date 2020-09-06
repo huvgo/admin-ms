@@ -24,7 +24,7 @@ public class LocalUserCache implements UserCache {
     }
 
     @Override
-    public void deleteUser(String token) {
+    public synchronized void deleteUser(String token) {
         userCache.remove(token);
     }
 

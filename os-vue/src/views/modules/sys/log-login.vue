@@ -35,12 +35,9 @@
       >
         <el-table-column type="selection" header-align="center" align="center" width="50" />
         <el-table-column label="操作人" prop="operator" width="100" />
-        <el-table-column label="用户操作" prop="url" />
-        <el-table-column label="请求方法" prop="method" width="100" />
         <el-table-column label="请求参数" prop="params" />
-        <el-table-column label="执行时长(毫秒)" prop="time" width="120" />
         <el-table-column label="IP地址" prop="ip" width="140" />
-        <el-table-column label="创建时间" prop="createTime" width="180" />
+        <el-table-column label="登录时间" prop="createTime" width="180" />
         <el-table-column align="center" label="操作" width="150">
           <template slot-scope="scope">
             <el-button size="mini" @click="handleEdit(scope)">修改</el-button>
@@ -124,7 +121,7 @@ export default {
         method: '',
         params: '',
         ip: '',
-        type: 0,
+        type: 1,
         createTime: '',
         currentPage: 1,
         pageSize: 10

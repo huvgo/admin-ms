@@ -1,19 +1,16 @@
 package com.company.project.modules.sys.controller;
 
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.company.project.component.annotation.Permissions;
 import com.company.project.core.Result;
-import org.springframework.web.bind.annotation.*;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.company.project.modules.sys.service.LogService;
 import com.company.project.modules.sys.entity.Log;
+import com.company.project.modules.sys.service.LogService;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-
-import org.springframework.web.bind.annotation.RestController;
 
 /**
  * <p>
@@ -64,9 +61,10 @@ public class LogController {
     @Permissions
     public Result<Page<Log>> get(@RequestParam(defaultValue = "0") Integer currentPage, @RequestParam(defaultValue = "10") Integer pageSize, @RequestParam Map<String, Object> params) {
         Page<Log> page = logService.page(new Page<>(currentPage, pageSize, true), new QueryWrapper<Log>()
-                .eq(StrUtil.isNotBlank((String)params.get("operator")), "operator", params.get("operator"))
-                .eq(StrUtil.isNotBlank((String)params.get("method")), "method", params.get("method"))
-                .like(StrUtil.isNotBlank((String)params.get("params")), "params", params.get("params"))
+                .eq(StrUtil.isNotBlank((String) params.get("operator")), "operator", params.get("operator"))
+                .eq(StrUtil.isNotBlank((String) params.get("type")), "type", params.get("type"))
+                .eq(StrUtil.isNotBlank((String) params.get("method")), "method", params.get("method"))
+                .like(StrUtil.isNotBlank((String) params.get("params")), "params", params.get("params"))
                 .orderByDesc("create_time")
         );
         return Result.success(page);

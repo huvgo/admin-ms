@@ -1,12 +1,10 @@
 package com.company.project.modules.sys.entity;
 
-import com.company.project.modules.base.entity.BaseEntity;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.company.project.modules.base.entity.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
-
-import java.util.Date;
 
 /**
  * <p>
@@ -57,6 +55,10 @@ public class Log extends BaseEntity<Integer> {
      */
     private String ip;
 
+    /**
+     * 日志类型
+     */
+    private Integer type;
 
 }
 

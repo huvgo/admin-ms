@@ -1,4 +1,4 @@
-package com.company.project.component.constant;
+package com.company.project.modules.sys.constant;
 
 /**
  * 角色的数据权限常量

@@ -2,6 +2,7 @@ package com.company.project.component.aspect;
 
 import cn.hutool.extra.servlet.ServletUtil;
 import com.company.project.cache.UserCacheUtil;
+import com.company.project.modules.sys.constant.LogType;
 import com.company.project.modules.sys.entity.Log;
 import com.company.project.modules.sys.service.LogService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -16,7 +17,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
-import java.sql.Timestamp;
+import java.util.Date;
 
 @Component
 @Aspect
@@ -27,21 +28,21 @@ public class LogAspect {
     private final LogService logService;
 
     @Autowired
-    public LogAspect(ObjectMapper objectMapper, LogService logService){
+    public LogAspect(ObjectMapper objectMapper, LogService logService) {
         this.objectMapper = objectMapper;
         this.logService = logService;
     }
 
 
     @Pointcut("@annotation(com.company.project.component.annotation.Log2DB)")
-    public void log(){
+    public void log() {
     }
 
     /**
      * 环绕通知  在方法的调用前、后执行
      */
     @Around("log()")
-    public Object doAround(ProceedingJoinPoint point) throws Throwable{
+    public Object doAround(ProceedingJoinPoint point) throws Throwable {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = attributes.getRequest();
         //开始时间
@@ -53,6 +54,7 @@ public class LogAspect {
         //时间差
         long timeDiff = (end - begin);
         Log log = new Log();
+        log.setType(LogType.SYSTEM_LOG);
         log.setIp(ServletUtil.getClientIP(request));
         log.setMethod(request.getMethod());
         log.setParams(objectMapper.writeValueAsString(point.getArgs()[0]));
@@ -60,7 +62,7 @@ public class LogAspect {
         log.setOperatorId(UserCacheUtil.getCurrentUser().getId());
         log.setUrl(request.getRequestURL().toString());
         log.setTime(timeDiff);
-//        log.setCreateDate(new Timestamp(System.currentTimeMillis()));
+        log.setCreateTime(new Date());
         logService.save(log);
         return obj;
     }

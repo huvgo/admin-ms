@@ -1,4 +1,4 @@
-package com.company.project.component.constant;
+package com.company.project.modules.sys.constant;
 
 /**
  * 用户信息 常量

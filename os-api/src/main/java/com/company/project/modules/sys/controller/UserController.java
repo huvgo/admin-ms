@@ -4,6 +4,10 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.extra.servlet.ServletUtil;
+import cn.hutool.http.useragent.UserAgent;
+import cn.hutool.http.useragent.UserAgentUtil;
+import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.company.project.cache.UserCache;
@@ -14,15 +18,20 @@ import com.company.project.core.Assert;
 import com.company.project.core.Result;
 import com.company.project.modules.base.controller.BaseController;
 import com.company.project.modules.base.entity.BaseEntity;
+import com.company.project.modules.sys.constant.LogType;
+import com.company.project.modules.sys.entity.Log;
 import com.company.project.modules.sys.entity.Notice;
 import com.company.project.modules.sys.entity.User;
 import com.company.project.modules.sys.entity.UserNotice;
+import com.company.project.modules.sys.service.LogService;
 import com.company.project.modules.sys.service.NoticeService;
 import com.company.project.modules.sys.service.UserNoticeService;
 import com.company.project.modules.sys.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -36,6 +45,7 @@ import java.util.stream.Collectors;
  * @author root
  * @since 2020-08-18
  */
+@Slf4j
 @RestController
 @RequestMapping("/sys/user")
 public class UserController extends BaseController {
@@ -43,13 +53,15 @@ public class UserController extends BaseController {
     private final UserCache userCache;
     private final NoticeService noticeService;
     private final UserNoticeService userNoticeService;
+    private final LogService logService;
 
 
-    public UserController(UserService userService, UserCache userCache, NoticeService noticeService, UserNoticeService userNoticeService) {
+    public UserController(UserService userService, UserCache userCache, NoticeService noticeService, UserNoticeService userNoticeService, LogService logService) {
         this.userService = userService;
         this.userCache = userCache;
         this.noticeService = noticeService;
         this.userNoticeService = userNoticeService;
+        this.logService = logService;
     }
 
     @Permissions
@@ -119,7 +131,7 @@ public class UserController extends BaseController {
     加密后密码:44944f63ddca4e2d1c77329df9e0d751
      */
     @PostMapping("/login")
-    public Result<Object> login(@RequestBody User user) {
+    public Result<Object> login(@RequestBody User user, HttpServletRequest httpRequest) {
         User currentUser = userService.login(user.getUsername(), user.getPassword());
         boolean status = currentUser.getEnabled();
         Assert.requireTrue(status, "您的账号因异常情况被冻结，请联系管理员");
@@ -130,6 +142,17 @@ public class UserController extends BaseController {
             userCache.putToken(currentUser.getUsername(), token);
         }
         userCache.putUser(token, currentUser);
+
+        try {
+            Log log = new Log();
+            String userAgent = ServletUtil.getHeader(httpRequest, "User-Agent", "UTF-8");
+            UserAgent ua = UserAgentUtil.parse(userAgent);
+            log.setType(LogType.LOGIN_LOG).setParams(JSONUtil.toJsonStr(ua)).setIp(ServletUtil.getClientIP(httpRequest)).setOperator(user.getUsername()).setCreateTime(new Date());
+            logService.save(log);
+        } catch (Exception e) {
+            log.warn("日志记录失败：{}", e.getMessage());
+        }
+
         return Result.success(Dict.create().set("token", token));
     }
 
