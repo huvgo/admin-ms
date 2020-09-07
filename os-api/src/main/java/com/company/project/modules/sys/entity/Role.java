@@ -1,14 +1,13 @@
 package com.company.project.modules.sys.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
 import com.company.project.modules.base.entity.BaseEntity;
-import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -35,6 +34,12 @@ public class Role extends BaseEntity<Integer> {
      */
     @TableField(typeHandler = JacksonTypeHandler.class)
     private List<Integer> menuIds;
+
+    /**
+     * 自定义数据权限 角色与部门对应关系
+     */
+    @TableField(typeHandler = JacksonTypeHandler.class)
+    private List<Integer> deptIds;
 
     /**
      * 数据权限范围

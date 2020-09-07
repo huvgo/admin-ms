@@ -70,23 +70,23 @@
         </el-form-item>
         <el-form-item v-show="dataForm.dataScope == 2" label="数据权限">
           <el-tree
-            ref="dept"
+            ref="deptTree"
             :data="treeData"
-            show-checkbox
-            default-expand-all
-            node-key="id"
-            empty-text="加载中，请稍后"
             :props="defaultProps"
+            show-checkbox
+            node-key="id"
+            :expand-on-click-node="false"
+            :check-strictly="true"
+            :check-on-click-node="true"
+            :default-expand-all="true"
+            @check="handleDeptNodeClick"
           />
         </el-form-item>
         <el-form-item label="菜单权限" prop="menuIds">
           <el-tree
             ref="menuTree"
             :data="menuList"
-            :props="{
-              children: 'children',
-              label: 'name'
-            }"
+            :props="defaultProps"
             show-checkbox
             node-key="id"
             class="permission-tree"
@@ -94,7 +94,7 @@
             :check-strictly="true"
             :check-on-click-node="true"
             :default-expand-all="true"
-            @check="handleNodeClick"
+            @check="handleMenuNodeClick"
           />
         </el-form-item>
         <el-form-item label="备注" prop="remark">
@@ -137,6 +137,7 @@ export default {
       dataForm: {
         name: '',
         menuIds: [],
+        deptIds: [],
         dataScope: '',
         remark: '',
         deptId: '',
@@ -255,10 +256,13 @@ export default {
         return item.id
       })
     },
-    handleNodeClick(data, checked) {
+    handleMenuNodeClick(data, checked) {
       this.dataForm.menuIds = checked.checkedKeys.concat(checked.halfCheckedKeys)
-      // this.dataForm.menuIds = checked.checkedKeys
+    },
+    handleDeptNodeClick(data, checked) {
+      this.dataForm.deptIds = checked.checkedKeys.concat(checked.halfCheckedKeys)
     }
+
   }
 }
 </script>

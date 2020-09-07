@@ -1,7 +1,9 @@
 package com.company.project.core;
 
 /**
- * 响应码枚举，参考HTTP状态码的语义
+ * 响应码枚举
+ * 以A开头的错误码为警告型错误码 多为用户输入错误
+ * 以B开头的错误码为异常型错误码 为非用户造成的错误
  */
 public enum ErrorCode {
     WARNING("A0000"),//用户警告
