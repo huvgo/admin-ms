@@ -1,10 +1,14 @@
 package com.company.project.modules.sys.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
 import com.company.project.modules.base.entity.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+
+import java.util.Map;
 
 /**
  * <p>
@@ -17,7 +21,7 @@ import lombok.experimental.Accessors;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
-@TableName(value = "sys_log")
+@TableName(value = "sys_log", autoResultMap = true)
 public class Log extends BaseEntity<Integer> {
 
     /**
@@ -31,24 +35,10 @@ public class Log extends BaseEntity<Integer> {
     private Integer operatorId;
 
     /**
-     * 请求URL
+     * 日志内容
      */
-    private String url;
-
-    /**
-     * 请求方法
-     */
-    private String method;
-
-    /**
-     * 请求参数
-     */
-    private String params;
-
-    /**
-     * 执行时长(毫秒)
-     */
-    private Long time;
+    @TableField(typeHandler = JacksonTypeHandler.class)
+    private Map<String,Object> content;
 
     /**
      * IP地址

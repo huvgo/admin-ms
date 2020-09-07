@@ -35,12 +35,12 @@
       >
         <el-table-column type="selection" header-align="center" align="center" width="50" />
         <el-table-column label="操作人" prop="operator" width="100" />
-        <el-table-column label="请求参数" prop="params" />
+        <el-table-column label="操作系统" prop="content.os" />
+        <el-table-column label="浏览器" prop="content.browser" />
         <el-table-column label="IP地址" prop="ip" width="140" />
         <el-table-column label="登录时间" prop="createTime" width="180" />
         <el-table-column align="center" label="操作" width="150">
           <template slot-scope="scope">
-            <el-button size="mini" @click="handleEdit(scope)">修改</el-button>
             <el-button type="danger" size="mini" @click="handleDelete(scope)">删除</el-button>
           </template>
         </el-table-column>
@@ -55,46 +55,6 @@
         @current-change="handleCurrentChange"
       />
     </el-card>
-    <el-dialog :visible.sync="dialogVisible" :title="'新增'">
-      <el-form ref="dataForm" :model="dataForm" label-width="80px" label-position="left">
-        <el-form-item v-show="false" label="ID" prop="id" />
-        <el-form-item v-show="false" label="ID" prop="id" />
-        <el-form-item label="操作人" prop="operator">
-          <el-input v-model="dataForm.operator" placeholder="请输入操作人" />
-        </el-form-item>
-        <el-form-item label="操作用户ID" prop="operatorId">
-          <el-input v-model="dataForm.operatorId" placeholder="请输入操作用户ID" />
-        </el-form-item>
-        <el-form-item label="请求URL" prop="url">
-          <el-input v-model="dataForm.url" placeholder="请输入请求URL" />
-        </el-form-item>
-        <el-form-item label="请求方法" prop="method">
-          <el-input v-model="dataForm.method" placeholder="请输入请求方法" />
-        </el-form-item>
-        <el-form-item label="请求参数" prop="params">
-          <el-input v-model="dataForm.params" placeholder="请输入请求参数" />
-        </el-form-item>
-        <el-form-item label="执行时长(毫秒)" prop="time">
-          <el-input v-model="dataForm.time" placeholder="请输入执行时长(毫秒)" />
-        </el-form-item>
-        <el-form-item label="IP地址" prop="ip">
-          <el-input v-model="dataForm.ip" placeholder="请输入IP地址" />
-        </el-form-item>
-        <el-form-item label="创建时间" prop="createTime">
-          <el-date-picker
-            v-model="dataForm.createTime"
-            style="width:100%"
-            type="date"
-            format="yyyy-MM-dd"
-            placeholder="选择用户操作日期"
-          />
-        </el-form-item>
-      </el-form>
-      <div style="text-align:right;">
-        <el-button type="danger" @click="dialogVisible=false">取消</el-button>
-        <el-button type="primary" @click="dataFormSubmit()">确定</el-button>
-      </div>
-    </el-dialog>
   </div>
 </template>
 

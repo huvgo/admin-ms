@@ -7,7 +7,6 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.servlet.ServletUtil;
 import cn.hutool.http.useragent.UserAgent;
 import cn.hutool.http.useragent.UserAgentUtil;
-import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.company.project.cache.UserCache;
@@ -33,6 +32,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -147,7 +147,10 @@ public class UserController extends BaseController {
             Log log = new Log();
             String userAgent = ServletUtil.getHeader(httpRequest, "User-Agent", "UTF-8");
             UserAgent ua = UserAgentUtil.parse(userAgent);
-            log.setType(LogType.LOGIN_LOG).setParams(JSONUtil.toJsonStr(ua)).setIp(ServletUtil.getClientIP(httpRequest)).setOperator(user.getUsername()).setCreateTime(new Date());
+            HashMap<String, Object> content = new HashMap<>();
+            content.put("os", ua.getOs().toString());
+            content.put("browser", ua.getBrowser().toString());
+            log.setType(LogType.LOGIN_LOG).setContent(content).setIp(ServletUtil.getClientIP(httpRequest)).setOperator(user.getUsername()).setCreateTime(new Date());
             logService.save(log);
         } catch (Exception e) {
             log.warn("日志记录失败：{}", e.getMessage());
