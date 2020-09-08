@@ -26,6 +26,7 @@ import com.company.project.modules.system.entity.User;
 import com.company.project.modules.system.entity.UserNotice;
 import com.company.project.modules.system.service.*;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -70,7 +71,7 @@ public class UserController extends BaseController {
     @Permissions
     @PostMapping
     @Log2DB
-    public Result<?> post(@RequestBody User user) {
+    public Result<?> post(@RequestBody @Validated User user) {
         userService.encodePassword(user);
         userService.save(user);
         return Results.SUCCESS;

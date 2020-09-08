@@ -11,7 +11,7 @@ import cn.hutool.db.sql.SqlExecutor;
 import com.company.project.modules.engine.entity.code.Column;
 import com.company.project.modules.engine.entity.code.Table;
 import com.company.project.modules.engine.util.CodeUtils;
-import com.company.project.util.JDBCUtils;
+import com.company.project.modules.engine.util.JDBCUtils;
 import org.springframework.stereotype.Component;
 
 import java.sql.Connection;
@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-public class TableMapper {
+public class CodeMapper {
     public List<Table> page(Integer offset, Integer limit, Map<String, Object> params) throws SQLException {
         String sql = "select table_name name, engine, table_comment comment, create_time createTime " +
                 "from information_schema.tables " +

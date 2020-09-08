@@ -5,7 +5,7 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.company.project.modules.engine.entity.code.Table;
 import com.company.project.modules.engine.entity.code.Template;
-import com.company.project.modules.engine.mapper.TableMapper;
+import com.company.project.modules.engine.mapper.CodeMapper;
 import com.company.project.modules.engine.service.CodeService;
 import com.company.project.modules.engine.util.CodeUtils;
 import com.company.project.modules.engine.util.FreeMarkUtils;
@@ -25,17 +25,17 @@ import java.util.zip.ZipOutputStream;
 @Service
 public class CodeServiceImpl implements CodeService {
 
-    private final TableMapper tableMapper;
+    private final CodeMapper codeMapper;
 
-    public CodeServiceImpl(TableMapper tableMapper) {
-        this.tableMapper = tableMapper;
+    public CodeServiceImpl(CodeMapper codeMapper) {
+        this.codeMapper = codeMapper;
     }
 
     @Override
     public Page<Table> page(Integer currentPage, Integer pageSize, Map<String, Object> params) throws SQLException {
         Page<Table> page = new Page<>();
-        page.setRecords(tableMapper.page((currentPage - 1) * pageSize, pageSize, params));
-        page.setTotal(tableMapper.total(params));
+        page.setRecords(codeMapper.page((currentPage - 1) * pageSize, pageSize, params));
+        page.setTotal(codeMapper.total(params));
         return page;
     }
 

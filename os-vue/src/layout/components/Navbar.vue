@@ -34,7 +34,7 @@
           <a target="_blank" href="https://github.com/PanJiaChen/vue-element-admin/">
             <el-dropdown-item>项目地址</el-dropdown-item>
           </a>
-          <a target="_blank" href="https://panjiachen.github.io/vue-element-admin-site/#/">
+          <a target="_blank" href="#">
             <el-dropdown-item>文档</el-dropdown-item>
           </a>
           <el-dropdown-item divided @click.native="logout">

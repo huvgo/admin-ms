@@ -57,7 +57,22 @@ service.interceptors.response.use(
         type: type,
         duration: 5 * 1000
       })
+      if (res.errorCode === 'B0001') {
+        let timeout = 0
+        for (let i = 0; i < res.data.length; i++) {
+          const errorMessage = res.data[i]
 
+          setTimeout(() => {
+            // 这里就是处理的事件
+            Message({
+              message: errorMessage,
+              type: 'warning',
+              duration: 3 * 1000
+            })
+          }, timeout)
+          timeout = timeout + 200
+        }
+      }
       // 50008: Illegal token; 50012: Other clients logged in; 50014: Token expired;
       if (res.errorCode === 'A0001' || res.errorCode === 'A0002' || res.errorCode === '"A0003"') {
         // to re-login

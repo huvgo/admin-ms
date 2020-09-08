@@ -10,6 +10,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
 /**
@@ -34,18 +36,21 @@ public class User extends BaseEntity<Integer> {
     /**
      * 用户名
      */
+    @NotBlank(message = "用户名不能为空")
     private String username;
 
     /**
      * 密码
      */
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @NotBlank(message = "密码不能为空")
     private String password;
 
     /**
      * 关联角色id
      */
     @TableField(typeHandler = JacksonTypeHandler.class)
+    @NotEmpty(message = "角色不能为空")
     private List<Integer> roleIds;
 
     /**

@@ -3,7 +3,7 @@
     <logo v-if="showLogo" :collapse="isCollapse" />
     <el-scrollbar wrap-class="scrollbar-wrapper">
       <el-menu
-        :default-openeds="['/sys','/dev']"
+        :default-openeds="['/system','/engine']"
         :default-active="activeMenu"
         :collapse="isCollapse"
         :background-color="variables.menuBg"

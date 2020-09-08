@@ -1,4 +1,4 @@
-package com.company.project.util;
+package com.company.project.modules.engine.util;
 
 import java.io.IOException;
 import java.io.InputStream;
