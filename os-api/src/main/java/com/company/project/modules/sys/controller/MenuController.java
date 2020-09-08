@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.company.project.component.annotation.Log2DB;
 import com.company.project.component.annotation.Permissions;
 import com.company.project.core.Result;
+import com.company.project.core.Results;
 import com.company.project.modules.sys.entity.Menu;
 import com.company.project.modules.sys.service.MenuService;
 import org.springframework.web.bind.annotation.*;
@@ -23,49 +24,49 @@ import java.util.List;
 public class MenuController {
     private final MenuService menuService;
 
-    public MenuController(MenuService menuService) {
+    public MenuController(MenuService menuService){
         this.menuService = menuService;
     }
 
     @Permissions
     @PostMapping
     @Log2DB
-    public Result<Object> post(@RequestBody Menu menu) {
-        if (menu.getParentId() == 0 && menu.getType() != 0) {
-            return Result.warning("菜单或按钮必须选择上级菜单");
+    public Result<?> post(@RequestBody Menu menu){
+        if(menu.getParentId() == 0 && menu.getType() != 0){
+            return Results.MUST_SELECT_UPPER_MENU;
         }
         menuService.save(menu);
-        return Result.success();
+        return Results.SUCCESS;
     }
 
     @Permissions
     @DeleteMapping
     @Log2DB
-    public Result<Object> delete(@RequestBody List<Long> ids) {
+    public Result<?> delete(@RequestBody List<Long> ids){
         menuService.removeByIds(ids);
-        return Result.success();
+        return Results.SUCCESS;
     }
 
     @Permissions
     @PutMapping
     @Log2DB
-    public Result<Object> put(@RequestBody Menu menu) {
+    public Result<?> put(@RequestBody Menu menu){
         menuService.updateById(menu);
-        return Result.success();
+        return Results.SUCCESS;
     }
 
     @Permissions
     @GetMapping("/{id}")
-    public Result<Menu> get(@PathVariable Integer id) {
+    public Result<Menu> get(@PathVariable Integer id){
         Menu menu = menuService.getById(id);
-        return Result.success(menu);
+        return Results.success(menu);
     }
 
     @Permissions
     @GetMapping
-    public Result<List<Menu>> get(@RequestParam(value = "nonButton", required = false) boolean nonButton) {
+    public Result<List<Menu>> get(@RequestParam(value = "nonButton", required = false) boolean nonButton){
         List<Menu> list = menuService.list(new QueryWrapper<Menu>().ne(nonButton, "type", 2));
-        return Result.success(list);
+        return Results.success(list);
     }
 
 }

@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.company.project.cache.UserCacheUtil;
 import com.company.project.component.annotation.Log2DB;
 import com.company.project.component.annotation.Permissions;
+import com.company.project.core.Results;
 import com.company.project.core.Result;
 import com.company.project.modules.sys.entity.Notice;
 import com.company.project.modules.sys.entity.User;
@@ -44,7 +45,7 @@ public class NoticeController {
 //            notice.setCreateDate(new Date());
 //        }
         noticeService.save(notice);
-        return Result.success();
+        return Results.SUCCESS;
     }
 
     @DeleteMapping
@@ -52,7 +53,7 @@ public class NoticeController {
     @Permissions
     public Result<?> delete(@RequestBody List<Long> ids) {
         noticeService.removeByIds(ids);
-        return Result.success();
+        return Results.SUCCESS;
     }
 
     @PutMapping
@@ -60,14 +61,14 @@ public class NoticeController {
     @Permissions
     public Result<?> put(@RequestBody Notice notice) {
         noticeService.updateById(notice);
-        return Result.success();
+        return Results.SUCCESS;
     }
 
     @GetMapping("/{id}")
     @Permissions
     public Result<Notice> get(@PathVariable Integer id) {
         Notice notice = noticeService.getById(id);
-        return Result.success(notice);
+        return Results.success(notice);
     }
 
     @GetMapping
@@ -79,6 +80,6 @@ public class NoticeController {
                 .eq(StrUtil.isNotBlank((String) params.get("createDate")), "create_date", params.get("createDate"))
                 .eq(StrUtil.isNotBlank((String) params.get("type")), "type", params.get("type"))
         );
-        return Result.success(page);
+        return Results.success(page);
     }
 }
