@@ -1,10 +1,10 @@
 package com.company.project.modules.sys.service.impl;
 
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.company.project.modules.sys.entity.Log;
 import com.company.project.modules.sys.mapper.LogMapper;
 import com.company.project.modules.sys.service.LogService;
 import org.springframework.stereotype.Service;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
 /**
  * <p>

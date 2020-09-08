@@ -26,14 +26,14 @@ import java.util.Map;
 public class RoleController {
     private final RoleService roleService;
 
-    public RoleController(RoleService roleService){
+    public RoleController(RoleService roleService) {
         this.roleService = roleService;
     }
 
     @Permissions
     @PostMapping
     @Log2DB
-    public Result<?> post(@RequestBody Role role){
+    public Result<?> post(@RequestBody Role role) {
         roleService.save(role);
         return Result.success();
     }
@@ -41,7 +41,7 @@ public class RoleController {
     @Permissions
     @DeleteMapping
     @Log2DB
-    public Result<?> delete(@RequestBody List<Long> ids){
+    public Result<?> delete(@RequestBody List<Long> ids) {
         roleService.removeByIds(ids);
         return Result.success();
     }
@@ -49,21 +49,21 @@ public class RoleController {
     @Permissions
     @PutMapping
     @Log2DB
-    public Result<?> put(@RequestBody Role role){
+    public Result<?> put(@RequestBody Role role) {
         roleService.updateById(role);
         return Result.success();
     }
 
     @Permissions
     @GetMapping("/{id}")
-    public Result<Role> get(@PathVariable Integer id){
+    public Result<Role> get(@PathVariable Integer id) {
         Role role = roleService.getById(id);
         return Result.success(role);
     }
 
     @Permissions
     @GetMapping
-    public Result<Page<Role>> get(@RequestParam(defaultValue = "0") Integer currentPage, @RequestParam(defaultValue = "10") Integer pageSize, @RequestParam Map<String, Object> params){
+    public Result<Page<Role>> get(@RequestParam(defaultValue = "0") Integer currentPage, @RequestParam(defaultValue = "10") Integer pageSize, @RequestParam Map<String, Object> params) {
         QueryWrapper<Role> queryWrapper = new QueryWrapper<Role>()
                 .like(!StrUtil.isBlankIfStr(params.get("name")), "name", params.get("name"));
         Page<Role> page = roleService.page(new Page<>(currentPage, pageSize, true), queryWrapper);
@@ -71,7 +71,7 @@ public class RoleController {
     }
 
     @GetMapping("/option")
-    public Result<List<Role>> option(){
+    public Result<List<Role>> option() {
         List<Role> list = roleService.list(new QueryWrapper<Role>().select("id", "name"));
         return Result.success(list);
     }

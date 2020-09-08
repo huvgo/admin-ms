@@ -8,33 +8,34 @@ import lombok.experimental.Accessors;
 
 <#list fields as field>
     <#if field.javaType = "Date">
-import java.util.Date;
+        import java.util.Date;
         <#break>
     </#if>
 </#list>
 
 /**
- * <p>
- * ${table.comment!}
- * </p>
- *
- * @author ${author}
- * @since ${date}
- */
+* <p>
+    * ${table.comment!}
+    * </p>
+*
+* @author ${author}
+* @since ${date}
+*/
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
 @TableName(value = "${table.name}")
-public class ${upperFirstName} extends BaseEntity<Integer> {
+public class ${upperFirstName} extends BaseEntity
+<Integer> {
 
-<#list fields as field>
-    <#if field.name != "id">
-        /**
-        * ${field.comment}
-        */
-        private ${field.javaType} ${field.name};
+    <#list fields as field>
+        <#if field.name != "id">
+            /**
+            * ${field.comment}
+            */
+            private ${field.javaType} ${field.name};
 
-    </#if>
-</#list>
-}
+        </#if>
+    </#list>
+    }
 

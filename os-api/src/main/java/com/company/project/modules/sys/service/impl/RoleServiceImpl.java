@@ -1,9 +1,9 @@
 package com.company.project.modules.sys.service.impl;
 
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.company.project.modules.sys.entity.Role;
 import com.company.project.modules.sys.mapper.RoleMapper;
 import com.company.project.modules.sys.service.RoleService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
 /**

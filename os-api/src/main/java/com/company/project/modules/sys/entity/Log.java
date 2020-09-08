@@ -38,7 +38,7 @@ public class Log extends BaseEntity<Integer> {
      * 日志内容
      */
     @TableField(typeHandler = JacksonTypeHandler.class)
-    private Map<String,Object> content;
+    private Map<String, Object> content;
 
     /**
      * IP地址

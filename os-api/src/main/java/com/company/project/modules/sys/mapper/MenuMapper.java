@@ -1,7 +1,7 @@
 package com.company.project.modules.sys.mapper;
 
-import com.company.project.modules.sys.entity.Menu;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.company.project.modules.sys.entity.Menu;
 import org.apache.ibatis.annotations.Mapper;
 
 /**

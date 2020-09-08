@@ -1,8 +1,9 @@
 package com.company.project.modules.sys.mapper;
 
-import com.company.project.modules.sys.entity.Notice;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.company.project.modules.sys.entity.Notice;
 import org.apache.ibatis.annotations.Mapper;
+
 /**
  * <p>
  * 系统通知 Mapper 接口

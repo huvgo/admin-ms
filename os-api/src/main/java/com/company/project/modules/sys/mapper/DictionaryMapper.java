@@ -1,8 +1,9 @@
 package com.company.project.modules.sys.mapper;
 
-import com.company.project.modules.sys.entity.Dictionary;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.company.project.modules.sys.entity.Dictionary;
 import org.apache.ibatis.annotations.Mapper;
+
 /**
  * <p>
  * 数据字典 Mapper 接口

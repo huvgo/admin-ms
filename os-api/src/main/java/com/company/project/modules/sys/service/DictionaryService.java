@@ -1,7 +1,7 @@
 package com.company.project.modules.sys.service;
 
-import com.company.project.modules.sys.entity.Dictionary;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.company.project.modules.sys.entity.Dictionary;
 
 /**
  * <p>

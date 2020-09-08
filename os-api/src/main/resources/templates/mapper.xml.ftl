@@ -3,5 +3,4 @@
 <mapper namespace="${package}.mapper.${upperFirstName}Mapper">
 
 
-
 </mapper>

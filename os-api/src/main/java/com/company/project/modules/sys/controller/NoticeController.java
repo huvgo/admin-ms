@@ -12,10 +12,8 @@ import com.company.project.modules.sys.entity.User;
 import com.company.project.modules.sys.service.NoticeService;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * <p>
@@ -30,14 +28,14 @@ import java.util.Objects;
 public class NoticeController {
     private final NoticeService noticeService;
 
-    public NoticeController(NoticeService noticeService){
+    public NoticeController(NoticeService noticeService) {
         this.noticeService = noticeService;
     }
 
     @PostMapping
     @Log2DB
     @Permissions
-    public Result<?> post(@RequestBody Notice notice){
+    public Result<?> post(@RequestBody Notice notice) {
         User user = UserCacheUtil.getCurrentUser();
         notice.setSenderId(user.getId());
         notice.setSender(user.getUsername());
@@ -52,7 +50,7 @@ public class NoticeController {
     @DeleteMapping
     @Log2DB
     @Permissions
-    public Result<?> delete(@RequestBody List<Long> ids){
+    public Result<?> delete(@RequestBody List<Long> ids) {
         noticeService.removeByIds(ids);
         return Result.success();
     }
@@ -60,21 +58,21 @@ public class NoticeController {
     @PutMapping
     @Log2DB
     @Permissions
-    public Result<?> put(@RequestBody Notice notice){
+    public Result<?> put(@RequestBody Notice notice) {
         noticeService.updateById(notice);
         return Result.success();
     }
 
     @GetMapping("/{id}")
     @Permissions
-    public Result<Notice> get(@PathVariable Integer id){
+    public Result<Notice> get(@PathVariable Integer id) {
         Notice notice = noticeService.getById(id);
         return Result.success(notice);
     }
 
     @GetMapping
     @Permissions
-    public Result<Page<Notice>> get(@RequestParam(defaultValue = "0") Integer currentPage, @RequestParam(defaultValue = "10") Integer pageSize, @RequestParam Map<String, Object> params){
+    public Result<Page<Notice>> get(@RequestParam(defaultValue = "0") Integer currentPage, @RequestParam(defaultValue = "10") Integer pageSize, @RequestParam Map<String, Object> params) {
         Page<Notice> page = noticeService.page(new Page<>(currentPage, pageSize, true), new QueryWrapper<Notice>()
                 .like(StrUtil.isNotBlank((String) params.get("sender")), "sender", params.get("sender"))
                 .eq(StrUtil.isNotBlank((String) params.get("content")), "content", params.get("content"))

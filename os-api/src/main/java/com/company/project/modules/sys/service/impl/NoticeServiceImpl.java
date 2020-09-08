@@ -1,10 +1,10 @@
 package com.company.project.modules.sys.service.impl;
 
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.company.project.modules.sys.entity.Notice;
 import com.company.project.modules.sys.mapper.NoticeMapper;
 import com.company.project.modules.sys.service.NoticeService;
 import org.springframework.stereotype.Service;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
 /**
  * <p>

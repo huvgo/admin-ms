@@ -7,14 +7,15 @@ import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
 /**
- * <p>
- * ${table.comment!} 服务实现类
- * </p>
- *
- * @author ${author}
- * @since ${date}
- */
+* <p>
+    * ${table.comment!} 服务实现类
+    * </p>
+*
+* @author ${author}
+* @since ${date}
+*/
 @Service
-public class ${upperFirstName}ServiceImpl extends ServiceImpl<${upperFirstName}Mapper, ${upperFirstName}> implements ${upperFirstName}Service {
+public class ${upperFirstName}ServiceImpl extends ServiceImpl
+<${upperFirstName}Mapper, ${upperFirstName}> implements ${upperFirstName}Service {
 
 }

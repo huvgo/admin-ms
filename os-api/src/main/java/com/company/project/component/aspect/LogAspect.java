@@ -28,21 +28,21 @@ public class LogAspect {
     private final LogServiceImpl logService;
 
     @Autowired
-    public LogAspect(ObjectMapper objectMapper, LogServiceImpl logService){
+    public LogAspect(ObjectMapper objectMapper, LogServiceImpl logService) {
         this.objectMapper = objectMapper;
         this.logService = logService;
     }
 
 
     @Pointcut("@annotation(com.company.project.component.annotation.Log2DB)")
-    public void log(){
+    public void log() {
     }
 
     /**
      * 环绕通知  在方法的调用前、后执行
      */
     @Around("log()")
-    public Object doAround(ProceedingJoinPoint point) throws Throwable{
+    public Object doAround(ProceedingJoinPoint point) throws Throwable {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = attributes.getRequest();
         //开始时间

@@ -28,14 +28,14 @@ import java.util.Map;
 public class DictionaryController {
     private final DictionaryService dictionaryService;
 
-    public DictionaryController(DictionaryService dictionaryService){
+    public DictionaryController(DictionaryService dictionaryService) {
         this.dictionaryService = dictionaryService;
     }
 
     @PostMapping
     @Log2DB
     @Permissions
-    public Result<?> post(@RequestBody Dictionary dictionary){
+    public Result<?> post(@RequestBody Dictionary dictionary) {
         dictionaryService.save(dictionary);
         return Result.success();
     }
@@ -43,7 +43,7 @@ public class DictionaryController {
     @DeleteMapping
     @Log2DB
     @Permissions
-    public Result<?> delete(@RequestBody List<Long> ids){
+    public Result<?> delete(@RequestBody List<Long> ids) {
         dictionaryService.removeByIds(ids);
         return Result.success();
     }
@@ -51,21 +51,21 @@ public class DictionaryController {
     @PutMapping
     @Log2DB
     @Permissions
-    public Result<?> put(@RequestBody Dictionary dictionary){
+    public Result<?> put(@RequestBody Dictionary dictionary) {
         dictionaryService.updateById(dictionary);
         return Result.success();
     }
 
     @GetMapping("/{id}")
     @Permissions
-    public Result<Dictionary> get(@PathVariable Integer id){
+    public Result<Dictionary> get(@PathVariable Integer id) {
         Dictionary dictionary = dictionaryService.getById(id);
         return Result.success(dictionary);
     }
 
     @GetMapping
     @Permissions
-    public Result<Page<Dictionary>> get(@RequestParam(defaultValue = "0") Integer currentPage, @RequestParam(defaultValue = "10") Integer pageSize, @RequestParam Map<String, Object> params){
+    public Result<Page<Dictionary>> get(@RequestParam(defaultValue = "0") Integer currentPage, @RequestParam(defaultValue = "10") Integer pageSize, @RequestParam Map<String, Object> params) {
         Page<Dictionary> page = dictionaryService.page(new Page<>(currentPage, pageSize, true), new QueryWrapper<Dictionary>()
                 .like(!StrUtil.isBlankIfStr(params.get("name")), "name", params.get("name"))
         );
@@ -73,10 +73,10 @@ public class DictionaryController {
     }
 
     @GetMapping("/option")
-    public Result<HashMap<String, List<Option>>> option(@RequestParam String codes){
+    public Result<HashMap<String, List<Option>>> option(@RequestParam String codes) {
         String[] codeArray = codes.split(",");
         HashMap<String, List<Option>> map = new HashMap<>();
-        for(String code : codeArray){
+        for (String code : codeArray) {
             Dictionary dictionary = dictionaryService.getByCode(code);
             List<Option> options = dictionary.getOptions();
             map.put(code + "Options", options);
