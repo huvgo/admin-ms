@@ -4,6 +4,7 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.company.project.component.annotation.Permissions;
+import com.company.project.core.Results;
 import com.company.project.core.Result;
 import com.company.project.modules.sys.entity.Dept;
 import com.company.project.modules.sys.service.DeptService;
@@ -35,28 +36,28 @@ public class DeptController {
     @Permissions
     public Result<?> post(@RequestBody Dept dept){
         deptService.save(dept);
-        return Result.success();
+        return Results.SUCCESS;
     }
 
     @DeleteMapping
     @Permissions
     public Result<?> delete(@RequestBody List<Long> ids){
         deptService.removeByIds(ids);
-        return Result.success();
+        return Results.SUCCESS;
     }
 
     @PutMapping
     @Permissions
     public Result<?> put(@RequestBody Dept dept){
         deptService.updateById(dept);
-        return Result.success();
+        return Results.SUCCESS;
     }
 
     @GetMapping("/{id}")
     @Permissions
     public Result<Dept> get(@PathVariable Integer id){
         Dept dept = deptService.getById(id);
-        return Result.success(dept);
+        return Results.success(dept);
     }
 
     @GetMapping
@@ -70,14 +71,14 @@ public class DeptController {
                 .and(deptIdCondition, i -> i.eq("id", params.get("deptId")).or().apply("JSON_CONTAINS(parent_ids,{0})", params.get("deptId")));
 
         Page<Dept> page = deptService.page(new Page<>(currentPage, pageSize, true), queryWrapper);
-        return Result.success(page);
+        return Results.success(page);
     }
 
     @GetMapping("/tree")
     public Result<List<Dept>> get(){
         List<Dept> list = deptService.list();
         List<Dept> tree = MenuUtil.buildTree(list, 0);
-        return Result.success(tree);
+        return Results.success(tree);
     }
 
 
@@ -88,6 +89,6 @@ public class DeptController {
         for(Dept dept : list){
             map.put(dept.getId(), dept.getName());
         }
-        return Result.success(map);
+        return Results.success(map);
     }
 }

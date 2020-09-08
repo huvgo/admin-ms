@@ -4,6 +4,7 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.company.project.component.annotation.Permissions;
+import com.company.project.core.Results;
 import com.company.project.core.Result;
 import com.company.project.modules.sys.entity.Log;
 import com.company.project.modules.sys.service.LogService;
@@ -33,28 +34,28 @@ public class LogController {
     @Permissions
     public Result<?> post(@RequestBody Log log) {
         logService.save(log);
-        return Result.success();
+        return Results.SUCCESS;
     }
 
     @DeleteMapping
     @Permissions
     public Result<?> delete(@RequestBody List<Long> ids) {
         logService.removeByIds(ids);
-        return Result.success();
+        return Results.SUCCESS;
     }
 
     @PutMapping
     @Permissions
     public Result<?> put(@RequestBody Log log) {
         logService.updateById(log);
-        return Result.success();
+        return Results.SUCCESS;
     }
 
     @GetMapping("/{id}")
     @Permissions
     public Result<Log> get(@PathVariable Integer id) {
         Log log = logService.getById(id);
-        return Result.success(log);
+        return Results.success(log);
     }
 
     @GetMapping
@@ -67,6 +68,6 @@ public class LogController {
                 .like(StrUtil.isNotBlank((String) params.get("params")), "params", params.get("params"))
                 .orderByDesc("create_time")
         );
-        return Result.success(page);
+        return Results.success(page);
     }
 }

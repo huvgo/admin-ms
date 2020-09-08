@@ -5,15 +5,15 @@ package com.company.project.core;
  */
 public class Assert {
 
-    public static <T> void requireNonNull(T obj, String userTips) {
-        if (obj == null)
-            throw new ServiceException(Result.warning(userTips));
+    public static <T> void requireNonNull(T obj, Result<?> result){
+        if(obj == null)
+            throw new ServiceException(result);
     }
 
 
-    public static void requireTrue(boolean expression, String userTips) {
-        if (!expression)
-            throw new ServiceException(Result.warning(userTips));
+    public static void requireTrue(boolean expression, Result<?> result){
+        if(!expression)
+            throw new ServiceException(result);
     }
 
 }

@@ -1,6 +1,8 @@
 package com.company.project.modules.dev.controller;
 
 import com.company.project.component.annotation.Permissions;
+import com.company.project.core.Results;
+import com.company.project.core.Results;
 import com.company.project.core.Result;
 import com.company.project.modules.dev.entity.oshi.Server;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,6 +25,6 @@ public class OshiController {
     public Result<Server> get() {
         Server server = new Server();
         server.copyTo();
-        return Result.success(server);
+        return Results.success(server);
     }
 }

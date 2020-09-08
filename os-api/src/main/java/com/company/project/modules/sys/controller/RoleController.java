@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.company.project.component.annotation.Log2DB;
 import com.company.project.component.annotation.Permissions;
+import com.company.project.core.Results;
 import com.company.project.core.Result;
 import com.company.project.modules.sys.entity.Role;
 import com.company.project.modules.sys.service.RoleService;
@@ -35,7 +36,7 @@ public class RoleController {
     @Log2DB
     public Result<?> post(@RequestBody Role role){
         roleService.save(role);
-        return Result.success();
+        return Results.SUCCESS;
     }
 
     @Permissions
@@ -43,7 +44,7 @@ public class RoleController {
     @Log2DB
     public Result<?> delete(@RequestBody List<Long> ids){
         roleService.removeByIds(ids);
-        return Result.success();
+        return Results.SUCCESS;
     }
 
     @Permissions
@@ -51,14 +52,14 @@ public class RoleController {
     @Log2DB
     public Result<?> put(@RequestBody Role role){
         roleService.updateById(role);
-        return Result.success();
+        return Results.SUCCESS;
     }
 
     @Permissions
     @GetMapping("/{id}")
     public Result<Role> get(@PathVariable Integer id){
         Role role = roleService.getById(id);
-        return Result.success(role);
+        return Results.success(role);
     }
 
     @Permissions
@@ -67,12 +68,12 @@ public class RoleController {
         QueryWrapper<Role> queryWrapper = new QueryWrapper<Role>()
                 .like(!StrUtil.isBlankIfStr(params.get("name")), "name", params.get("name"));
         Page<Role> page = roleService.page(new Page<>(currentPage, pageSize, true), queryWrapper);
-        return Result.success(page);
+        return Results.success(page);
     }
 
     @GetMapping("/option")
     public Result<List<Role>> option(){
         List<Role> list = roleService.list(new QueryWrapper<Role>().select("id", "name"));
-        return Result.success(list);
+        return Results.success(list);
     }
 }

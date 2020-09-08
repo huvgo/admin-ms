@@ -3,6 +3,7 @@ package com.company.project.modules.sys.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.company.project.core.Assert;
+import com.company.project.core.Results;
 import com.company.project.modules.sys.entity.UserNotice;
 import com.company.project.modules.sys.mapper.UserNoticeMapper;
 import com.company.project.modules.sys.service.UserNoticeService;
@@ -21,7 +22,7 @@ public class UserNoticeServiceImpl extends ServiceImpl<UserNoticeMapper, UserNot
 
     @Override
     public UserNotice getByUserId(Integer userId){
-        Assert.requireNonNull(userId, "用户ID不能为空");
+        Assert.requireNonNull(userId, Results.Fail);
         QueryWrapper<UserNotice> queryWrapper = new QueryWrapper<UserNotice>()
                 .eq("user_id", userId);
         return this.getOne(queryWrapper);

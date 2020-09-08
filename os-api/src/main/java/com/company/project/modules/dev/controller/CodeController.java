@@ -3,6 +3,7 @@ package com.company.project.modules.dev.controller;
 import cn.hutool.core.io.IoUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.company.project.component.annotation.Permissions;
+import com.company.project.core.Results;
 import com.company.project.core.Result;
 import com.company.project.modules.dev.entity.code.Table;
 import com.company.project.modules.dev.service.CodeService;
@@ -34,7 +35,7 @@ public class CodeController {
     @Permissions
     public Result<Page<Table>> get(@RequestParam(defaultValue = "1") Integer currentPage, @RequestParam(defaultValue = "10") Integer pageSize, @RequestParam Map<String, Object> params) throws SQLException {
         Page<Table> page = codeService.page(currentPage, pageSize, params);
-        return Result.success(page);
+        return Results.success(page);
     }
 
 

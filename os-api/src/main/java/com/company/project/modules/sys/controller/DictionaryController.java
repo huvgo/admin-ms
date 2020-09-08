@@ -5,7 +5,9 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.company.project.component.annotation.Log2DB;
 import com.company.project.component.annotation.Permissions;
+import com.company.project.core.Results;
 import com.company.project.core.Result;
+import com.company.project.core.Results;
 import com.company.project.modules.sys.entity.Dictionary;
 import com.company.project.modules.sys.entity.Option;
 import com.company.project.modules.sys.service.DictionaryService;
@@ -37,7 +39,7 @@ public class DictionaryController {
     @Permissions
     public Result<?> post(@RequestBody Dictionary dictionary){
         dictionaryService.save(dictionary);
-        return Result.success();
+        return Results.SUCCESS;
     }
 
     @DeleteMapping
@@ -45,7 +47,7 @@ public class DictionaryController {
     @Permissions
     public Result<?> delete(@RequestBody List<Long> ids){
         dictionaryService.removeByIds(ids);
-        return Result.success();
+        return Results.SUCCESS;
     }
 
     @PutMapping
@@ -53,14 +55,14 @@ public class DictionaryController {
     @Permissions
     public Result<?> put(@RequestBody Dictionary dictionary){
         dictionaryService.updateById(dictionary);
-        return Result.success();
+        return Results.SUCCESS;
     }
 
     @GetMapping("/{id}")
     @Permissions
     public Result<Dictionary> get(@PathVariable Integer id){
         Dictionary dictionary = dictionaryService.getById(id);
-        return Result.success(dictionary);
+        return Results.success(dictionary);
     }
 
     @GetMapping
@@ -69,7 +71,7 @@ public class DictionaryController {
         Page<Dictionary> page = dictionaryService.page(new Page<>(currentPage, pageSize, true), new QueryWrapper<Dictionary>()
                 .like(!StrUtil.isBlankIfStr(params.get("name")), "name", params.get("name"))
         );
-        return Result.success(page);
+        return Results.success(page);
     }
 
     @GetMapping("/option")
@@ -81,7 +83,7 @@ public class DictionaryController {
             List<Option> options = dictionary.getOptions();
             map.put(code + "Options", options);
         }
-        return Result.success(map);
+        return Results.success(map);
     }
 
 }

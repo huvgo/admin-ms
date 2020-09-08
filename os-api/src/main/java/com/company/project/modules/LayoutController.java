@@ -3,6 +3,7 @@ package com.company.project.modules;
 import cn.hutool.core.collection.CollUtil;
 import com.company.project.cache.UserCacheUtil;
 import com.company.project.core.Assert;
+import com.company.project.core.Results;
 import com.company.project.core.Result;
 import com.company.project.modules.sys.entity.Menu;
 import com.company.project.modules.sys.entity.User;
@@ -27,17 +28,17 @@ public class LayoutController {
      * 侧边栏
      */
     @GetMapping("/sidebar")
-    public Result<List<Menu>> sidebar(@RequestHeader(value = "X-Token") String token) throws JsonProcessingException {
+    public Result<List<Menu>> sidebar(@RequestHeader(value = "X-Token") String token) throws JsonProcessingException{
         User user = UserCacheUtil.getUser(token);
-        Assert.requireNonNull(user, "登录过期,请重新登陆");
+        Assert.requireNonNull(user, Results.LOGIN_EXPIRED);
         List<Menu> menuList = user.getMenuList();
-        if (CollUtil.isEmpty(menuList)) {
-            return Result.success(menuList);
+        if(CollUtil.isEmpty(menuList)){
+            return Results.success(menuList);
         }
         // 过滤掉按钮 只保留菜单
         List<Menu> collect = menuList.stream().filter(menu -> menu.getType() != 2).collect(Collectors.toList());
         // 构建tree列表
         List<Menu> tree = MenuUtil.buildTree(collect, 0);
-        return Result.success(tree);
+        return Results.success(tree);
     }
 }

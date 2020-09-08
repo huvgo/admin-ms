@@ -2,6 +2,7 @@ package com.company.project.component.aspect;
 
 import com.company.project.cache.UserCache;
 import com.company.project.core.Assert;
+import com.company.project.core.Results;
 import com.company.project.modules.sys.entity.Menu;
 import com.company.project.modules.sys.entity.User;
 import lombok.extern.slf4j.Slf4j;
@@ -37,19 +38,19 @@ public class PermissionAspect {
 
 
     @Pointcut("@annotation(com.company.project.component.annotation.Permissions)")
-    public void permissions() {
+    public void permissions(){
     }
 
     /**
      * 拦截方法之前的一段业务逻辑
      */
     @Before("permissions()")
-    public void doBefore(JoinPoint joinPoint) {
+    public void doBefore(JoinPoint joinPoint){
         // 获取用户信息，获取用户拥有的菜单
         HttpServletRequest request = Objects.requireNonNull((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         String token = request.getHeader("X-Token");
         User user = userCache.getUser(token);
-        Assert.requireNonNull(user, "登录过期,请重新登陆");
+        Assert.requireNonNull(user, Results.LOGIN_EXPIRED);
         List<Menu> menuList = user.getMenuList();
 
         // 获取当前访问的菜单和当前访问菜单的权限
@@ -63,19 +64,19 @@ public class PermissionAspect {
 
         // 判断用户是否具有该菜单
         Optional<Menu> menuOptional = menuList.stream().filter(menu -> requestPath.equals(menu.getPath()) || ("/" + requestPath).equals(menu.getPath())).findFirst();
-        Assert.requireTrue(menuOptional.isPresent(), "您没有此操作的权限，请联系管理员为您添加权限");
+        Assert.requireTrue(menuOptional.isPresent(), Results.UNAUTHORIZED);
         Menu requestMenu = menuOptional.get();
 
         // 判断用户是否具有该权限
         boolean hasPermission = false;
         String perms = requestMenu.getPerms();
-        if (methodPerms.equals(perms)) {
+        if(methodPerms.equals(perms)){
             hasPermission = true;
-        } else {
-            for (Menu menu : menuList) {
-                if (requestMenu.getId().equals(menu.getParentId())) {
+        } else{
+            for(Menu menu : menuList){
+                if(requestMenu.getId().equals(menu.getParentId())){
                     String childPerms = menu.getPerms();
-                    if (methodPerms.equals(childPerms)) {
+                    if(methodPerms.equals(childPerms)){
                         hasPermission = true;
                         break;
                     }
@@ -83,7 +84,7 @@ public class PermissionAspect {
             }
         }
 
-        Assert.requireTrue(hasPermission, "你没有权限去该页面");
+        Assert.requireTrue(hasPermission, Results.UNAUTHORIZED);
     }
 
 
