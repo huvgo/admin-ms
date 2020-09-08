@@ -38,14 +38,14 @@ public class PermissionAspect {
 
 
     @Pointcut("@annotation(com.company.project.component.annotation.Permissions)")
-    public void permissions(){
+    public void permissions() {
     }
 
     /**
      * 拦截方法之前的一段业务逻辑
      */
     @Before("permissions()")
-    public void doBefore(JoinPoint joinPoint){
+    public void doBefore(JoinPoint joinPoint) {
         // 获取用户信息，获取用户拥有的菜单
         HttpServletRequest request = Objects.requireNonNull((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         String token = request.getHeader("X-Token");
@@ -70,13 +70,13 @@ public class PermissionAspect {
         // 判断用户是否具有该权限
         boolean hasPermission = false;
         String perms = requestMenu.getPerms();
-        if(methodPerms.equals(perms)){
+        if (methodPerms.equals(perms)) {
             hasPermission = true;
-        } else{
-            for(Menu menu : menuList){
-                if(requestMenu.getId().equals(menu.getParentId())){
+        } else {
+            for (Menu menu : menuList) {
+                if (requestMenu.getId().equals(menu.getParentId())) {
                     String childPerms = menu.getPerms();
-                    if(methodPerms.equals(childPerms)){
+                    if (methodPerms.equals(childPerms)) {
                         hasPermission = true;
                         break;
                     }

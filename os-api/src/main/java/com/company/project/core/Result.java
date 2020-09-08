@@ -18,17 +18,17 @@ public class Result<T> {
     private String errorMessage;
     private T data;
 
-    public Result(){
+    public Result() {
     }
 
-    public Result(boolean success, String userTips, String errorCode, String errorMessage){
+    public Result(boolean success, String userTips, String errorCode, String errorMessage) {
         this.success = success;
         this.userTips = userTips;
         this.errorCode = errorCode;
         this.errorMessage = errorMessage;
     }
 
-    public Result(boolean success, String errorCode, String errorMessage, String userTips, T data){
+    public Result(boolean success, String errorCode, String errorMessage, String userTips, T data) {
         this.success = success;
         this.errorCode = errorCode;
         this.errorMessage = errorMessage;

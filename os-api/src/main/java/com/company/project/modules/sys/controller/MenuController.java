@@ -24,15 +24,15 @@ import java.util.List;
 public class MenuController {
     private final MenuService menuService;
 
-    public MenuController(MenuService menuService){
+    public MenuController(MenuService menuService) {
         this.menuService = menuService;
     }
 
     @Permissions
     @PostMapping
     @Log2DB
-    public Result<?> post(@RequestBody Menu menu){
-        if(menu.getParentId() == 0 && menu.getType() != 0){
+    public Result<?> post(@RequestBody Menu menu) {
+        if (menu.getParentId() == 0 && menu.getType() != 0) {
             return Results.MUST_SELECT_UPPER_MENU;
         }
         menuService.save(menu);
@@ -42,7 +42,7 @@ public class MenuController {
     @Permissions
     @DeleteMapping
     @Log2DB
-    public Result<?> delete(@RequestBody List<Long> ids){
+    public Result<?> delete(@RequestBody List<Long> ids) {
         menuService.removeByIds(ids);
         return Results.SUCCESS;
     }
@@ -50,21 +50,21 @@ public class MenuController {
     @Permissions
     @PutMapping
     @Log2DB
-    public Result<?> put(@RequestBody Menu menu){
+    public Result<?> put(@RequestBody Menu menu) {
         menuService.updateById(menu);
         return Results.SUCCESS;
     }
 
     @Permissions
     @GetMapping("/{id}")
-    public Result<Menu> get(@PathVariable Integer id){
+    public Result<Menu> get(@PathVariable Integer id) {
         Menu menu = menuService.getById(id);
         return Results.success(menu);
     }
 
     @Permissions
     @GetMapping
-    public Result<List<Menu>> get(@RequestParam(value = "nonButton", required = false) boolean nonButton){
+    public Result<List<Menu>> get(@RequestParam(value = "nonButton", required = false) boolean nonButton) {
         List<Menu> list = menuService.list(new QueryWrapper<Menu>().ne(nonButton, "type", 2));
         return Results.success(list);
     }

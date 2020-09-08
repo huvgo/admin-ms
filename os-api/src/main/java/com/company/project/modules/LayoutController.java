@@ -3,8 +3,8 @@ package com.company.project.modules;
 import cn.hutool.core.collection.CollUtil;
 import com.company.project.cache.UserCacheUtil;
 import com.company.project.core.Assert;
-import com.company.project.core.Results;
 import com.company.project.core.Result;
+import com.company.project.core.Results;
 import com.company.project.modules.sys.entity.Menu;
 import com.company.project.modules.sys.entity.User;
 import com.company.project.modules.sys.util.MenuUtil;
@@ -28,11 +28,11 @@ public class LayoutController {
      * 侧边栏
      */
     @GetMapping("/sidebar")
-    public Result<List<Menu>> sidebar(@RequestHeader(value = "X-Token") String token) throws JsonProcessingException{
+    public Result<List<Menu>> sidebar(@RequestHeader(value = "X-Token") String token) throws JsonProcessingException {
         User user = UserCacheUtil.getUser(token);
         Assert.requireNonNull(user, Results.LOGIN_EXPIRED);
         List<Menu> menuList = user.getMenuList();
-        if(CollUtil.isEmpty(menuList)){
+        if (CollUtil.isEmpty(menuList)) {
             return Results.success(menuList);
         }
         // 过滤掉按钮 只保留菜单

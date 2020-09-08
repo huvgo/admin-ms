@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.company.project.component.annotation.Log2DB;
 import com.company.project.component.annotation.Permissions;
-import com.company.project.core.Results;
 import com.company.project.core.Result;
 import com.company.project.core.Results;
 import com.company.project.modules.sys.entity.Dictionary;

@@ -8,12 +8,12 @@ public class ServiceException extends RuntimeException {
     private Result<?> error;
 
 
-    public ServiceException(Result<?> result){
+    public ServiceException(Result<?> result) {
         this.error = result;
     }
 
 
-    public Result<?> getResult(){
+    public Result<?> getResult() {
         return error;
     }
 }

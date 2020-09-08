@@ -31,13 +31,13 @@ public class WebMvcConfig implements WebMvcConfigurer {
     private final ObjectMapper objectMapper;
 
 
-    public WebMvcConfig(ObjectMapper objectMapper){
+    public WebMvcConfig(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
     }
 
     //解决跨域问题
     @Override
-    public void addCorsMappings(CorsRegistry registry){
+    public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**").
                 allowedOrigins("*"). //allowedOrigins("https://www.xxx.cn"). //允许跨域的域名，可以用*表示允许任何域名使用
                 allowedMethods("*"). //允许任何方法（post、get等）
@@ -48,19 +48,19 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     //添加拦截器
     @Override
-    public void addInterceptors(InterceptorRegistry registry){
+    public void addInterceptors(InterceptorRegistry registry) {
         // 添加登录状态拦截器
         InterceptorRegistration interceptorRegistration = registry.addInterceptor(new HandlerInterceptorAdapter() {
             @Override
-            public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException{
+            public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException {
                 // 判断是否是OPTIONS请求
                 boolean isOptionsMethod = ServletUtil.METHOD_OPTIONS.equalsIgnoreCase(request.getMethod());
-                if(isOptionsMethod){
+                if (isOptionsMethod) {
                     return true;
                 }
                 // 登录状态检查
                 boolean isLogin = checkLoginStatus(request, response);
-                if(!isLogin){
+                if (!isLogin) {
                     logger.warn("未获取到登录状态，请求接口：{}，请求IP：{}，请求参数：{}", request.getRequestURI(), ServletUtil.getClientIP(request), objectMapper.writeValueAsString(request.getParameterMap()));
                 }
                 return isLogin;
@@ -74,16 +74,16 @@ public class WebMvcConfig implements WebMvcConfigurer {
     }
 
 
-    private boolean checkLoginStatus(HttpServletRequest request, HttpServletResponse response) throws IOException{
+    private boolean checkLoginStatus(HttpServletRequest request, HttpServletResponse response) throws IOException {
         // 获取用户信息，获取用户拥有的菜单
         String token = request.getHeader("X-Token");
-        if(token == null){
+        if (token == null) {
             Result<?> fail = Results.NOT_LOGGED_IN;
             ServletUtil.write(response, objectMapper.writeValueAsString(fail), "application/json;charset=UTF-8");
             return false;
-        } else{
+        } else {
             User user = UserCacheUtil.getUser(token);
-            if(user == null){
+            if (user == null) {
                 Result<?> fail = Results.LOGIN_EXPIRED;
                 ServletUtil.write(response, objectMapper.writeValueAsString(fail), "application/json;charset=UTF-8");
                 return false;

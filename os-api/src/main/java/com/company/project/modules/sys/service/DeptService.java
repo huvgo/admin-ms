@@ -20,14 +20,14 @@ import java.util.stream.Collectors;
  */
 public interface DeptService extends IService<Dept> {
 
-    default List<Integer> listChildrenIdById(Integer parentId){
+    default List<Integer> listChildrenIdById(Integer parentId) {
 
         QueryWrapper<Dept> queryWrapper = new QueryWrapper<Dept>()
                 .apply("JSON_CONTAINS(parent_ids,{0})", String.valueOf(parentId));
         List<Dept> deptList = this.list(queryWrapper);
-        if(CollUtil.isNotEmpty(deptList)){
+        if (CollUtil.isNotEmpty(deptList)) {
             return deptList.stream().map(BaseEntity::getId).collect(Collectors.toList());
-        }else{
+        } else {
             return new ArrayList<>();
         }
     }

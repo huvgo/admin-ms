@@ -21,7 +21,7 @@ import org.springframework.stereotype.Service;
 public class UserNoticeServiceImpl extends ServiceImpl<UserNoticeMapper, UserNotice> implements UserNoticeService {
 
     @Override
-    public UserNotice getByUserId(Integer userId){
+    public UserNotice getByUserId(Integer userId) {
         Assert.requireNonNull(userId, Results.Fail);
         QueryWrapper<UserNotice> queryWrapper = new QueryWrapper<UserNotice>()
                 .eq("user_id", userId);

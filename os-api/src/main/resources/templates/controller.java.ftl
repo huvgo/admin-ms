@@ -32,39 +32,45 @@ public ${upperFirstName}Controller(${upperFirstName}Service ${lowerFirstName}Ser
 this.${lowerFirstName}Service = ${lowerFirstName}Service;
 }
 
-    @PostMapping
-    public Result<?> post(@RequestBody ${upperFirstName} ${lowerFirstName}) {
-        ${lowerFirstName}Service.save(${lowerFirstName});
-        return Results.SUCCESS;
-    }
+@PostMapping
+public Result<?> post(@RequestBody ${upperFirstName} ${lowerFirstName}) {
+${lowerFirstName}Service.save(${lowerFirstName});
+return Results.SUCCESS;
+}
 
-    @DeleteMapping
-    public Result<?> delete(@RequestBody List<Long> ids) {
-        ${lowerFirstName}Service.removeByIds(ids);
-        return Results.SUCCESS;
+@DeleteMapping
+public Result<?> delete(@RequestBody List
+<Long> ids) {
+    ${lowerFirstName}Service.removeByIds(ids);
+    return Results.SUCCESS;
     }
 
     @PutMapping
     public Result<?> put(@RequestBody ${upperFirstName} ${lowerFirstName}) {
-        ${lowerFirstName}Service.updateById(${lowerFirstName});
-        return Results.SUCCESS;
+    ${lowerFirstName}Service.updateById(${lowerFirstName});
+    return Results.SUCCESS;
     }
 
     @GetMapping("/{id}")
     public Result<${upperFirstName}> get(@PathVariable Integer id) {
-        ${upperFirstName} ${lowerFirstName} = ${lowerFirstName}Service.getById(id);
-        return Results.success(${lowerFirstName});
+    ${upperFirstName} ${lowerFirstName} = ${lowerFirstName}Service.getById(id);
+    return Results.success(${lowerFirstName});
     }
 
     @GetMapping
-    public Result<Page<${upperFirstName}>> get(@RequestParam(defaultValue = "0") Integer currentPage, @RequestParam(defaultValue = "10") Integer pageSize, @RequestParam Map<String, Object> params) {
-        QueryWrapper<${upperFirstName}> queryWrapper = new QueryWrapper<>()
-        <#list fields as field>
-            <#if field.condition>
-                .eq(StrUtil.isNotBlank((String)params.get("${field.name}")), "${field.columnName}", params.get("${field.name}"))
-            </#if>
-        </#list>
-        Page<${upperFirstName}> page = ${lowerFirstName}Service.page(new Page<>(current, size, true), queryWrapper);
-        return Results.success(page);
+    public Result
+    <Page
+    <${upperFirstName}>> get(@RequestParam(defaultValue = "0") Integer currentPage, @RequestParam(defaultValue = "10")
+    Integer pageSize, @RequestParam Map
+    <String
+    , Object> params) {
+    QueryWrapper<${upperFirstName}> queryWrapper = new QueryWrapper<>()
+    <#list fields as field>
+        <#if field.condition>
+            .eq(StrUtil.isNotBlank((String)params.get("${field.name}")), "${field.columnName}", params.get("${field.name}"))
+        </#if>
+    </#list>
+    Page<${upperFirstName}> page = ${lowerFirstName}Service.page(new Page<>(current, size, true), queryWrapper);
+    return Results.success(page);
     }
     }

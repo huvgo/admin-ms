@@ -121,7 +121,7 @@ public class User extends BaseEntity<Integer> {
     private List<Menu> menuList;
 
     @JsonIgnore
-    public boolean isSuperAdmin(){
+    public boolean isSuperAdmin() {
         return this.getId().equals(1);
     }
 }

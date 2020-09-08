@@ -5,14 +5,14 @@ package com.company.project.core;
  */
 public class Assert {
 
-    public static <T> void requireNonNull(T obj, Result<?> result){
-        if(obj == null)
+    public static <T> void requireNonNull(T obj, Result<?> result) {
+        if (obj == null)
             throw new ServiceException(result);
     }
 
 
-    public static void requireTrue(boolean expression, Result<?> result){
-        if(!expression)
+    public static void requireTrue(boolean expression, Result<?> result) {
+        if (!expression)
             throw new ServiceException(result);
     }
 

@@ -18,15 +18,15 @@ public class Results {
 
     public static Result<?> UNAUTHORIZED = new Result<>(false, "您没有此操作的权限，请联系管理员为您添加权限", "B0002", "");
 
-    public static <T> Result<T> success(T data){
+    public static <T> Result<T> success(T data) {
         return new Result<T>().setSuccess(true).setUserTips("操作成功").setData(data);
     }
 
-    public static <T> Result<T> error(String errorCode, String userTips){
+    public static <T> Result<T> error(String errorCode, String userTips) {
         return new Result<T>().setSuccess(false).setErrorCode(errorCode).setUserTips(userTips);
     }
 
-    public static <T> Result<T> error(String errorCode, String userTips, String errorMessage){
+    public static <T> Result<T> error(String errorCode, String userTips, String errorMessage) {
         return new Result<T>().setSuccess(false).setErrorCode(errorCode).setUserTips(userTips).setErrorMessage(errorMessage);
     }
 

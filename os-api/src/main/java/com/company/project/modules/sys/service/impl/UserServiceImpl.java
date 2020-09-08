@@ -8,7 +8,6 @@ import cn.hutool.crypto.SecureUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.company.project.core.Assert;
-import com.company.project.core.Result;
 import com.company.project.core.Results;
 import com.company.project.core.ServiceException;
 import com.company.project.modules.sys.entity.Menu;
@@ -45,13 +44,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     private final MenuService menuService;
     private final RoleService roleService;
 
-    public UserServiceImpl(MenuService menuService, RoleService roleService){
+    public UserServiceImpl(MenuService menuService, RoleService roleService) {
         this.menuService = menuService;
         this.roleService = roleService;
     }
 
     @Override
-    public User getByUsername(String username){
+    public User getByUsername(String username) {
         QueryWrapper<User> queryWrapper = new QueryWrapper<User>().eq("username", username);
 
         return this.getOne(queryWrapper);
@@ -59,7 +58,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     @SuppressWarnings("all")
-    public User login(String username, String password){
+    public User login(String username, String password) {
         User user = this.getByUsername(username);
         Assert.requireNonNull(user, Results.INCORRECT_ACCOUNT_OR_PASSWORD);
         password = SecureUtil.md5().setSalt(user.getSalt().getBytes()).digestHex(password);
@@ -67,15 +66,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         // 菜单权限
         List<Integer> roleIds = user.getRoleIds();
         List<Menu> menuList = null;
-        if(user.isSuperAdmin()){
+        if (user.isSuperAdmin()) {
             menuList = menuService.list();
-        } else{
+        } else {
             List<Role> roles = roleService.listByIds(roleIds);
             HashSet<Integer> menuIds = new HashSet<>();
             roles.forEach(role -> menuIds.addAll(role.getMenuIds()));
-            if(!menuIds.isEmpty()){
+            if (!menuIds.isEmpty()) {
                 menuList = menuService.list(new QueryWrapper<Menu>().in("id", menuIds));
-            } else{
+            } else {
                 menuList = Collections.EMPTY_LIST;
             }
         }
@@ -84,7 +83,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
-    public void encodePassword(User user){
+    public void encodePassword(User user) {
         String password = user.getPassword();
         Assert.requireNonNull(password, Results.INCORRECT_ACCOUNT_OR_PASSWORD);
         String salt = IdUtil.fastSimpleUUID();
@@ -98,16 +97,16 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     private static String CLASS_PATH;
 
-    static{
-        try{
+    static {
+        try {
             CLASS_PATH = Objects.requireNonNull(UserServiceImpl.class.getClassLoader().getResource("")).toURI().getPath();
-        } catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     @Override
-    public String upload(MultipartFile file, String moduleDir){
+    public String upload(MultipartFile file, String moduleDir) {
         Assert.requireTrue(!file.isEmpty(), Results.Fail);
         String rootPath = CLASS_PATH + "static";
         String today = DateUtil.format(new DateTime(), "yyyyMMdd");
@@ -118,9 +117,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         File local = new File(rootPath, relativePath);
         log.info("头像上传路径:{}", local.getPath());
         FileUtil.mkParentDirs(local);
-        try{
+        try {
             file.transferTo(local);
-        } catch(IOException e){
+        } catch (IOException e) {
             throw new ServiceException(Results.Fail);
         }
         return domain + relativePath;
