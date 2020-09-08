@@ -21,7 +21,7 @@ public class BaseTreeEntity<E> extends BaseEntity<Integer> {
 
     /**
      * 所有上级ID
-     * 子类 设置autoResultMap = true   例如 ：@TableName(value = "sys_dept", autoResultMap = true)
+     * 子类 设置autoResultMap = true   例如 ：@TableName(value = "system_dept", autoResultMap = true)
      */
     @TableField(typeHandler = JacksonTypeHandler.class)
     private List<Integer> parentIds;

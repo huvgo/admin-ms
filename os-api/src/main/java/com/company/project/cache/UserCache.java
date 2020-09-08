@@ -1,6 +1,6 @@
 package com.company.project.cache;
 
-import com.company.project.modules.sys.entity.User;
+import com.company.project.modules.system.entity.User;
 
 /**
  * 用户信息缓存 接口

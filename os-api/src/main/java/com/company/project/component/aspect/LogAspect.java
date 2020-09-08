@@ -2,9 +2,9 @@ package com.company.project.component.aspect;
 
 import cn.hutool.extra.servlet.ServletUtil;
 import com.company.project.cache.UserCacheUtil;
-import com.company.project.modules.sys.constant.LogType;
-import com.company.project.modules.sys.entity.Log;
-import com.company.project.modules.sys.service.impl.LogServiceImpl;
+import com.company.project.modules.system.constant.LogType;
+import com.company.project.modules.system.entity.Log;
+import com.company.project.modules.system.service.impl.LogServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;

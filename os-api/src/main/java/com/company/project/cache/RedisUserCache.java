@@ -1,6 +1,6 @@
 package com.company.project.cache;
 
-import com.company.project.modules.sys.entity.User;
+import com.company.project.modules.system.entity.User;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;

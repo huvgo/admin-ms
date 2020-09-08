@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 * @since ${date}
 */
 @RestController
-@RequestMapping("${moduleName}/${lowerFirstName}")
+@RequestMapping("/${moduleName}/${lowerFirstName}")
 public class ${upperFirstName}Controller {
 private final ${upperFirstName}Service ${lowerFirstName}Service;
 

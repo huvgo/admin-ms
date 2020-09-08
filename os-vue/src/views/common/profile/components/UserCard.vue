@@ -86,7 +86,7 @@ export default {
   },
   data() {
     return {
-      uploadUrl: `http://localhost:9090/dev-api/sys/user/upload`,
+      uploadUrl: `http://localhost:9090/dev-api/system/user/upload`,
       token: getToken()
     }
   },

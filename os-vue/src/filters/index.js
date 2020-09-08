@@ -72,7 +72,7 @@ export function arrayFilter(ids, options) {
   for (var i = 0; i < ids.length; i++) {
     for (var j = 0; j < options.length; j++) {
       if (ids[i] === options[j].id) {
-        names += options[j].name + '/'
+        names += options[j].name + ' / '
       }
     }
   }

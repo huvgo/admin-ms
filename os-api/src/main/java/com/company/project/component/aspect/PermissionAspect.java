@@ -3,8 +3,8 @@ package com.company.project.component.aspect;
 import com.company.project.cache.UserCache;
 import com.company.project.core.Assert;
 import com.company.project.core.Results;
-import com.company.project.modules.sys.entity.Menu;
-import com.company.project.modules.sys.entity.User;
+import com.company.project.modules.system.entity.Menu;
+import com.company.project.modules.system.entity.User;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
@@ -25,7 +25,7 @@ import java.util.Optional;
 /**
  * 权限判断 拦截器
  * 拦截所有标有注解@Permissions的方法
- * 将请求的方法名与sys_menu表中的perms字段比较
+ * 将请求的方法名与system_menu表中的perms字段比较
  */
 @Profile({"dev", "test", "prod"})
 @Component

@@ -41,7 +41,7 @@
 
 <script>
 import screenfull from 'screenfull'
-import { getNotice, cleearNotice } from '@/api/sys/user'
+import { getNotice, cleearNotice } from '@/api/system/user'
 
 export default {
   name: 'Screenfull',

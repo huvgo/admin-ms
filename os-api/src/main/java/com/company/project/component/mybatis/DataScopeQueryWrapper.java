@@ -4,11 +4,11 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.company.project.cache.UserCacheUtil;
 import com.company.project.core.Assert;
 import com.company.project.core.Results;
-import com.company.project.modules.sys.constant.DataScopeConst;
-import com.company.project.modules.sys.entity.Role;
-import com.company.project.modules.sys.entity.User;
-import com.company.project.modules.sys.service.DeptService;
-import com.company.project.modules.sys.service.RoleService;
+import com.company.project.modules.system.constant.DataScopeConst;
+import com.company.project.modules.system.entity.Role;
+import com.company.project.modules.system.entity.User;
+import com.company.project.modules.system.service.DeptService;
+import com.company.project.modules.system.service.RoleService;
 
 import java.util.List;
 

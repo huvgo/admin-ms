@@ -3,7 +3,7 @@ package com.company.project.cache;
 import cn.hutool.cache.CacheUtil;
 import cn.hutool.cache.impl.TimedCache;
 import cn.hutool.core.date.DateUnit;
-import com.company.project.modules.sys.entity.User;
+import com.company.project.modules.system.entity.User;
 
 /**
  * 用户信息缓存接口的本地缓存实现类

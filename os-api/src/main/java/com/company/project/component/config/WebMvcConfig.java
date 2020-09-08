@@ -4,7 +4,7 @@ import cn.hutool.extra.servlet.ServletUtil;
 import com.company.project.cache.UserCacheUtil;
 import com.company.project.core.Result;
 import com.company.project.core.Results;
-import com.company.project.modules.sys.entity.User;
+import com.company.project.modules.system.entity.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -67,8 +67,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
             }
         });
         // 排除请求路径
-        interceptorRegistration.excludePathPatterns("/sys/user/login");
-        interceptorRegistration.excludePathPatterns("/sys/user/token");
+        interceptorRegistration.excludePathPatterns("/system/user/login");
+        interceptorRegistration.excludePathPatterns("/system/user/token");
         interceptorRegistration.excludePathPatterns("/avatar/**");// 静态资源路径
         interceptorRegistration.addPathPatterns("/**");
     }

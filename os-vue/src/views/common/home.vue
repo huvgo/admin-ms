@@ -199,7 +199,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import { getList } from '@/api/dev/oshi'
+import { getList } from '@/api/engine/oshi'
 import LineChart from './components/LineChart'
 
 const lineChartData = {

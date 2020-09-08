@@ -1,6 +1,6 @@
 package com.company.project.cache;
 
-import com.company.project.modules.sys.entity.User;
+import com.company.project.modules.system.entity.User;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;

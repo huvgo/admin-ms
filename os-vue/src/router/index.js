@@ -97,25 +97,25 @@ export const asyncRoutes = [
     path: '/sys',
     component: Layout,
     name: '系统管理',
-    redirect: '/sys/user',
+    redirect: '/system/user',
     meta: { title: '系统管理', icon: 'el-icon-setting' },
     children: [
       {
         path: 'user',
         name: '用户管理',
-        component: () => import('@/views/modules/sys/user'),
+        component: () => import('@/views/modules/system/user'),
         meta: { title: '用户管理', icon: 'peoples' }
       },
       {
         path: 'role',
         name: '角色管理',
-        component: () => import('@/views/modules/sys/role'),
+        component: () => import('@/views/modules/system/role'),
         meta: { title: '角色管理', icon: 'eye-open' }
       },
       {
         path: 'menu',
         name: '菜单管理',
-        component: () => import('@/views/modules/sys/menu'),
+        component: () => import('@/views/modules/system/menu'),
         meta: { title: '菜单管理', icon: 'el-icon-receiving' }
       }
     ]
@@ -131,7 +131,7 @@ export const asyncRoutes = [
       {
         path: 'oshi',
         name: 'oshi',
-        component: () => import('@/views/modules/dev/oshi'),
+        component: () => import('@/views/modules/engine/oshi'),
         meta: { title: '服务器', icon: 'el-icon-s-platform' }
       }
     ]
