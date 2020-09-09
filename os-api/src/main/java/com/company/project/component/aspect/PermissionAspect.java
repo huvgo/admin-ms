@@ -18,9 +18,9 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * 权限判断 拦截器
@@ -51,7 +51,7 @@ public class PermissionAspect {
         String token = request.getHeader("X-Token");
         User user = userCache.getUser(token);
         Assert.requireNonNull(user, Results.LOGIN_EXPIRED);
-        List<Menu> menuList = user.getMenuList();
+        Set<Menu> menuList = user.getMenuList();
 
         // 获取当前访问的菜单和当前访问菜单的权限
         Class<?> classTarget = joinPoint.getTarget().getClass();

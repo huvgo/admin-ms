@@ -6,7 +6,6 @@
       :rules="loginRules"
       class="login-form"
       autocomplete="on"
-      label-position="left"
     >
       <div class="title-container">
         <h3 class="title">欢迎</h3>

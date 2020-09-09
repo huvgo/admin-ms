@@ -24,10 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * <p>
@@ -65,21 +62,49 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         Assert.requireTrue(password.equals(user.getPassword()), Results.INCORRECT_ACCOUNT_OR_PASSWORD);
         // 菜单权限
         List<Integer> roleIds = user.getRoleIds();
-        List<Menu> menuList = null;
+        Set<Menu> menus = new HashSet<>();
         if (user.isSuperAdmin()) {
-            menuList = menuService.list();
+            List<Menu> menuList = menuService.list();
+            menus.addAll(menuList);
         } else {
             List<Role> roles = roleService.listByIds(roleIds);
             HashSet<Integer> menuIds = new HashSet<>();
             roles.forEach(role -> menuIds.addAll(role.getMenuIds()));
             if (!menuIds.isEmpty()) {
-                menuList = menuService.list(new QueryWrapper<Menu>().in("id", menuIds));
+                List<Menu> menuList = menuService.list(new QueryWrapper<Menu>().in("id", menuIds));
+                Set<Menu> parentMenuList = new HashSet<>();
+                menuList.forEach(menu -> {
+                    if (0 != menu.getParentId()) {
+                        getAllParents(parentMenuList, menu.getParentId());
+                    }
+                });
+
+                menus.addAll(parentMenuList);
+                menus.addAll(menuList);
             } else {
-                menuList = Collections.EMPTY_LIST;
+                menus = Collections.EMPTY_SET;
             }
         }
-        user.setMenuList(menuList);
+        user.setMenuList(menus);
         return user;
+    }
+
+    public void getAllParents(Set<Menu> menuSet, Integer childrenId) {
+        Menu parentMenu = menuService.getById(childrenId);
+        menuSet.add(parentMenu);
+        if (0 != parentMenu.getParentId()) {
+            boolean has = false;
+            for (Menu m : menuSet) {
+                if (parentMenu.getId().equals(m.getParentId())) {
+                    has = true;
+                    break;
+                }
+            }
+            if (!has) {
+                getAllParents(menuSet, parentMenu.getParentId());
+            }
+
+        }
     }
 
     @Override

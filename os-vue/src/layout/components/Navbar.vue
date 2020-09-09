@@ -11,6 +11,13 @@
 
     <div class="right-menu">
       <template v-if="device!=='mobile'">
+        <div class="right-menu-item hover-effect">
+          <el-tooltip class="item" effect="dark" content="文档" placement="top-start">
+            <a target="_blank" href="https://huvgo.github.io/admin-docs/">
+              <i class="el-icon-reading"></i>
+            </a>
+          </el-tooltip>
+        </div>
         <message-bell class="right-menu-item hover-effect" />
         <div class="right-menu-item hover-effect" @click.stop="showSettingBarChange(true)">
           <i class="el-icon-brush"></i>
@@ -28,13 +35,10 @@
           <router-link to="/profile/index">
             <el-dropdown-item>个人中心</el-dropdown-item>
           </router-link>
-          <router-link to="/">
-            <el-dropdown-item>首页</el-dropdown-item>
-          </router-link>
           <a target="_blank" href="https://github.com/PanJiaChen/vue-element-admin/">
             <el-dropdown-item>项目地址</el-dropdown-item>
           </a>
-          <a target="_blank" href="#">
+          <a target="_blank" href="https://huvgo.github.io/admin-docs/">
             <el-dropdown-item>文档</el-dropdown-item>
           </a>
           <el-dropdown-item divided @click.native="logout">

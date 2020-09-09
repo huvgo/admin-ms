@@ -7,6 +7,7 @@
         </el-form-item>
         <el-form-item>
           <el-button @click="fetchData()">查询</el-button>
+          <el-button type="info" @click="resetQueryFields()">重置</el-button>
           <el-button type="primary" @click="handleAdd()">新增</el-button>
           <el-button
             plain
@@ -53,13 +54,18 @@
       />
     </el-card>
     <el-dialog :visible.sync="dialogVisible" :title="'新增'">
-      <el-form ref="dataForm" :model="dataForm" label-width="80px" label-position="left">
+      <el-form ref="dataForm" :rules="rules" :model="dataForm" label-width="80px">
         <el-form-item v-show="false" label="ID" prop="id" />
         <el-form-item label="角色名称" prop="name">
           <el-input v-model="dataForm.name" placeholder="请输入角色名称" />
         </el-form-item>
         <el-form-item label="权限范围" prop="dataScope">
-          <el-select v-model="dataForm.dataScope " placeholder="请选择权限范围" style="width:100%">
+          <el-select
+            v-model="dataForm.dataScope "
+            placeholder="请选择权限范围"
+            style="width:100%"
+            @change="handleSelectChange"
+          >
             <el-option
               v-for="item in dataScopeOptions"
               :key="item.value"
@@ -68,7 +74,7 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item v-show="dataForm.dataScope == 2" label="数据权限">
+        <el-form-item v-show="dataForm.dataScope == 2" label="数据权限" prop="deptIds">
           <el-tree
             ref="deptTree"
             :data="treeData"
@@ -91,7 +97,6 @@
             node-key="id"
             class="permission-tree"
             :expand-on-click-node="false"
-            :check-strictly="true"
             :check-on-click-node="true"
             :default-expand-all="true"
             @check="handleMenuNodeClick"
@@ -143,6 +148,17 @@ export default {
         deptId: '',
         createUserId: '',
         createTime: ''
+      },
+      rules: {
+        name: [
+          { required: true, message: '角色名不能为空', trigger: 'blur' }
+        ],
+        dataScope: [
+          { required: true, message: '权限范围不能为空', trigger: 'blur' }
+        ],
+        menuIds: [
+          { required: true, message: '菜单权限不能为空', trigger: 'blur' }
+        ]
       },
       // 数据范围选项
       dataScopeOptions: [
@@ -203,17 +219,25 @@ export default {
         this.treeData = response.data
       })
     },
+    resetQueryFields() {
+      this.queryParam = {}
+      this.fetchData()
+    },
     dataFormSubmit() {
-      let request
-      if (this.dataForm.id) {
-        request = update(this.dataForm)
-      } else {
-        request = add(this.dataForm)
-      }
-      request.then((response) => {
-        this.dialogVisible = false
-        this.fetchData()
-        this.$message({ message: response.userTips, type: 'success' })
+      this.$refs['dataForm'].validate((valid) => {
+        if (valid) {
+          let request
+          if (this.dataForm.id) {
+            request = update(this.dataForm)
+          } else {
+            request = add(this.dataForm)
+          }
+          request.then((response) => {
+            this.dialogVisible = false
+            this.fetchData()
+            this.$message({ message: response.userTips, type: 'success' })
+          })
+        }
       })
     },
     handleSizeChange(pageSize) {
@@ -229,9 +253,6 @@ export default {
       this.$nextTick(() => {
         this.$refs['dataForm'].resetFields()
         this.$refs.menuTree.setCheckedKeys(this.dataForm.menuIds)
-        if (!this.dataForm.deptIds) {
-          this.dataForm.deptIds = []
-        }
         this.$refs.deptTree.setCheckedKeys(this.dataForm.deptIds)
       })
     },
@@ -265,10 +286,14 @@ export default {
       })
     },
     handleMenuNodeClick(data, checked) {
-      this.dataForm.menuIds = checked.checkedKeys.concat(checked.halfCheckedKeys)
+      this.dataForm.menuIds = checked.checkedKeys
+      this.$refs.dataForm.validateField('menuIds')
     },
     handleDeptNodeClick(data, checked) {
-      this.dataForm.deptIds = checked.checkedKeys.concat(checked.halfCheckedKeys)
+      this.dataForm.deptIds = checked.checkedKeys
+    },
+    handleSelectChange(val) {
+      this.$refs.dataForm.validateField('dataScope')
     }
 
   }

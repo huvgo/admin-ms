@@ -93,7 +93,7 @@
               <span>账号信息</span>
             </div>
             <div class="component-item">
-              <el-form ref="dataForm" :model="dataForm" label-width="80px" label-position="left">
+              <el-form ref="dataForm" :rules="rules" :model="dataForm" label-width="80px">
                 <el-form-item v-show="false" label="ID" prop="id" />
                 <el-form-item label="账号" prop="username">
                   <el-input v-model="dataForm.username" placeholder="请输入昵称" />
@@ -120,6 +120,7 @@
                     multiple
                     placeholder="请选择"
                     style="width: 100%;"
+                    @change="handleSelectChange"
                   >
                     <el-option
                       v-for="item in roleOptions"
@@ -141,19 +142,6 @@
                     @change="handleCascaderChange"
                   />
                 </el-form-item>
-              </el-form>
-            </div>
-          </el-card>
-        </el-col>
-      </el-row>
-      <el-row :gutter="15">
-        <el-col :span="24">
-          <el-card class="box-card" shadow="never">
-            <div slot="header" class="clearfix">
-              <span>基本信息</span>
-            </div>
-            <div class="component-item">
-              <el-form ref="dataForm2" :model="dataForm" label-width="80px" label-position="left">
                 <el-form-item label="姓名" prop="name">
                   <el-input v-model="dataForm.name" placeholder="请输入姓名" />
                 </el-form-item>
@@ -194,6 +182,15 @@ export default {
     }
   },
   data() {
+    var validateComfirmPassword = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请再次输入密码'))
+      } else if (value !== this.dataForm.password) {
+        callback(new Error('两次输入密码不一致!'))
+      } else {
+        callback()
+      }
+    }
     return {
       dialogVisible: false,
       queryParam: {
@@ -211,9 +208,44 @@ export default {
         comfirmPassword: '',
         enabled: true,
         roleIds: [],
+        deptIds: [],
         name: '',
         idNumber: '',
         email: ''
+      },
+      // 表单校验
+      rules: {
+        username: [
+          { required: true, message: '用户名称不能为空', trigger: 'blur' }
+        ],
+        deptIds: [
+          { required: true, message: '所属部门不能为空', trigger: 'blur' }
+        ],
+        roleIds: [
+          { required: true, message: '所属角色不能为空', trigger: 'blur' }
+        ],
+        password: [
+          { required: true, message: '用户密码不能为空', trigger: 'blur' }
+        ],
+        comfirmPassword: [
+          { required: true, validator: validateComfirmPassword, trigger: 'blur' }
+        ],
+        email: [
+          { message: '邮箱地址不能为空', trigger: 'blur' },
+          {
+            type: 'email',
+            message: "'请输入正确的邮箱地址",
+            trigger: ['blur', 'change']
+          }
+        ],
+        mobile: [
+          { required: true, message: '手机号码不能为空', trigger: 'blur' },
+          {
+            pattern: /^1[3|4|5|6|7|8|9][0-9]\d{8}$/,
+            message: '请输入正确的手机号码',
+            trigger: 'blur'
+          }
+        ]
       },
       treeData: [],
       multipleSelection: [],
@@ -222,6 +254,14 @@ export default {
       list: null,
       listLoading: true,
       total: 0
+    }
+  },
+  watch: {
+    'dataForm.roleIds': {
+      handler: function(newV, oldV) {
+
+      },
+      deep: true
     }
   },
   created() {
@@ -256,16 +296,19 @@ export default {
       this.fetchData()
     },
     dataFormSubmit() {
-      let request
-      if (this.dataForm.id) {
-        request = update(this.dataForm)
-      } else {
-        request = add(this.dataForm)
-      }
-      request.then((response) => {
-        this.dialogVisible = false
-        this.fetchData()
-        this.$message({ message: response.userTips, type: 'success' })
+      this.$refs['dataForm'].validate((valid) => {
+        if (valid) {
+          let request
+          if (this.dataForm.id) {
+            request = update(this.dataForm)
+          } else {
+            request = add(this.dataForm)
+          }
+          request.then((response) => {
+            this.dialogVisible = false
+            this.fetchData()
+          })
+        }
       })
     },
     handleSizeChange(pageSize) {
@@ -278,9 +321,10 @@ export default {
     },
     handleAdd() {
       this.dialogVisible = true
+      this.rules.password[0].required = true
+      this.rules.comfirmPassword[0].required = true
       this.$nextTick(() => {
         this.$refs['dataForm'].resetFields()
-        this.$refs['dataForm2'].resetFields()
         console.log(this.dataForm)
       })
     },
@@ -299,7 +343,10 @@ export default {
     },
     handleEdit(scope) {
       this.dialogVisible = true
+      this.rules.password[0].required = false
+      this.rules.comfirmPassword[0].required = false
       this.$nextTick(() => {
+        this.$refs['dataForm'].resetFields()
         this.dataForm = JSON.parse(JSON.stringify(scope.row))
       })
     },
@@ -315,6 +362,7 @@ export default {
       const parentId = val[val.length - 1]
       this.dataForm.deptId = parentId
       this.dataForm.deptIds = val
+      this.$refs.dataForm.validateField('deptIds')
     },
     handleSwitchChange(row) {
       update(row).then((response) => {
@@ -325,6 +373,9 @@ export default {
         console.log(err)
         row.enabled = true
       })
+    },
+    handleSelectChange(val) {
+      this.$refs.dataForm.validateField('roleIds')
     }
   }
 }

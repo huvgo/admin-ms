@@ -6,8 +6,13 @@
       </el-col>
       <el-col :span="20">
         <el-card class="box-card">
-          <el-form :inline="true" :model="queryParam" @keyup.enter.native="fetchData()">
-            <el-form-item>
+          <el-form
+            ref="queryForm"
+            :inline="true"
+            :model="queryParam"
+            @keyup.enter.native="fetchData()"
+          >
+            <el-form-item prop="name">
               <el-input v-model="queryParam.name" placeholder="部门名称" clearable />
             </el-form-item>
             <el-form-item>
@@ -57,7 +62,7 @@
       </el-col>
     </el-row>
     <el-dialog :visible.sync="dialogVisible" :title="'新增'">
-      <el-form ref="dataForm" :model="dataForm" label-width="80px" label-position="left">
+      <el-form ref="dataForm" :rules="rules" :model="dataForm" label-width="80px">
         <el-form-item v-show="false" label="ID" prop="id" />
         <el-form-item v-show="false" label="上级部门ID" prop="parentId" />
         <el-form-item label="部门名称" prop="name">
@@ -92,6 +97,7 @@
 import { add, del, update, getList } from '@/api/system/dept'
 import { getTree } from '@/api/system/dept'
 import TreeCard from './components/TreeCard'
+
 export default {
   components: { TreeCard },
   filters: {
@@ -122,6 +128,11 @@ export default {
         mobile: '',
         enabled: ''
       },
+      rules: {
+        name: [
+          { required: true, message: '部门名称不能为空', trigger: 'blur' }
+        ]
+      },
       treeData: [],
       ids: [],
       list: null,
@@ -130,7 +141,6 @@ export default {
     }
   },
   created() {
-    this.fetchDeptTreeData()
     this.fetchData()
   },
   methods: {
@@ -141,8 +151,7 @@ export default {
         this.total = response.data.total
         this.listLoading = false
       })
-    },
-    fetchDeptTreeData() {
+      // 获取DeptTreeData
       getTree().then((response) => {
         this.treeData = response.data
       })
@@ -152,16 +161,20 @@ export default {
       this.fetchData()
     },
     dataFormSubmit() {
-      let request
-      if (this.dataForm.id) {
-        request = update(this.dataForm)
-      } else {
-        request = add(this.dataForm)
-      }
-      request.then((response) => {
-        this.dialogVisible = false
-        this.fetchData()
-        this.$message({ message: response.userTips, type: 'success' })
+      this.$refs['dataForm'].validate((valid) => {
+        if (valid) {
+          let request
+          if (this.dataForm.id) {
+            request = update(this.dataForm)
+          } else {
+            request = add(this.dataForm)
+          }
+          request.then((response) => {
+            this.dialogVisible = false
+            this.fetchData()
+            this.$message({ message: response.userTips, type: 'success' })
+          })
+        }
       })
     },
     handleSizeChange(pageSize) {

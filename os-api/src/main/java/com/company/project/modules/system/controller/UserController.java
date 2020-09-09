@@ -152,7 +152,7 @@ public class UserController extends BaseController {
             String userAgent = ServletUtil.getHeader(httpRequest, "User-Agent", "UTF-8");
             UserAgent ua = UserAgentUtil.parse(userAgent);
             HashMap<String, Object> content = new HashMap<>();
-            content.put("os", ua.getOs().toString());
+            content.put("os", ua.getPlatform().toString());
             content.put("browser", ua.getBrowser().toString());
             log.setType(LogType.LOGIN_LOG).setContent(content).setIp(ServletUtil.getClientIP(httpRequest)).setOperator(user.getUsername()).setCreateTime(new Date());
             logService.save(log);

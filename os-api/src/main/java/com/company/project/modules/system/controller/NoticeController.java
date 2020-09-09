@@ -13,8 +13,10 @@ import com.company.project.modules.system.entity.User;
 import com.company.project.modules.system.service.NoticeService;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * <p>
@@ -41,9 +43,9 @@ public class NoticeController {
         notice.setSenderId(user.getId());
         notice.setSender(user.getUsername());
         notice.setSenderAvatar(user.getAvatar());
-//        if (Objects.isNull(notice.getCreateDate())) {
-//            notice.setCreateDate(new Date());
-//        }
+        if (Objects.isNull(notice.getPushTime())) {
+            notice.setPushTime(new Date());
+        }
         noticeService.save(notice);
         return Results.SUCCESS;
     }

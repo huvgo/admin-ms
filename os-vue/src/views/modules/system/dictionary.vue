@@ -7,6 +7,7 @@
         </el-form-item>
         <el-form-item>
           <el-button @click="fetchData()">查询</el-button>
+          <el-button type="info" @click="resetQueryFields()">重置</el-button>
           <el-button type="primary" @click="handleAdd()">新增</el-button>
         </el-form-item>
       </el-form>
@@ -52,7 +53,7 @@
       />
     </el-card>
     <el-dialog :visible.sync="dialogVisible" :title="'新增'">
-      <el-form ref="dataForm" :model="dataForm" label-width="80px" label-position="left">
+      <el-form ref="dataForm" :rules="rules" :model="dataForm" label-width="80px">
         <el-form-item v-show="false" label="ID" prop="id" />
         <el-form-item label="名称" prop="name">
           <el-input v-model="dataForm.name" placeholder="请输入名称" />
@@ -138,6 +139,17 @@ export default {
           }
         ]
       },
+      rules: {
+        name: [
+          { required: true, message: '名称不能为空', trigger: 'blur' }
+        ],
+        code: [
+          { required: true, message: '编码不能为空', trigger: 'blur' }
+        ],
+        options: [
+          { required: true, message: '选项不能为空', trigger: 'blur' }
+        ]
+      },
       option: {
         label: '',
         value: '',
@@ -161,17 +173,25 @@ export default {
         this.listLoading = false
       })
     },
+    resetQueryFields() {
+      this.queryParam = {}
+      this.fetchData()
+    },
     dataFormSubmit() {
-      let request
-      if (this.dataForm.id) {
-        request = update(this.dataForm)
-      } else {
-        request = add(this.dataForm)
-      }
-      request.then((response) => {
-        this.dialogVisible = false
-        this.fetchData()
-        this.$message({ message: response.userTips, type: 'success' })
+      this.$refs['dataForm'].validate((valid) => {
+        if (valid) {
+          let request
+          if (this.dataForm.id) {
+            request = update(this.dataForm)
+          } else {
+            request = add(this.dataForm)
+          }
+          request.then((response) => {
+            this.dialogVisible = false
+            this.fetchData()
+            this.$message({ message: response.userTips, type: 'success' })
+          })
+        }
       })
     },
     handleSizeChange(pageSize) {
@@ -208,9 +228,11 @@ export default {
     },
     handleAddOption() {
       this.dataForm.options.push(JSON.parse(JSON.stringify(this.option)))
+      this.$refs.dataForm.validateField('options')
     },
     handleDelOption(index) {
       this.dataForm.options.splice(index, 1)
+      this.$refs.dataForm.validateField('options')
     }
   }
 

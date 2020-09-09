@@ -13,6 +13,7 @@ import lombok.experimental.Accessors;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import java.util.List;
+import java.util.Set;
 
 /**
  * <p>
@@ -123,7 +124,7 @@ public class User extends BaseEntity<Integer> {
     private List<Role> roleList;
 
     @TableField(exist = false)
-    private List<Menu> menuList;
+    private Set<Menu> menuList;
 
     @JsonIgnore
     public boolean isSuperAdmin() {

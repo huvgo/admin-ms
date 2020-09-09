@@ -6,21 +6,11 @@
           <el-input v-model="queryParam.operator" placeholder="操作人" clearable />
         </el-form-item>
         <el-form-item>
-          <el-select v-model="queryParam.method" clearable placeholder="请求方法">
-            <el-option
-              v-for="item in ['DELETE','POST','PUT']"
-              :key="item"
-              :label="item"
-              :value="item"
-            />
-          </el-select>
-        </el-form-item>
-        <el-form-item>
-          <el-input v-model="queryParam.params" placeholder="请求参数" clearable />
+          <el-input v-model="queryParam.content" placeholder="模糊搜索" clearable />
         </el-form-item>
         <el-form-item>
           <el-button @click="fetchData()">查询</el-button>
-          <el-button type="primary" @click="handleAdd()">新增</el-button>
+          <el-button type="info" @click="resetQueryFields()">重置</el-button>
           <el-button type="danger" :disabled="ids.length <= 0" @click="handleBatchDelete()">批量删除</el-button>
         </el-form-item>
       </el-form>
@@ -78,9 +68,7 @@ export default {
       queryParam: {
         operator: '',
         url: '',
-        method: '',
-        params: '',
-        ip: '',
+        content: '',
         type: 1,
         createTime: '',
         currentPage: 1,
@@ -115,6 +103,10 @@ export default {
         this.listLoading = false
       })
     },
+    resetQueryFields() {
+      this.queryParam = {}
+      this.fetchData()
+    },
     dataFormSubmit() {
       let request
       if (this.dataForm.id) {
@@ -136,12 +128,6 @@ export default {
       this.queryParam.currentPage = currentPage
       this.fetchData()
     },
-    handleAdd() {
-      this.dialogVisible = true
-      this.$nextTick(() => {
-        this.$refs['dataForm'].resetFields()
-      })
-    },
     handleDelete({ $index, row }) {
       del([row.id]).then((response) => {
         this.fetchData()
@@ -152,12 +138,6 @@ export default {
       del(this.ids).then((response) => {
         this.fetchData()
         this.$message({ message: response.userTips, type: 'success' })
-      })
-    },
-    handleEdit(scope) {
-      this.dialogVisible = true
-      this.$nextTick(() => {
-        this.dataForm = JSON.parse(JSON.stringify(scope.row))
       })
     },
     // 多选

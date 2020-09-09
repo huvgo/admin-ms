@@ -62,10 +62,10 @@ public class LogController {
     @Permissions
     public Result<Page<Log>> get(@RequestParam(defaultValue = "0") Integer currentPage, @RequestParam(defaultValue = "10") Integer pageSize, @RequestParam Map<String, Object> params) {
         Page<Log> page = logService.page(new Page<>(currentPage, pageSize, true), new QueryWrapper<Log>()
-                .eq(StrUtil.isNotBlank((String) params.get("operator")), "operator", params.get("operator"))
+                .like(StrUtil.isNotBlank((String) params.get("operator")), "operator", params.get("operator"))
                 .eq(StrUtil.isNotBlank((String) params.get("type")), "type", params.get("type"))
                 .eq(StrUtil.isNotBlank((String) params.get("method")), "method", params.get("method"))
-                .like(StrUtil.isNotBlank((String) params.get("params")), "params", params.get("params"))
+                .like(StrUtil.isNotBlank((String) params.get("content")), "content", params.get("content"))
                 .orderByDesc("create_time")
         );
         return Results.success(page);

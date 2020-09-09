@@ -51,7 +51,7 @@
       />
     </el-card>
     <el-dialog :visible.sync="dialogVisible" :title="'新增'">
-      <el-form ref="dataForm" :model="dataForm" label-width="80px" label-position="left">
+      <el-form ref="dataForm" :rules="rules" :model="dataForm" label-width="80px">
         <el-form-item v-show="false" label="ID" prop="id" />
         <el-form-item label="菜单名称" prop="name">
           <el-input v-model="dataForm.name" placeholder="请输入菜单名称" />
@@ -122,6 +122,17 @@ export default {
         type: '1',
         sort: ''
       },
+      rules: {
+        name: [
+          { required: true, message: '菜单名称不能为空', trigger: 'blur' }
+        ],
+        dataScope: [
+          { required: true, message: '权限范围不能为空', trigger: 'blur' }
+        ],
+        menuIds: [
+          { required: true, message: '菜单权限不能为空', trigger: 'blur' }
+        ]
+      },
       ids: [],
       treeData: [],
       list: [],
@@ -148,16 +159,20 @@ export default {
       })
     },
     dataFormSubmit() {
-      let request
-      if (this.dataForm.id) {
-        request = update(this.dataForm)
-      } else {
-        request = add(this.dataForm)
-      }
-      request.then((response) => {
-        this.dialogVisible = false
-        this.fetchData()
-        this.$message({ message: response.userTips, type: 'success' })
+      this.$refs['dataForm'].validate((valid) => {
+        if (valid) {
+          let request
+          if (this.dataForm.id) {
+            request = update(this.dataForm)
+          } else {
+            request = add(this.dataForm)
+          }
+          request.then((response) => {
+            this.dialogVisible = false
+            this.fetchData()
+            this.$message({ message: response.userTips, type: 'success' })
+          })
+        }
       })
     },
     handleSizeChange(pageSize) {

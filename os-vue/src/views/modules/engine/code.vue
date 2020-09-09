@@ -41,7 +41,7 @@
       />
     </el-card>
     <el-dialog :visible.sync="dialogVisible" :title="'新增'">
-      <el-form ref="dataForm" :model="dataForm" label-width="80px" label-position="left">
+      <el-form ref="dataForm" :model="dataForm" label-width="80px">
         <el-form-item label="上级菜单" prop="menuParentId">
           <tree-Popover :id="dataForm.parentMenuId" @tree-popover-click="handleTreePopoverClick" />
         </el-form-item>
