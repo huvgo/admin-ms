@@ -9,6 +9,8 @@
           <el-button @click="fetchData()">查询</el-button>
           <el-button type="info" @click="resetQueryFields()">重置</el-button>
           <el-button type="primary" @click="handleAdd()">新增</el-button>
+        </el-form-item>
+        <el-form-item>
           <el-button
             plain
             type="danger"

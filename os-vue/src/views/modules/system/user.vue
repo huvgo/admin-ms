@@ -1,10 +1,17 @@
 <template>
   <div class="app-container">
     <el-row :gutter="10">
-      <el-col :span="4">
+      <el-col :xs="24" :sm="8" :md="7" :lg="4" :xl="4">
         <tree-card :data="treeData" @tree-click="handleTreeClick" />
       </el-col>
-      <el-col :span="20">
+      <el-col
+        :class="device ==='mobile'?'mobile-el-col':''"
+        :xs="24"
+        :sm="16"
+        :md="15"
+        :lg="20"
+        :xl="20"
+      >
         <el-card class="box-card">
           <el-form
             ref="queryParam"
@@ -22,10 +29,12 @@
               <el-button @click="fetchData()">查询</el-button>
               <el-button type="info" @click="resetQueryFields()">重置</el-button>
               <el-button type="primary" @click="handleAdd()">新增</el-button>
+            </el-form-item>
+            <el-form-item>
               <el-button
                 plain
                 type="danger"
-                :disabled="multipleSelection.length <= 0"
+                :disabled="ids.length <= 0"
                 @click="handleBatchDelete()"
               >批量删除</el-button>
             </el-form-item>
@@ -169,6 +178,8 @@ import { add, del, update, getList } from '@/api/system/user'
 import { option } from '@/api/system/role'
 import { getTree, getMap } from '@/api/system/dept'
 import TreeCard from './components/TreeCard'
+import { mapGetters } from 'vuex'
+
 export default {
   components: { TreeCard },
   filters: {
@@ -248,13 +259,18 @@ export default {
         ]
       },
       treeData: [],
-      multipleSelection: [],
+      ids: [],
       deptMap: [],
       roleOptions: [],
       list: null,
       listLoading: true,
       total: 0
     }
+  },
+  computed: {
+    ...mapGetters([
+      'device'
+    ])
   },
   watch: {
     'dataForm.roleIds': {
@@ -335,8 +351,7 @@ export default {
       })
     },
     handleBatchDelete() {
-      const ids = this.multipleSelection.map(item => { return item.id })
-      del(ids).then((response) => {
+      del(this.ids).then((response) => {
         this.fetchData()
         this.$message({ message: response.userTips, type: 'success' })
       })
@@ -351,8 +366,10 @@ export default {
       })
     },
     // 多选
-    handleSelectionChange(val) {
-      this.multipleSelection = val
+    handleSelectionChange(ids) {
+      this.ids = ids.map(item => {
+        return item.id
+      })
     },
     handleTreeClick(val) {
       this.queryParam.deptId = val
