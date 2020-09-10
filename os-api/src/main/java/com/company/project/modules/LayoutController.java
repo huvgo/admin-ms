@@ -36,13 +36,13 @@ public class LayoutController {
         Assert.requireNonNull(user, Results.LOGIN_EXPIRED);
         Set<Menu> menus = user.getMenuList();
         if (CollUtil.isEmpty(menus)) {
-            return Results.success(menus);
+            return Results.SUCCESS.setData(menus);
         }
         // 过滤掉按钮 只保留菜单
         List<Menu> collect = menus.stream().filter(menu -> menu.getType() != 2).collect(Collectors.toList());
         // 构建tree列表
         List<Menu> tree = MenuUtil.buildTree(collect, 0);
         menus = new LinkedHashSet<>(tree);
-        return Results.success(menus);
+        return Results.SUCCESS.setData(menus);
     }
 }

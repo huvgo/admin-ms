@@ -59,14 +59,14 @@ public class MenuController {
     @GetMapping("/{id}")
     public Result<Menu> get(@PathVariable Integer id) {
         Menu menu = menuService.getById(id);
-        return Results.success(menu);
+        return Results.SUCCESS.setData(menu);
     }
 
     @Permissions
     @GetMapping
     public Result<List<Menu>> get(@RequestParam(value = "nonButton", required = false) boolean nonButton) {
         List<Menu> list = menuService.list(new QueryWrapper<Menu>().ne(nonButton, "type", 2));
-        return Results.success(list);
+        return Results.SUCCESS.setData(list);
     }
 
 }

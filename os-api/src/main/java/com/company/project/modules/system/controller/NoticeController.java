@@ -70,7 +70,7 @@ public class NoticeController {
     @Permissions
     public Result<Notice> get(@PathVariable Integer id) {
         Notice notice = noticeService.getById(id);
-        return Results.success(notice);
+        return Results.SUCCESS.setData(notice);
     }
 
     @GetMapping
@@ -82,6 +82,6 @@ public class NoticeController {
                 .eq(StrUtil.isNotBlank((String) params.get("createDate")), "create_date", params.get("createDate"))
                 .eq(StrUtil.isNotBlank((String) params.get("type")), "type", params.get("type"))
         );
-        return Results.success(page);
+        return Results.SUCCESS.setData(page);
     }
 }

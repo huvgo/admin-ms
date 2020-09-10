@@ -26,41 +26,41 @@ import java.util.Map;
 public class LogController {
     private final LogService logService;
 
-    public LogController(LogService logService) {
+    public LogController(LogService logService){
         this.logService = logService;
     }
 
     @PostMapping
     @Permissions
-    public Result<?> post(@RequestBody Log log) {
+    public Result<?> post(@RequestBody Log log){
         logService.save(log);
         return Results.SUCCESS;
     }
 
     @DeleteMapping
     @Permissions
-    public Result<?> delete(@RequestBody List<Long> ids) {
+    public Result<?> delete(@RequestBody List<Long> ids){
         logService.removeByIds(ids);
         return Results.SUCCESS;
     }
 
     @PutMapping
     @Permissions
-    public Result<?> put(@RequestBody Log log) {
+    public Result<?> put(@RequestBody Log log){
         logService.updateById(log);
         return Results.SUCCESS;
     }
 
     @GetMapping("/{id}")
     @Permissions
-    public Result<Log> get(@PathVariable Integer id) {
+    public Result<Log> get(@PathVariable Integer id){
         Log log = logService.getById(id);
-        return Results.success(log);
+        return Results.SUCCESS.setData(log);
     }
 
     @GetMapping
     @Permissions
-    public Result<Page<Log>> get(@RequestParam(defaultValue = "0") Integer currentPage, @RequestParam(defaultValue = "10") Integer pageSize, @RequestParam Map<String, Object> params) {
+    public Result<Page<Log>> get(@RequestParam(defaultValue = "0") Integer currentPage, @RequestParam(defaultValue = "10") Integer pageSize, @RequestParam Map<String, Object> params){
         Page<Log> page = logService.page(new Page<>(currentPage, pageSize, true), new QueryWrapper<Log>()
                 .like(StrUtil.isNotBlank((String) params.get("operator")), "operator", params.get("operator"))
                 .eq(StrUtil.isNotBlank((String) params.get("type")), "type", params.get("type"))
@@ -68,6 +68,6 @@ public class LogController {
                 .like(StrUtil.isNotBlank((String) params.get("content")), "content", params.get("content"))
                 .orderByDesc("create_time")
         );
-        return Results.success(page);
+        return Results.SUCCESS.setData(page);
     }
 }

@@ -59,7 +59,7 @@ public class RoleController {
     @GetMapping("/{id}")
     public Result<Role> get(@PathVariable Integer id) {
         Role role = roleService.getById(id);
-        return Results.success(role);
+        return Results.SUCCESS.setData(role);
     }
 
     @Permissions
@@ -68,12 +68,12 @@ public class RoleController {
         QueryWrapper<Role> queryWrapper = new QueryWrapper<Role>()
                 .like(!StrUtil.isBlankIfStr(params.get("name")), "name", params.get("name"));
         Page<Role> page = roleService.page(new Page<>(currentPage, pageSize, true), queryWrapper);
-        return Results.success(page);
+        return Results.SUCCESS.setData(page);
     }
 
     @GetMapping("/option")
     public Result<List<Role>> option() {
         List<Role> list = roleService.list(new QueryWrapper<Role>().select("id", "name"));
-        return Results.success(list);
+        return Results.SUCCESS.setData(list);
     }
 }

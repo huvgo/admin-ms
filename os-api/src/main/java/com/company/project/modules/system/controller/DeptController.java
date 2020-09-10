@@ -57,7 +57,7 @@ public class DeptController {
     @Permissions
     public Result<Dept> get(@PathVariable Integer id) {
         Dept dept = deptService.getById(id);
-        return Results.success(dept);
+        return Results.SUCCESS.setData(dept);
     }
 
     @GetMapping
@@ -71,14 +71,14 @@ public class DeptController {
                 .and(deptIdCondition, i -> i.eq("id", params.get("deptId")).or().apply("JSON_CONTAINS(parent_ids,{0})", params.get("deptId")));
 
         Page<Dept> page = deptService.page(new Page<>(currentPage, pageSize, true), queryWrapper);
-        return Results.success(page);
+        return Results.SUCCESS.setData(page);
     }
 
     @GetMapping("/tree")
     public Result<List<Dept>> get() {
         List<Dept> list = deptService.list();
         List<Dept> tree = MenuUtil.buildTree(list, 0);
-        return Results.success(tree);
+        return Results.SUCCESS.setData(tree);
     }
 
 
@@ -89,6 +89,6 @@ public class DeptController {
         for (Dept dept : list) {
             map.put(dept.getId(), dept.getName());
         }
-        return Results.success(map);
+        return Results.SUCCESS.setData(map);
     }
 }

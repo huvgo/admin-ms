@@ -1,13 +1,11 @@
 package com.company.project.core;
 
-import org.springframework.validation.ObjectError;
-
 import java.util.List;
 
 public class Results {
 
-    public static Result<?> SUCCESS = new Result<>(true, "操作成功", "00000", "");
-    public static Result<?> Fail = new Result<>(false, "操作失败", "B0000", "");
+    public static Result<?> SUCCESS = new Result<>(true, "操作成功", "00000", null);
+    public static Result<?> Fail = new Result<>(false, "操作失败", "B0000", null);
 
 
     // A开头的errorCode为警告型
@@ -22,18 +20,5 @@ public class Results {
     public static Result<List<String>> PARAM_ERROR = new Result<>(false, "操作失败，请校验页面填写的信息", "B0001", "");
     public static Result<?> UNAUTHORIZED = new Result<>(false, "您没有此操作的权限，请联系管理员为您添加权限", "B0002", "");
     public static Result<?> NOT_FOUND = new Result<>(false, "您访问的接口不存在", "B0003", "访问的接口不存在");
-
-    public static <T> Result<T> success(T data) {
-        return new Result<T>().setSuccess(true).setUserTips("操作成功").setData(data);
-    }
-
-    public static <T> Result<T> error(String errorCode, String userTips) {
-        return new Result<T>().setSuccess(false).setErrorCode(errorCode).setUserTips(userTips);
-    }
-
-    public static <T> Result<T> error(String errorCode, String userTips, String errorMessage) {
-        return new Result<T>().setSuccess(false).setErrorCode(errorCode).setUserTips(userTips).setErrorMessage(errorMessage);
-    }
-
 
 }

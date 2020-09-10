@@ -61,7 +61,7 @@ public class DictionaryController {
     @Permissions
     public Result<Dictionary> get(@PathVariable Integer id) {
         Dictionary dictionary = dictionaryService.getById(id);
-        return Results.success(dictionary);
+        return Results.SUCCESS.setData(dictionary);
     }
 
     @GetMapping
@@ -70,7 +70,7 @@ public class DictionaryController {
         Page<Dictionary> page = dictionaryService.page(new Page<>(currentPage, pageSize, true), new QueryWrapper<Dictionary>()
                 .like(!StrUtil.isBlankIfStr(params.get("name")), "name", params.get("name"))
         );
-        return Results.success(page);
+        return Results.SUCCESS.setData(page);
     }
 
     @GetMapping("/option")
@@ -82,7 +82,7 @@ public class DictionaryController {
             List<Option> options = dictionary.getOptions();
             map.put(code + "Options", options);
         }
-        return Results.success(map);
+        return Results.SUCCESS.setData(map);
     }
 
 }

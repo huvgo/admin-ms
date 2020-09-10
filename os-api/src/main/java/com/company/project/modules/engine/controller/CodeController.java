@@ -35,7 +35,7 @@ public class CodeController {
     @Permissions
     public Result<Page<Table>> get(@RequestParam(defaultValue = "1") Integer currentPage, @RequestParam(defaultValue = "10") Integer pageSize, @RequestParam Map<String, Object> params) throws SQLException {
         Page<Table> page = codeService.page(currentPage, pageSize, params);
-        return Results.success(page);
+        return Results.SUCCESS.setData(page);
     }
 
 

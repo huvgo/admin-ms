@@ -54,7 +54,7 @@ public Result<?> delete(@RequestBody List
     @GetMapping("/{id}")
     public Result<${upperFirstName}> get(@PathVariable Integer id) {
     ${upperFirstName} ${lowerFirstName} = ${lowerFirstName}Service.getById(id);
-    return Results.success(${lowerFirstName});
+    return Results.SUCCESS.setData(${lowerFirstName});
     }
 
     @GetMapping
@@ -71,6 +71,6 @@ public Result<?> delete(@RequestBody List
         </#if>
     </#list>
     Page<${upperFirstName}> page = ${lowerFirstName}Service.page(new Page<>(current, size, true), queryWrapper);
-    return Results.success(page);
+    return Results.SUCCESS.setData(page);
     }
     }

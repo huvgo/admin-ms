@@ -1,16 +1,12 @@
 package com.company.project.core;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.Data;
-import lombok.experimental.Accessors;
 
 /**
  * 统一API响应结果封装
  */
-@Data
-@Accessors(chain = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Result<T> {
+public final class Result<T> {
 
     private boolean success;
     private String userTips;
@@ -18,22 +14,44 @@ public class Result<T> {
     private String errorMessage;
     private T data;
 
-    public Result() {
+    public Result(){
     }
 
-    public Result(boolean success, String userTips, String errorCode, String errorMessage) {
+    public Result(boolean success, String userTips, T data){
         this.success = success;
-        this.userTips = userTips;
-        this.errorCode = errorCode;
-        this.errorMessage = errorMessage;
-    }
-
-    public Result(boolean success, String errorCode, String errorMessage, String userTips, T data) {
-        this.success = success;
-        this.errorCode = errorCode;
-        this.errorMessage = errorMessage;
         this.userTips = userTips;
         this.data = data;
     }
 
+    public Result(boolean success, String userTips, String errorCode, String errorMessage){
+        this.success = success;
+        this.userTips = userTips;
+        this.errorCode = errorCode;
+        this.errorMessage = errorMessage;
+    }
+
+    public Result(boolean success, String userTips, String errorCode, String errorMessage, T data){
+        this.success = success;
+        this.userTips = userTips;
+        this.errorCode = errorCode;
+        this.errorMessage = errorMessage;
+        this.data = data;
+    }
+
+    public Result<T> setUserTips(String userTips){
+        return new Result<>(this.success, userTips, this.errorCode, errorMessage, this.data);
+
+    }
+
+    public Result<T> setErrorCode(String errorCode){
+        return new Result<>(this.success, this.userTips, errorCode, errorMessage, this.data);
+    }
+
+    public <E> Result<E> setData(E data){
+        return new Result<>(this.success, this.userTips, this.errorCode, this.errorMessage, data);
+    }
+
+    public Result<T> setErrorMessage(String errorMessage){
+        return new Result<>(this.success, this.userTips, this.errorCode, errorMessage, this.data);
+    }
 }

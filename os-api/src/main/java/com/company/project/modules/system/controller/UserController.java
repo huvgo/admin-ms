@@ -110,7 +110,7 @@ public class UserController extends BaseController {
     @GetMapping("/{id}")
     public Result<User> get(@PathVariable Integer id) {
         User user = userService.getById(id);
-        return Results.success(user);
+        return Results.SUCCESS.setData(user);
     }
 
     @Permissions
@@ -126,7 +126,7 @@ public class UserController extends BaseController {
                 .eq(mobileCondition, "mobile", params.get("mobile"))
                 .and(deptIdCondition, i -> i.eq("dept_Id", params.get("deptId")).or().apply("JSON_CONTAINS(dept_Ids,{0})", params.get("deptId")));
         Page<User> page = userService.page(new Page<>(currentPage, pageSize, true), dataScopeQueryWrapper);
-        return Results.success(page);
+        return Results.SUCCESS.setData(page);
     }
 
     /*
@@ -160,14 +160,14 @@ public class UserController extends BaseController {
             log.warn("日志记录失败：{}", e.getMessage());
         }
 
-        return Results.success(Dict.create().set("token", token));
+        return Results.SUCCESS.setData(Dict.create().set("token", token));
     }
 
     @GetMapping("/token")
     public Result<Object> token(String token) {
         User user = userCache.getUser(token);
         Assert.requireNonNull(user, Results.NOT_LOGGED_IN);
-        return Results.success(user);
+        return Results.SUCCESS.setData(user);
     }
 
     @PostMapping("/logout")
@@ -184,7 +184,7 @@ public class UserController extends BaseController {
         user.setId(UserCacheUtil.getCurrentUser().getId());
         user.setAvatar(path);
         userService.updateById(user);
-        return Results.success(path);
+        return Results.SUCCESS.setData(path);
     }
 
     /**
@@ -221,7 +221,7 @@ public class UserController extends BaseController {
         userNotice.setUpdateTime(now);
         userNotice.setNoticeIds(noticeIds);
         userNoticeService.saveOrUpdate(userNotice);
-        return Results.success(list);
+        return Results.SUCCESS.setData(list);
     }
 
 

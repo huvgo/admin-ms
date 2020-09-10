@@ -24,6 +24,6 @@ public class OshiController {
     public Result<Server> get() {
         Server server = new Server();
         server.copyTo();
-        return Results.success(server);
+        return Results.SUCCESS.setData(server);
     }
 }
