@@ -13,7 +13,7 @@ import com.company.project.cache.UserCache;
 import com.company.project.cache.UserCacheUtil;
 import com.company.project.component.annotation.Log2DB;
 import com.company.project.component.annotation.Permissions;
-import com.company.project.component.mybatis.DataScopeQueryWrapper;
+import com.company.project.component.plugin.DataScopeQueryWrapper;
 import com.company.project.core.Assert;
 import com.company.project.core.Result;
 import com.company.project.core.Results;
