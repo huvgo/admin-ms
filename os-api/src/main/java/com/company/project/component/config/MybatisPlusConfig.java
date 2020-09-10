@@ -11,11 +11,13 @@ import java.util.Date;
 
 /**
  * MybatisPlus 配置
- * 配置了MybatisPlus的分页插件
  */
 @Configuration
 public class MybatisPlusConfig {
 
+    /**
+     * 配置了MybatisPlus的分页插件
+     */
     @Bean
     public PaginationInterceptor paginationInterceptor() {
         PaginationInterceptor paginationInterceptor = new PaginationInterceptor();
@@ -30,10 +32,8 @@ public class MybatisPlusConfig {
 
 
     /**
-     * mybatis-plus 实现公共字段自动写入
-     * 例如 createTime updateTime
+     * 配置了MybatisPlus的字段自动填充
      */
-
     @Bean
     public MetaObjectHandler metaObjectHandler() {
         return new MetaObjectHandler() {

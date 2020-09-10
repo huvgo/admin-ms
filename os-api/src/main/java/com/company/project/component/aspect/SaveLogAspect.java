@@ -22,19 +22,19 @@ import java.util.HashMap;
 @Component
 @Aspect
 @Slf4j
-public class Log2DBAspect {
+public class SaveLogAspect {
 
     private final ObjectMapper objectMapper;
     private final LogServiceImpl logService;
 
     @Autowired
-    public Log2DBAspect(ObjectMapper objectMapper, LogServiceImpl logService) {
+    public SaveLogAspect(ObjectMapper objectMapper, LogServiceImpl logService) {
         this.objectMapper = objectMapper;
         this.logService = logService;
     }
 
 
-    @Pointcut("@annotation(com.company.project.component.annotation.Log2DB)")
+    @Pointcut("@annotation(com.company.project.component.annotation.SaveLog)")
     public void log() {
     }
 

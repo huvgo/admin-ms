@@ -3,8 +3,8 @@ package com.company.project.modules.system.controller;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.company.project.component.annotation.Log2DB;
-import com.company.project.component.annotation.Permission;
+import com.company.project.component.annotation.SaveLog;
+import com.company.project.component.annotation.RequirePermission;
 import com.company.project.core.Result;
 import com.company.project.core.Results;
 import com.company.project.modules.system.entity.Dictionary;
@@ -34,38 +34,38 @@ public class DictionaryController {
     }
 
     @PostMapping
-    @Log2DB
-    @Permission
+    @SaveLog
+    @RequirePermission
     public Result<?> post(@RequestBody Dictionary dictionary) {
         dictionaryService.save(dictionary);
         return Results.SUCCESS;
     }
 
     @DeleteMapping
-    @Log2DB
-    @Permission
+    @SaveLog
+    @RequirePermission
     public Result<?> delete(@RequestBody List<Long> ids) {
         dictionaryService.removeByIds(ids);
         return Results.SUCCESS;
     }
 
     @PutMapping
-    @Log2DB
-    @Permission
+    @SaveLog
+    @RequirePermission
     public Result<?> put(@RequestBody Dictionary dictionary) {
         dictionaryService.updateById(dictionary);
         return Results.SUCCESS;
     }
 
     @GetMapping("/{id}")
-    @Permission
+    @RequirePermission
     public Result<Dictionary> get(@PathVariable Integer id) {
         Dictionary dictionary = dictionaryService.getById(id);
         return Results.SUCCESS.setData(dictionary);
     }
 
     @GetMapping
-    @Permission
+    @RequirePermission
     public Result<Page<Dictionary>> get(@RequestParam(defaultValue = "0") Integer currentPage, @RequestParam(defaultValue = "10") Integer pageSize, @RequestParam Map<String, Object> params) {
         Page<Dictionary> page = dictionaryService.page(new Page<>(currentPage, pageSize, true), new QueryWrapper<Dictionary>()
                 .like(!StrUtil.isBlankIfStr(params.get("name")), "name", params.get("name"))

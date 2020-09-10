@@ -7,7 +7,7 @@ public interface LogType {
     int SYSTEM_LOG = 0;
 
     /**
-     * 操作日志
+     * 登录日志
      */
     int LOGIN_LOG = 1;
 }

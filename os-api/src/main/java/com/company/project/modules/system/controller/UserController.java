@@ -11,8 +11,8 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.company.project.cache.UserCache;
 import com.company.project.cache.UserCacheUtil;
-import com.company.project.component.annotation.Log2DB;
-import com.company.project.component.annotation.Permission;
+import com.company.project.component.annotation.SaveLog;
+import com.company.project.component.annotation.RequirePermission;
 import com.company.project.component.plugin.DataScopeQueryWrapper;
 import com.company.project.core.Assert;
 import com.company.project.core.Result;
@@ -68,26 +68,26 @@ public class UserController extends BaseController {
         this.roleService = roleService;
     }
 
-    @Permission
+    @RequirePermission
     @PostMapping
-    @Log2DB
+    @SaveLog
     public Result<?> post(@RequestBody @Validated User user) {
         userService.encodePassword(user);
         userService.save(user);
         return Results.SUCCESS;
     }
 
-    @Permission
+    @RequirePermission
     @DeleteMapping
-    @Log2DB
+    @SaveLog
     public Result<?> delete(@RequestBody List<Long> ids) {
         userService.removeByIds(ids);
         return Results.SUCCESS;
     }
 
-    @Permission
+    @RequirePermission
     @PutMapping
-    @Log2DB
+    @SaveLog
     public Result<?> put(@RequestBody User user) {
         if (StrUtil.isNotBlank(user.getPassword())) {
             userService.encodePassword(user);
@@ -106,14 +106,14 @@ public class UserController extends BaseController {
         return Results.SUCCESS;
     }
 
-    @Permission
+    @RequirePermission
     @GetMapping("/{id}")
     public Result<User> get(@PathVariable Integer id) {
         User user = userService.getById(id);
         return Results.SUCCESS.setData(user);
     }
 
-    @Permission
+    @RequirePermission
     @GetMapping
     public Result<Page<User>> get(@RequestParam(defaultValue = "0") Integer currentPage, @RequestParam(defaultValue = "10") Integer pageSize, @RequestParam Map<String, Object> params) {
 
@@ -129,11 +129,6 @@ public class UserController extends BaseController {
         return Results.SUCCESS.setData(page);
     }
 
-    /*
-    密码:111111
-    盐:860effd2852141adad4dd5b256209b4a
-    加密后密码:44944f63ddca4e2d1c77329df9e0d751
-     */
     @PostMapping("/login")
     public Result<Object> login(@RequestBody User user, HttpServletRequest httpRequest) {
         User currentUser = userService.login(user.getUsername(), user.getPassword());

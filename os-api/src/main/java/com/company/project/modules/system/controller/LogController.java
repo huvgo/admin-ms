@@ -3,7 +3,7 @@ package com.company.project.modules.system.controller;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.company.project.component.annotation.Permission;
+import com.company.project.component.annotation.RequirePermission;
 import com.company.project.core.Result;
 import com.company.project.core.Results;
 import com.company.project.modules.system.entity.Log;
@@ -31,35 +31,35 @@ public class LogController {
     }
 
     @PostMapping
-    @Permission
+    @RequirePermission
     public Result<?> post(@RequestBody Log log) {
         logService.save(log);
         return Results.SUCCESS;
     }
 
     @DeleteMapping
-    @Permission
+    @RequirePermission
     public Result<?> delete(@RequestBody List<Long> ids) {
         logService.removeByIds(ids);
         return Results.SUCCESS;
     }
 
     @PutMapping
-    @Permission
+    @RequirePermission
     public Result<?> put(@RequestBody Log log) {
         logService.updateById(log);
         return Results.SUCCESS;
     }
 
     @GetMapping("/{id}")
-    @Permission
+    @RequirePermission
     public Result<Log> get(@PathVariable Integer id) {
         Log log = logService.getById(id);
         return Results.SUCCESS.setData(log);
     }
 
     @GetMapping
-    @Permission
+    @RequirePermission
     public Result<Page<Log>> get(@RequestParam(defaultValue = "0") Integer currentPage, @RequestParam(defaultValue = "10") Integer pageSize, @RequestParam Map<String, Object> params) {
         Page<Log> page = logService.page(new Page<>(currentPage, pageSize, true), new QueryWrapper<Log>()
                 .like(StrUtil.isNotBlank((String) params.get("operator")), "operator", params.get("operator"))

@@ -8,7 +8,6 @@ import com.company.project.modules.system.constant.DataScopeConst;
 import com.company.project.modules.system.entity.Role;
 import com.company.project.modules.system.entity.User;
 import com.company.project.modules.system.service.DeptService;
-import com.company.project.modules.system.service.RoleService;
 
 import java.util.List;
 
@@ -24,7 +23,7 @@ public class DataScopeQueryWrapper<T> extends QueryWrapper<T> {
     private final DeptService deptService;
 
     public DataScopeQueryWrapper(DeptService deptService) {
-        super(null);
+        super();
         this.deptService = deptService;
         addScope(this.typedThis);
     }

@@ -37,7 +37,7 @@ public class PermissionAspect {
     private UserCache userCache;
 
 
-    @Pointcut("@annotation(com.company.project.component.annotation.Permission)")
+    @Pointcut("@annotation(com.company.project.component.annotation.RequirePermission)")
     public void permissions() {
     }
 
