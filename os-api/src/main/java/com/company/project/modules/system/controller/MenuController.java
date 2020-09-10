@@ -2,7 +2,7 @@ package com.company.project.modules.system.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.company.project.component.annotation.Log2DB;
-import com.company.project.component.annotation.Permissions;
+import com.company.project.component.annotation.Permission;
 import com.company.project.core.Result;
 import com.company.project.core.Results;
 import com.company.project.modules.system.entity.Menu;
@@ -28,7 +28,7 @@ public class MenuController {
         this.menuService = menuService;
     }
 
-    @Permissions
+    @Permission
     @PostMapping
     @Log2DB
     public Result<?> post(@RequestBody Menu menu) {
@@ -39,7 +39,7 @@ public class MenuController {
         return Results.SUCCESS;
     }
 
-    @Permissions
+    @Permission
     @DeleteMapping
     @Log2DB
     public Result<?> delete(@RequestBody List<Long> ids) {
@@ -47,7 +47,7 @@ public class MenuController {
         return Results.SUCCESS;
     }
 
-    @Permissions
+    @Permission
     @PutMapping
     @Log2DB
     public Result<?> put(@RequestBody Menu menu) {
@@ -55,14 +55,14 @@ public class MenuController {
         return Results.SUCCESS;
     }
 
-    @Permissions
+    @Permission
     @GetMapping("/{id}")
     public Result<Menu> get(@PathVariable Integer id) {
         Menu menu = menuService.getById(id);
         return Results.SUCCESS.setData(menu);
     }
 
-    @Permissions
+    @Permission
     @GetMapping
     public Result<List<Menu>> get(@RequestParam(value = "nonButton", required = false) boolean nonButton) {
         List<Menu> list = menuService.list(new QueryWrapper<Menu>().ne(nonButton, "type", 2));

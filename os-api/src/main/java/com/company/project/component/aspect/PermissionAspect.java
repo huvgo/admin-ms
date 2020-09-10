@@ -37,7 +37,7 @@ public class PermissionAspect {
     private UserCache userCache;
 
 
-    @Pointcut("@annotation(com.company.project.component.annotation.Permissions)")
+    @Pointcut("@annotation(com.company.project.component.annotation.Permission)")
     public void permissions() {
     }
 
@@ -51,7 +51,7 @@ public class PermissionAspect {
         String token = request.getHeader("X-Token");
         User user = userCache.getUser(token);
         Assert.requireNonNull(user, Results.LOGIN_EXPIRED);
-        Set<Menu> menuList = user.getMenuList();
+        Set<Menu> menuList = user.getMenus();
 
         // 获取当前访问的菜单和当前访问菜单的权限
         Class<?> classTarget = joinPoint.getTarget().getClass();

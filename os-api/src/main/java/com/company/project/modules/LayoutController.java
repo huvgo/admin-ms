@@ -33,7 +33,7 @@ public class LayoutController {
     public Result<Set<Menu>> sidebar(@RequestHeader(value = "X-Token") String token) throws JsonProcessingException {
         User user = UserCacheUtil.getUser(token);
         Assert.requireNonNull(user, Results.LOGIN_EXPIRED);
-        Set<Menu> menus = user.getMenuList();
+        Set<Menu> menus = user.getMenus();
         if (CollUtil.isEmpty(menus)) {
             return Results.SUCCESS.setData(menus);
         }

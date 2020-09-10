@@ -1,6 +1,6 @@
 package com.company.project.modules.engine.controller;
 
-import com.company.project.component.annotation.Permissions;
+import com.company.project.component.annotation.Permission;
 import com.company.project.core.Result;
 import com.company.project.core.Results;
 import com.company.project.modules.engine.entity.oshi.Server;
@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class OshiController {
 
     @GetMapping
-    @Permissions
+    @Permission
     public Result<Server> get() {
         Server server = new Server();
         server.copyTo();

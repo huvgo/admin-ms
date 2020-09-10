@@ -41,6 +41,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     private final MenuService menuService;
     private final RoleService roleService;
 
+
     public UserServiceImpl(MenuService menuService, RoleService roleService) {
         this.menuService = menuService;
         this.roleService = roleService;
@@ -54,56 +55,52 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
-    @SuppressWarnings("all")
     public User login(String username, String password) {
+        // 判断账号密码是否正确
         User user = this.getByUsername(username);
         Assert.requireNonNull(user, Results.INCORRECT_ACCOUNT_OR_PASSWORD);
         password = SecureUtil.md5().setSalt(user.getSalt().getBytes()).digestHex(password);
         Assert.requireTrue(password.equals(user.getPassword()), Results.INCORRECT_ACCOUNT_OR_PASSWORD);
-        // 菜单权限
+
+        // 成功登录后
+
+        // 获取所拥有角色
         List<Integer> roleIds = user.getRoleIds();
+        List<Role> roles = roleService.listByIds(roleIds);
+        user.setRoles(roles);
+
+        // 获取所拥有菜单
         Set<Menu> menus = new HashSet<>();
         if (user.isSuperAdmin()) {
-            List<Menu> menuList = menuService.list();
-            menus.addAll(menuList);
+            List<Menu> allMenu = menuService.list();
+            menus.addAll(allMenu);
         } else {
-            List<Role> roles = roleService.listByIds(roleIds);
             HashSet<Integer> menuIds = new HashSet<>();
             roles.forEach(role -> menuIds.addAll(role.getMenuIds()));
-            if (!menuIds.isEmpty()) {
-                List<Menu> menuList = menuService.list(new QueryWrapper<Menu>().in("id", menuIds));
-                Set<Menu> parentMenuList = new HashSet<>();
-                menuList.forEach(menu -> {
-                    if (0 != menu.getParentId()) {
-                        getAllParents(parentMenuList, menu.getParentId());
-                    }
-                });
-
-                menus.addAll(parentMenuList);
-                menus.addAll(menuList);
+            if (menuIds.isEmpty()) {
+                menus = new HashSet<>();
             } else {
-                menus = Collections.EMPTY_SET;
+                menus.addAll(menuService.listByIds(menuIds));
+                Set<Menu> parentMenus = new HashSet<>();
+                menus.stream()
+                        .filter(menu -> 0 != menu.getParentId())
+                        .forEach(menu -> getAllParents(parentMenus, menu.getParentId()));
+                menus.addAll(parentMenus);
             }
         }
-        user.setMenuList(menus);
+        user.setMenus(menus);
+
         return user;
     }
 
-    public void getAllParents(Set<Menu> menuSet, Integer childrenId) {
-        Menu parentMenu = menuService.getById(childrenId);
+    public void getAllParents(Set<Menu> menuSet, Integer parentId) {
+        Menu parentMenu = menuService.getById(parentId);
         menuSet.add(parentMenu);
         if (0 != parentMenu.getParentId()) {
-            boolean has = false;
-            for (Menu m : menuSet) {
-                if (parentMenu.getId().equals(m.getParentId())) {
-                    has = true;
-                    break;
-                }
-            }
-            if (!has) {
+            Optional<Menu> menu = menuSet.stream().filter(m -> parentMenu.getId().equals(m.getParentId())).findAny();
+            if (!menu.isPresent()) {
                 getAllParents(menuSet, parentMenu.getParentId());
             }
-
         }
     }
 

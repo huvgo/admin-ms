@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.company.project.cache.UserCacheUtil;
 import com.company.project.component.annotation.Log2DB;
-import com.company.project.component.annotation.Permissions;
+import com.company.project.component.annotation.Permission;
 import com.company.project.core.Result;
 import com.company.project.core.Results;
 import com.company.project.modules.system.entity.Notice;
@@ -37,7 +37,7 @@ public class NoticeController {
 
     @PostMapping
     @Log2DB
-    @Permissions
+    @Permission
     public Result<?> post(@RequestBody Notice notice) {
         User user = UserCacheUtil.getCurrentUser();
         notice.setSenderId(user.getId());
@@ -52,7 +52,7 @@ public class NoticeController {
 
     @DeleteMapping
     @Log2DB
-    @Permissions
+    @Permission
     public Result<?> delete(@RequestBody List<Long> ids) {
         noticeService.removeByIds(ids);
         return Results.SUCCESS;
@@ -60,21 +60,21 @@ public class NoticeController {
 
     @PutMapping
     @Log2DB
-    @Permissions
+    @Permission
     public Result<?> put(@RequestBody Notice notice) {
         noticeService.updateById(notice);
         return Results.SUCCESS;
     }
 
     @GetMapping("/{id}")
-    @Permissions
+    @Permission
     public Result<Notice> get(@PathVariable Integer id) {
         Notice notice = noticeService.getById(id);
         return Results.SUCCESS.setData(notice);
     }
 
     @GetMapping
-    @Permissions
+    @Permission
     public Result<Page<Notice>> get(@RequestParam(defaultValue = "0") Integer currentPage, @RequestParam(defaultValue = "10") Integer pageSize, @RequestParam Map<String, Object> params) {
         Page<Notice> page = noticeService.page(new Page<>(currentPage, pageSize, true), new QueryWrapper<Notice>()
                 .like(StrUtil.isNotBlank((String) params.get("sender")), "sender", params.get("sender"))

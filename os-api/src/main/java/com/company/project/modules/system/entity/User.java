@@ -121,14 +121,14 @@ public class User extends BaseEntity<Integer> {
     private Boolean deleted;
 
     @TableField(exist = false)
-    private List<Role> roleList;
+    private List<Role> roles;
 
     @TableField(exist = false)
-    private Set<Menu> menuList;
+    private Set<Menu> menus;
 
     @JsonIgnore
     public boolean isSuperAdmin() {
-        return this.getId().equals(1);
+        return 1 == this.getId();
     }
 }
 

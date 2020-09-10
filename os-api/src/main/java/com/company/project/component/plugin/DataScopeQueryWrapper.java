@@ -22,12 +22,10 @@ public class DataScopeQueryWrapper<T> extends QueryWrapper<T> {
 
 
     private final DeptService deptService;
-    private final RoleService roleService;
 
-    public DataScopeQueryWrapper(DeptService deptService, RoleService roleService) {
+    public DataScopeQueryWrapper(DeptService deptService) {
         super(null);
         this.deptService = deptService;
-        this.roleService = roleService;
         addScope(this.typedThis);
     }
 
@@ -38,8 +36,7 @@ public class DataScopeQueryWrapper<T> extends QueryWrapper<T> {
         if (currentUser.isSuperAdmin()) {
             return;
         }
-        List<Integer> roleIds = currentUser.getRoleIds();
-        List<Role> roleList = roleService.listByIds(roleIds);
+        List<Role> roleList = currentUser.getRoles();
         queryWrapper.and(c -> {
             for (Role role : roleList) {
                 Integer dataScope = role.getDataScope();

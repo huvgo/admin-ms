@@ -3,7 +3,7 @@ package com.company.project.modules.system.controller;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.company.project.component.annotation.Permissions;
+import com.company.project.component.annotation.Permission;
 import com.company.project.core.Result;
 import com.company.project.core.Results;
 import com.company.project.modules.system.entity.Dept;
@@ -33,35 +33,35 @@ public class DeptController {
     }
 
     @PostMapping
-    @Permissions
+    @Permission
     public Result<?> post(@RequestBody Dept dept) {
         deptService.save(dept);
         return Results.SUCCESS;
     }
 
     @DeleteMapping
-    @Permissions
+    @Permission
     public Result<?> delete(@RequestBody List<Long> ids) {
         deptService.removeByIds(ids);
         return Results.SUCCESS;
     }
 
     @PutMapping
-    @Permissions
+    @Permission
     public Result<?> put(@RequestBody Dept dept) {
         deptService.updateById(dept);
         return Results.SUCCESS;
     }
 
     @GetMapping("/{id}")
-    @Permissions
+    @Permission
     public Result<Dept> get(@PathVariable Integer id) {
         Dept dept = deptService.getById(id);
         return Results.SUCCESS.setData(dept);
     }
 
     @GetMapping
-    @Permissions
+    @Permission
     public Result<Page<Dept>> get(@RequestParam(defaultValue = "0") Integer currentPage, @RequestParam(defaultValue = "10") Integer pageSize, @RequestParam Map<String, Object> params) {
         boolean deptIdCondition = StrUtil.isNotEmpty((String) params.get("deptId"));
         boolean nameCondition = StrUtil.isNotEmpty((String) params.get("name"));

@@ -12,7 +12,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.company.project.cache.UserCache;
 import com.company.project.cache.UserCacheUtil;
 import com.company.project.component.annotation.Log2DB;
-import com.company.project.component.annotation.Permissions;
+import com.company.project.component.annotation.Permission;
 import com.company.project.component.plugin.DataScopeQueryWrapper;
 import com.company.project.core.Assert;
 import com.company.project.core.Result;
@@ -68,7 +68,7 @@ public class UserController extends BaseController {
         this.roleService = roleService;
     }
 
-    @Permissions
+    @Permission
     @PostMapping
     @Log2DB
     public Result<?> post(@RequestBody @Validated User user) {
@@ -77,7 +77,7 @@ public class UserController extends BaseController {
         return Results.SUCCESS;
     }
 
-    @Permissions
+    @Permission
     @DeleteMapping
     @Log2DB
     public Result<?> delete(@RequestBody List<Long> ids) {
@@ -85,7 +85,7 @@ public class UserController extends BaseController {
         return Results.SUCCESS;
     }
 
-    @Permissions
+    @Permission
     @PutMapping
     @Log2DB
     public Result<?> put(@RequestBody User user) {
@@ -106,14 +106,14 @@ public class UserController extends BaseController {
         return Results.SUCCESS;
     }
 
-    @Permissions
+    @Permission
     @GetMapping("/{id}")
     public Result<User> get(@PathVariable Integer id) {
         User user = userService.getById(id);
         return Results.SUCCESS.setData(user);
     }
 
-    @Permissions
+    @Permission
     @GetMapping
     public Result<Page<User>> get(@RequestParam(defaultValue = "0") Integer currentPage, @RequestParam(defaultValue = "10") Integer pageSize, @RequestParam Map<String, Object> params) {
 
@@ -121,7 +121,7 @@ public class UserController extends BaseController {
         boolean usernameCondition = StrUtil.isNotEmpty((String) params.get("username"));
         boolean mobileCondition = StrUtil.isNotEmpty((String) params.get("mobile"));
 
-        QueryWrapper<User> dataScopeQueryWrapper = new DataScopeQueryWrapper<User>(deptService, roleService)
+        QueryWrapper<User> dataScopeQueryWrapper = new DataScopeQueryWrapper<User>(deptService)
                 .like(usernameCondition, "username", params.get("username"))
                 .eq(mobileCondition, "mobile", params.get("mobile"))
                 .and(deptIdCondition, i -> i.eq("dept_Id", params.get("deptId")).or().apply("JSON_CONTAINS(dept_Ids,{0})", params.get("deptId")));

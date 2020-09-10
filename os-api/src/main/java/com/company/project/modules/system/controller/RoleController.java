@@ -4,7 +4,7 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.company.project.component.annotation.Log2DB;
-import com.company.project.component.annotation.Permissions;
+import com.company.project.component.annotation.Permission;
 import com.company.project.core.Result;
 import com.company.project.core.Results;
 import com.company.project.modules.system.entity.Role;
@@ -31,7 +31,7 @@ public class RoleController {
         this.roleService = roleService;
     }
 
-    @Permissions
+    @Permission
     @PostMapping
     @Log2DB
     public Result<?> post(@RequestBody Role role) {
@@ -39,7 +39,7 @@ public class RoleController {
         return Results.SUCCESS;
     }
 
-    @Permissions
+    @Permission
     @DeleteMapping
     @Log2DB
     public Result<?> delete(@RequestBody List<Long> ids) {
@@ -47,7 +47,7 @@ public class RoleController {
         return Results.SUCCESS;
     }
 
-    @Permissions
+    @Permission
     @PutMapping
     @Log2DB
     public Result<?> put(@RequestBody Role role) {
@@ -55,14 +55,14 @@ public class RoleController {
         return Results.SUCCESS;
     }
 
-    @Permissions
+    @Permission
     @GetMapping("/{id}")
     public Result<Role> get(@PathVariable Integer id) {
         Role role = roleService.getById(id);
         return Results.SUCCESS.setData(role);
     }
 
-    @Permissions
+    @Permission
     @GetMapping
     public Result<Page<Role>> get(@RequestParam(defaultValue = "0") Integer currentPage, @RequestParam(defaultValue = "10") Integer pageSize, @RequestParam Map<String, Object> params) {
         QueryWrapper<Role> queryWrapper = new QueryWrapper<Role>()
