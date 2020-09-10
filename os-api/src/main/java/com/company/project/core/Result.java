@@ -1,10 +1,12 @@
 package com.company.project.core;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.Getter;
 
 /**
  * 统一API响应结果封装
  */
+@Getter
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public final class Result<T> {
 

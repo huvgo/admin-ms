@@ -33,20 +33,20 @@ public class WebMvcConfig implements WebMvcConfigurer {
         this.objectMapper = objectMapper;
     }
 
-    //解决跨域问题
+    // 解决跨域问题
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**").
-                allowedOrigins("*"). //allowedOrigins("https://www.xxx.cn"). //允许跨域的域名，可以用*表示允许任何域名使用
-                allowedMethods("*"). //允许任何方法（post、get等）
-                allowedHeaders("*"). //允许任何请求头
-                allowCredentials(true);//带上cookie信息
+                allowedOrigins("*"). // allowedOrigins("https://www.xxx.cn"). //允许跨域的域名，可以用*表示允许任何域名使用
+                allowedMethods("*"). // 允许任何方法（post、get等）
+                allowedHeaders("*"). // 允许任何请求头
+                allowCredentials(true);// 带上cookie信息
     }
 
-    //添加拦截器
+    // 添加拦截器
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        // 添加登录状态拦截器
+        // 该拦截器为了判断用户是否登录
         InterceptorRegistration interceptorRegistration = registry.addInterceptor(new HandlerInterceptorAdapter() {
             @Override
             public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
@@ -56,13 +56,23 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 if (isOptionsMethod) {
                     return true;
                 }
-                // 登录状态检查
-                boolean isLogin = handleLoginStatus(request, response);
-                if (!isLogin) {
-                    logger.warn("未获取到登录状态，请求接口：{}，请求IP：{}，请求参数：{}", request.getRequestURI(),
-                            ServletUtil.getClientIP(request), objectMapper.writeValueAsString(request.getParameterMap()));
+
+                // 获取token
+                String token = request.getHeader("X-Token");
+                if (token == null) {
+                    Result<?> fail = Results.NOT_LOGGED_IN;
+                    ServletUtil.write(response, objectMapper.writeValueAsString(fail), "application/json;charset=UTF-8");
+                    return false;
+                } else {
+                    User user = UserCacheUtil.getUser(token);
+                    if (user == null) {
+                        Result<?> fail = Results.LOGIN_EXPIRED;
+                        ServletUtil.write(response, objectMapper.writeValueAsString(fail), "application/json;charset=UTF-8");
+                        return false;
+                    }
                 }
-                return isLogin;
+                return true;
+
             }
         });
         // 排除请求路径
@@ -70,24 +80,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
         interceptorRegistration.excludePathPatterns("/system/user/token");
         interceptorRegistration.excludePathPatterns("/avatar/**");// 静态资源路径
         interceptorRegistration.addPathPatterns("/**");
-    }
-
-    private boolean handleLoginStatus(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        // 获取用户信息，获取用户拥有的菜单
-        String token = request.getHeader("X-Token");
-        if (token == null) {
-            Result<?> fail = Results.NOT_LOGGED_IN;
-            ServletUtil.write(response, objectMapper.writeValueAsString(fail), "application/json;charset=UTF-8");
-            return false;
-        } else {
-            User user = UserCacheUtil.getUser(token);
-            if (user == null) {
-                Result<?> fail = Results.LOGIN_EXPIRED;
-                ServletUtil.write(response, objectMapper.writeValueAsString(fail), "application/json;charset=UTF-8");
-                return false;
-            }
-        }
-        return true;
     }
 
 }
