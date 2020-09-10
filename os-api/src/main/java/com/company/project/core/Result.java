@@ -10,11 +10,11 @@ import lombok.Getter;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public final class Result<T> {
 
-    private boolean success;
-    private String userTips;
-    private String errorCode;
-    private String errorMessage;
-    private T data;
+    private final boolean success;
+    private final String userTips;
+    private final String errorCode;
+    private final String errorMessage;
+    private final T data;
 
     protected Result(boolean success, String userTips, String errorCode, String errorMessage, T data) {
         this.success = success;
@@ -33,11 +33,11 @@ public final class Result<T> {
         return new Result<>(this.success, this.userTips, errorCode, errorMessage, this.data);
     }
 
-    public <E> Result<E> setData(E data) {
-        return new Result<>(this.success, this.userTips, this.errorCode, this.errorMessage, data);
-    }
-
     public Result<T> setErrorMessage(String errorMessage) {
         return new Result<>(this.success, this.userTips, this.errorCode, errorMessage, this.data);
+    }
+
+    public <E> Result<E> setData(E data) {
+        return new Result<>(this.success, this.userTips, this.errorCode, this.errorMessage, data);
     }
 }
