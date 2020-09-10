@@ -40,11 +40,11 @@
 </template>
 
 <script>
-import screenfull from 'screenfull'
-import { getNotice, cleearNotice } from '@/api/system/user'
+import { cleearNotice } from '@/api/system/user'
+import { getToken } from '@/utils/auth'
 
 export default {
-  name: 'Screenfull',
+  name: 'MessageBell',
   data() {
     return {
       list: [],
@@ -52,67 +52,67 @@ export default {
     }
   },
   mounted() {
-    this.init()
+    if ('WebSocket' in window) {
+      this.websocket = new WebSocket('ws://' + process.env.VUE_APP_SOCKET_API + '/user/notice/' + getToken())
+      this.initWebSocket()
+    } else {
+      alert('当前浏览器 Not support websocket')
+    }
   },
   beforeDestroy() {
-    this.destroy()
+    this.onbeforeunload()
   },
   methods: {
-    click() {
-      if (!screenfull.enabled) {
-        this.$message({
-          message: 'you browser can not work',
-          type: 'warning'
-        })
-        return false
-      }
-      screenfull.toggle()
-    },
-    change() {
-      this.isFullscreen = screenfull.isFullscreen
-    },
-    init() {
-      if (screenfull.enabled) {
-        screenfull.on('change', this.change)
-      }
-      this.getNotice()
-      setInterval(() => {
-        this.getNotice()
-      }, 30000)
-    },
-    getNotice() {
-      getNotice().then((response) => {
-        this.list = response.data
-      })
-    },
     clearNotice() {
       cleearNotice().then((response) => {
         this.list = []
       })
     },
-    destroy() {
-      if (screenfull.enabled) {
-        screenfull.off('change', this.change)
-      }
+    initWebSocket() {
+      // 连接错误
+      this.websocket.onerror = this.setErrorMessage
+
+      // 连接成功
+      this.websocket.onopen = this.setOnopenMessage
+
+      // 收到消息的回调
+      this.websocket.onmessage = this.setOnmessageMessage
+
+      // 连接关闭的回调
+      this.websocket.onclose = this.setOncloseMessage
+
+      // 监听窗口关闭事件，当窗口关闭时，主动去关闭websocket连接，防止连接还没断开就关闭窗口，server端会抛异常。
+      window.onbeforeunload = this.onbeforeunload
+    },
+    setErrorMessage() {
+      console.log('WebSocket连接发生错误   状态码：' + this.websocket.readyState)
+    },
+    setOnopenMessage() {
+      console.log('WebSocket连接成功    状态码：' + this.websocket.readyState)
+    },
+    setOnmessageMessage(event) {
+      // 根据服务器推送的消息做自己的业务处理
+      console.log('服务端返回：' + event.data)
+      this.list = JSON.parse(event.data).data
+    },
+    setOncloseMessage() {
+      console.log('WebSocket连接关闭    状态码：' + this.websocket.readyState)
+    },
+    onbeforeunload() {
+      this.closeWebSocket()
+    },
+    closeWebSocket() {
+      this.websocket.close()
     }
   }
 }
 </script>
 
 <style scoped>
-.screenfull-svg {
-  display: inline-block;
-  cursor: pointer;
-  fill: #5a5e66;
-  width: 20px;
-  height: 20px;
-  vertical-align: 10px;
-}
 .bell-badge >>> .el-badge__content.is-fixed {
   top: 10px;
 }
-</style>
-<style>
+
 .el-popover {
   height: 500px;
   overflow: auto;

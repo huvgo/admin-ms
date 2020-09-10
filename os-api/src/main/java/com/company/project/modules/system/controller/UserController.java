@@ -1,6 +1,5 @@
 package com.company.project.modules.system.controller;
 
-import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
@@ -11,17 +10,15 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.company.project.cache.UserCache;
 import com.company.project.cache.UserCacheUtil;
-import com.company.project.component.annotation.SaveLog;
 import com.company.project.component.annotation.RequirePermission;
+import com.company.project.component.annotation.SaveLog;
 import com.company.project.component.plugin.DataScopeQueryWrapper;
 import com.company.project.core.Assert;
 import com.company.project.core.Result;
 import com.company.project.core.Results;
 import com.company.project.modules.base.controller.BaseController;
-import com.company.project.modules.base.entity.BaseEntity;
 import com.company.project.modules.system.constant.LogTypeConst;
 import com.company.project.modules.system.entity.Log;
-import com.company.project.modules.system.entity.Notice;
 import com.company.project.modules.system.entity.User;
 import com.company.project.modules.system.entity.UserNotice;
 import com.company.project.modules.system.service.*;
@@ -35,7 +32,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -182,43 +178,6 @@ public class UserController extends BaseController {
         return Results.SUCCESS.setData(path);
     }
 
-    /**
-     * 用户通知
-     */
-    @GetMapping("/notice")
-    public Result<List<Notice>> getNotice() {
-        User currentUser = UserCacheUtil.getCurrentUser();
-        Date now = new Date();
-        // 用户上次获取消息的时间,如果没有则默认为创建用户的时间
-        Date updateDate = currentUser.getCreateTime();
-
-        // 为了获取用户上次从system_notice表拉取的消息
-        UserNotice userNotice = userNoticeService.getByUserId(currentUser.getId());
-        // 构造查询条件
-        QueryWrapper<Notice> queryWrapper = new QueryWrapper<>();
-        UserNotice finalUserNotice = userNotice;
-        if (userNotice != null) {
-            // 为了把用户上次拉取的未读消息也要查询出来
-            updateDate = userNotice.getUpdateTime();
-            Date finalUpdateDate = updateDate;
-            queryWrapper.eq("is_enabled", true).and(c -> c.in(CollUtil.isNotEmpty(finalUserNotice.getNoticeIds()), "id", finalUserNotice.getNoticeIds()).or().gt("push_time", finalUpdateDate).le("push_time", now));
-        } else {
-            queryWrapper.eq("is_enabled", true).gt("push_time", updateDate).le("push_time", now);
-        }
-        List<Notice> list = noticeService.list(queryWrapper);
-        List<Integer> noticeIds = list.stream().map(BaseEntity::getId).collect(Collectors.toList());
-
-        // 更新用户通知信息
-        if (userNotice == null) {
-            userNotice = new UserNotice();
-        }
-        userNotice.setUserId(currentUser.getId());
-        userNotice.setUpdateTime(now);
-        userNotice.setNoticeIds(noticeIds);
-        userNoticeService.saveOrUpdate(userNotice);
-        return Results.SUCCESS.setData(list);
-    }
-
 
     @DeleteMapping("/notice")
     public Result<?> clearNotice() {
@@ -228,4 +187,5 @@ public class UserController extends BaseController {
         userNoticeService.updateById(userNotice);
         return Results.SUCCESS;
     }
+
 }

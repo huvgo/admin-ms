@@ -1,7 +1,11 @@
 package com.company.project.modules.system.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.company.project.modules.system.entity.Notice;
+import com.company.project.modules.system.entity.User;
 import com.company.project.modules.system.entity.UserNotice;
+
+import java.util.List;
 
 /**
  * <p>
@@ -14,4 +18,6 @@ import com.company.project.modules.system.entity.UserNotice;
 public interface UserNoticeService extends IService<UserNotice> {
 
     UserNotice getByUserId(Integer id);
+
+    List<Notice> getByUser(User user);
 }

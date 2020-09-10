@@ -4,8 +4,8 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.company.project.cache.UserCacheUtil;
-import com.company.project.component.annotation.SaveLog;
 import com.company.project.component.annotation.RequirePermission;
+import com.company.project.component.annotation.SaveLog;
 import com.company.project.core.Result;
 import com.company.project.core.Results;
 import com.company.project.modules.system.entity.Notice;
@@ -30,9 +30,11 @@ import java.util.Objects;
 @RequestMapping("/system/notice")
 public class NoticeController {
     private final NoticeService noticeService;
+    private final UserNoticeServer userNoticeServer;
 
-    public NoticeController(NoticeService noticeService) {
+    public NoticeController(NoticeService noticeService, UserNoticeServer userNoticeServer) {
         this.noticeService = noticeService;
+        this.userNoticeServer = userNoticeServer;
     }
 
     @PostMapping
@@ -47,6 +49,10 @@ public class NoticeController {
             notice.setPushTime(new Date());
         }
         noticeService.save(notice);
+
+        //主动向用户发送通知
+        userNoticeServer.sendNotice();
+
         return Results.SUCCESS;
     }
 
