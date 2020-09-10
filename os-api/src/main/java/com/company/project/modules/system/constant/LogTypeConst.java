@@ -1,6 +1,6 @@
 package com.company.project.modules.system.constant;
 
-public interface LogType {
+public interface LogTypeConst {
     /**
      * 系统日志
      */

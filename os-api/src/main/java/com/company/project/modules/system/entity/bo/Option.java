@@ -1,4 +1,4 @@
-package com.company.project.modules.system.entity;
+package com.company.project.modules.system.entity.bo;
 
 import lombok.Data;
 

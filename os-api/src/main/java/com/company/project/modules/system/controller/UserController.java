@@ -19,7 +19,7 @@ import com.company.project.core.Result;
 import com.company.project.core.Results;
 import com.company.project.modules.base.controller.BaseController;
 import com.company.project.modules.base.entity.BaseEntity;
-import com.company.project.modules.system.constant.LogType;
+import com.company.project.modules.system.constant.LogTypeConst;
 import com.company.project.modules.system.entity.Log;
 import com.company.project.modules.system.entity.Notice;
 import com.company.project.modules.system.entity.User;
@@ -149,7 +149,7 @@ public class UserController extends BaseController {
             HashMap<String, Object> content = new HashMap<>();
             content.put("os", ua.getPlatform().toString());
             content.put("browser", ua.getBrowser().toString());
-            log.setType(LogType.LOGIN_LOG).setContent(content).setIp(ServletUtil.getClientIP(httpRequest)).setOperator(user.getUsername()).setCreateTime(new Date());
+            log.setType(LogTypeConst.LOGIN_LOG).setContent(content).setIp(ServletUtil.getClientIP(httpRequest)).setOperator(user.getUsername()).setCreateTime(new Date());
             logService.save(log);
         } catch (Exception e) {
             log.warn("日志记录失败：{}", e.getMessage());

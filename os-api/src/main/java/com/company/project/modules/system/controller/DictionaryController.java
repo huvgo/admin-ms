@@ -8,7 +8,7 @@ import com.company.project.component.annotation.RequirePermission;
 import com.company.project.core.Result;
 import com.company.project.core.Results;
 import com.company.project.modules.system.entity.Dictionary;
-import com.company.project.modules.system.entity.Option;
+import com.company.project.modules.system.entity.bo.Option;
 import com.company.project.modules.system.service.DictionaryService;
 import org.springframework.web.bind.annotation.*;
 

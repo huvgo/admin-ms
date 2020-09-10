@@ -2,7 +2,7 @@ package com.company.project.component.aspect;
 
 import cn.hutool.extra.servlet.ServletUtil;
 import com.company.project.cache.UserCacheUtil;
-import com.company.project.modules.system.constant.LogType;
+import com.company.project.modules.system.constant.LogTypeConst;
 import com.company.project.modules.system.entity.Log;
 import com.company.project.modules.system.service.impl.LogServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -55,7 +55,7 @@ public class SaveLogAspect {
         long timeDiff = (end - begin);
 
         Log log = new Log();
-        log.setType(LogType.SYSTEM_LOG)
+        log.setType(LogTypeConst.SYSTEM_LOG)
                 .setOperator(UserCacheUtil.getCurrentUser().getUsername())
                 .setOperatorId(UserCacheUtil.getCurrentUser().getId())
                 .setIp(ServletUtil.getClientIP(request));
