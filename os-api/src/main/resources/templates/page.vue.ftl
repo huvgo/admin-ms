@@ -92,7 +92,7 @@
 </template>
 
 <script>
-    import {add, del, update, getList} from '@/api/${moduleName}/${lowerFirstName}'
+    import {add, del, getList, update} from '@/api/'
 
     export default {
         filters: {
@@ -109,13 +109,13 @@
             return {
                 dialogVisible: false,
                 queryParam: {
-            <#list fields as field>
-            <#if field.condition>
-            ${field.name}:
-            '',
-                </#if>
-                </#list>
-                currentPage
+                    <#list fields as field>
+                    <#if field.condition>
+                    ${field.name}:
+                        '',
+                    </#if>
+                    </#list>
+                    currentPage
         :
             1,
                 pageSize
@@ -125,7 +125,7 @@
             dataForm: {
                 <#list fields as field>
                 ${field.name}:
-                ''<#if field_has_next>,
+                    ''<#if field_has_next>,
                 </#if>
                 </#list>
             }

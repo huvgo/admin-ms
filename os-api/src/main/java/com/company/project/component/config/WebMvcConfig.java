@@ -27,9 +27,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     private final Logger logger = LoggerFactory.getLogger(WebMvcConfig.class);
 
-
     private final ObjectMapper objectMapper;
-
 
     public WebMvcConfig(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
@@ -45,23 +43,24 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 allowCredentials(true);//带上cookie信息
     }
 
-
     //添加拦截器
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         // 添加登录状态拦截器
         InterceptorRegistration interceptorRegistration = registry.addInterceptor(new HandlerInterceptorAdapter() {
             @Override
-            public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException {
+            public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
+                    throws IOException {
                 // 判断是否是OPTIONS请求
                 boolean isOptionsMethod = ServletUtil.METHOD_OPTIONS.equalsIgnoreCase(request.getMethod());
                 if (isOptionsMethod) {
                     return true;
                 }
                 // 登录状态检查
-                boolean isLogin = checkLoginStatus(request, response);
+                boolean isLogin = handleLoginStatus(request, response);
                 if (!isLogin) {
-                    logger.warn("未获取到登录状态，请求接口：{}，请求IP：{}，请求参数：{}", request.getRequestURI(), ServletUtil.getClientIP(request), objectMapper.writeValueAsString(request.getParameterMap()));
+                    logger.warn("未获取到登录状态，请求接口：{}，请求IP：{}，请求参数：{}", request.getRequestURI(),
+                            ServletUtil.getClientIP(request), objectMapper.writeValueAsString(request.getParameterMap()));
                 }
                 return isLogin;
             }
@@ -73,8 +72,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
         interceptorRegistration.addPathPatterns("/**");
     }
 
-
-    private boolean checkLoginStatus(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    private boolean handleLoginStatus(HttpServletRequest request, HttpServletResponse response) throws IOException {
         // 获取用户信息，获取用户拥有的菜单
         String token = request.getHeader("X-Token");
         if (token == null) {
@@ -91,6 +89,5 @@ public class WebMvcConfig implements WebMvcConfigurer {
         }
         return true;
     }
-
 
 }

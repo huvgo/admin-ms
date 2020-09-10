@@ -63,14 +63,14 @@ public Result<?> delete(@RequestBody List
     <${upperFirstName}>> get(@RequestParam(defaultValue = "0") Integer currentPage, @RequestParam(defaultValue = "10")
     Integer pageSize, @RequestParam Map
     <String
-    , Object> params) {
-    QueryWrapper<${upperFirstName}> queryWrapper = new QueryWrapper<>()
-    <#list fields as field>
-        <#if field.condition>
-            .eq(StrUtil.isNotBlank((String)params.get("${field.name}")), "${field.columnName}", params.get("${field.name}"))
-        </#if>
-    </#list>
-    Page<${upperFirstName}> page = ${lowerFirstName}Service.page(new Page<>(current, size, true), queryWrapper);
-    return Results.SUCCESS.setData(page);
-    }
-    }
+            , Object> params) {
+        QueryWrapper<${upperFirstName}> queryWrapper = new QueryWrapper<>()
+        <#list fields as field>
+            <#if field.condition>
+                .eq(StrUtil.isNotBlank((String)params.get("${field.name}")), "${field.columnName}", params.get("${field.name}"))
+            </#if>
+        </#list>
+        Page<${upperFirstName}> page = ${lowerFirstName}Service.page(new Page<>(current, size, true), queryWrapper);
+        return Results.SUCCESS.setData(page);
+        }
+        }
