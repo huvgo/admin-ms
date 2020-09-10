@@ -22,13 +22,13 @@ import java.util.HashMap;
 @Component
 @Aspect
 @Slf4j
-public class LogAspect {
+public class Log2DBAspect {
 
     private final ObjectMapper objectMapper;
     private final LogServiceImpl logService;
 
     @Autowired
-    public LogAspect(ObjectMapper objectMapper, LogServiceImpl logService) {
+    public Log2DBAspect(ObjectMapper objectMapper, LogServiceImpl logService) {
         this.objectMapper = objectMapper;
         this.logService = logService;
     }

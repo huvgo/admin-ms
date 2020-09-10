@@ -1,5 +1,6 @@
 package com.company.project.component.aspect;
 
+import cn.hutool.extra.servlet.ServletUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -24,12 +25,12 @@ import java.util.Map;
 @Component
 @Aspect
 @Slf4j
-public class DevConsoleAspect {
+public class DevLogAspect {
 
     private final ObjectMapper objectMapper;
 
     @Autowired
-    public DevConsoleAspect(ObjectMapper objectMapper) {
+    public DevLogAspect(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
     }
 
@@ -58,7 +59,7 @@ public class DevConsoleAspect {
             Map<String, Object> params = new LinkedHashMap<>(10);
             params.put("url", request.getRequestURL()); // 获取请求的url
             params.put("method", request.getMethod()); // 获取请求的方式
-            params.put("args", joinPoint.getArgs()); // 请求参数
+            params.put("args", ServletUtil.getParamMap(request)); // 请求参数
             params.put("className", joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName()); // 获取类名和获取类方法
             params.put("ip", request.getRemoteAddr()); // 获取请求的ip地址
 
