@@ -10,6 +10,8 @@
     <breadcrumb id="breadcrumb-container" class="breadcrumb-container" />
 
     <div class="right-menu">
+      <message-bell class="right-menu-item hover-effect" />
+
       <template v-if="device!=='mobile'">
         <div class="right-menu-item hover-effect">
           <el-tooltip class="item" effect="dark" content="文档" placement="top-start">
@@ -18,7 +20,7 @@
             </a>
           </el-tooltip>
         </div>
-        <message-bell class="right-menu-item hover-effect" />
+
         <div class="right-menu-item hover-effect" @click.stop="showSettingBarChange(true)">
           <i class="el-icon-brush"></i>
         </div>
