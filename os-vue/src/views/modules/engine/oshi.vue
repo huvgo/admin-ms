@@ -1,5 +1,9 @@
 <template>
   <div class="app-container">
+    <el-row v-loading="listLoading" style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
+      <line-chart />
+    </el-row>
+
     <el-row :gutter="15">
       <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
         <el-card class="box-card">
@@ -166,8 +170,11 @@
 
 <script>
 import { getList } from '@/api/engine/oshi'
-
+import LineChart from './components/LineChart'
 export default {
+  components: {
+    LineChart
+  },
   data() {
     return {
       data: {
