@@ -1,5 +1,6 @@
 package com.company.project.cache;
 
+import com.company.project.modules.common.service.UserCacheService;
 import com.company.project.modules.system.entity.User;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -16,10 +17,10 @@ import java.util.Objects;
 @Component
 public class UserCacheUtil {
 
-    private static UserCache userCache;
+    private static UserCacheService userCacheService;
 
-    public UserCacheUtil(UserCache userCache) {
-        UserCacheUtil.userCache = userCache;
+    public UserCacheUtil(UserCacheService userCacheService) {
+        UserCacheUtil.userCacheService = userCacheService;
     }
 
     /**
@@ -30,11 +31,11 @@ public class UserCacheUtil {
     public static User getCurrentUser() {
         HttpServletRequest request = Objects.requireNonNull((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         String token = request.getHeader("X-Token");
-        return userCache.getUser(token);
+        return userCacheService.getUser(token);
     }
 
     public static User getUser(String token) {
-        return userCache.getUser(token);
+        return userCacheService.getUser(token);
     }
 
 }
