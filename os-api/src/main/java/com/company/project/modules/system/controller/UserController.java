@@ -8,7 +8,6 @@ import cn.hutool.http.useragent.UserAgent;
 import cn.hutool.http.useragent.UserAgentUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.company.project.cache.UserCache;
 import com.company.project.cache.UserCacheUtil;
 import com.company.project.component.annotation.RequirePermission;
 import com.company.project.component.annotation.SaveLog;
@@ -17,6 +16,7 @@ import com.company.project.core.Assert;
 import com.company.project.core.Result;
 import com.company.project.core.Results;
 import com.company.project.modules.base.controller.BaseController;
+import com.company.project.modules.common.service.UserCacheService;
 import com.company.project.modules.system.constant.LogTypeConst;
 import com.company.project.modules.system.entity.Log;
 import com.company.project.modules.system.entity.User;
@@ -46,7 +46,7 @@ import java.util.Map;
 @RequestMapping("/system/user")
 public class UserController extends BaseController {
     private final UserService userService;
-    private final UserCache userCache;
+    private final UserCacheService userCacheService;
     private final NoticeService noticeService;
     private final UserNoticeService userNoticeService;
     private final LogService logService;
@@ -54,9 +54,9 @@ public class UserController extends BaseController {
     private final RoleService roleService;
 
 
-    public UserController(UserService userService, UserCache userCache, NoticeService noticeService, UserNoticeService userNoticeService, LogService logService, DeptService deptService, RoleService roleService) {
+    public UserController(UserService userService, UserCacheService userCacheService, NoticeService noticeService, UserNoticeService userNoticeService, LogService logService, DeptService deptService, RoleService roleService) {
         this.userService = userService;
-        this.userCache = userCache;
+        this.userCacheService = userCacheService;
         this.noticeService = noticeService;
         this.userNoticeService = userNoticeService;
         this.logService = logService;
@@ -91,11 +91,11 @@ public class UserController extends BaseController {
         // 冻结状态
         boolean status = user.getEnabled();
         if (!status) {
-            boolean isNotOwn = !user.getId().equals(UserCacheUtil.getCurrentUser().getId());
+            boolean isNotOwn = !user.getId().equals(userCacheService.getCurrentUser().getId());
             Assert.requireTrue(isNotOwn, Results.NOT_FREEZE_SELF);
-            String token = userCache.getToken(user.getUsername());
+            String token = userCacheService.getToken(user.getUsername());
             if (token != null) {
-                userCache.deleteUser(token);
+                userCacheService.deleteUser(token);
             }
         }
         userService.updateById(user);
@@ -131,12 +131,12 @@ public class UserController extends BaseController {
         boolean status = currentUser.getEnabled();
         Assert.requireTrue(status, Results.ACCOUNT_EXCEPTION);
         // 重新刷新缓存
-        String token = userCache.getToken(currentUser.getUsername());
+        String token = userCacheService.getToken(currentUser.getUsername());
         if (token == null) {
             token = IdUtil.fastSimpleUUID();
-            userCache.putToken(currentUser.getUsername(), token);
+            userCacheService.putToken(currentUser.getUsername(), token);
         }
-        userCache.putUser(token, currentUser);
+        userCacheService.putUser(token, currentUser);
 
         try {
             Log log = new Log();
@@ -156,7 +156,7 @@ public class UserController extends BaseController {
 
     @GetMapping("/token")
     public Result<Object> token(String token) {
-        User user = userCache.getUser(token);
+        User user = userCacheService.getUser(token);
         Assert.requireNonNull(user, Results.NOT_LOGGED_IN);
         return Results.SUCCESS.setData(user);
     }

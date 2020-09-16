@@ -1,10 +1,10 @@
 package com.company.project.modules;
 
 import cn.hutool.core.collection.CollUtil;
-import com.company.project.cache.UserCacheUtil;
 import com.company.project.core.Assert;
 import com.company.project.core.Result;
 import com.company.project.core.Results;
+import com.company.project.modules.common.service.UserCacheService;
 import com.company.project.modules.system.entity.Menu;
 import com.company.project.modules.system.entity.User;
 import com.company.project.modules.system.util.MenuUtil;
@@ -26,12 +26,18 @@ import java.util.stream.Collectors;
 @RequestMapping("/layout")
 public class LayoutController {
 
+    private final UserCacheService userCacheService;
+
+    public LayoutController(UserCacheService userCacheService) {
+        this.userCacheService = userCacheService;
+    }
+
     /**
      * 侧边栏
      */
     @GetMapping("/sidebar")
     public Result<Set<Menu>> sidebar(@RequestHeader(value = "X-Token") String token) throws JsonProcessingException {
-        User user = UserCacheUtil.getUser(token);
+        User user = userCacheService.getUser(token);
         Assert.requireNonNull(user, Results.LOGIN_EXPIRED);
         Set<Menu> menus = user.getMenus();
         if (CollUtil.isEmpty(menus)) {

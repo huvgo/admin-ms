@@ -5,7 +5,7 @@ import cn.hutool.core.util.IdUtil;
 import cn.hutool.extra.servlet.ServletUtil;
 import cn.hutool.http.useragent.UserAgent;
 import cn.hutool.http.useragent.UserAgentUtil;
-import com.company.project.cache.UserCache;
+import com.company.project.modules.common.service.UserCacheService;
 import com.company.project.component.filter.JwtAuthenticationTokenFilter;
 import com.company.project.core.Assert;
 import com.company.project.core.Results;
@@ -153,7 +153,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      * 处理登录成功后返回 JWT Token 对.
      */
     @Bean
-    public AuthenticationSuccessHandler authenticationSuccessHandler(ObjectMapper objectMapper, UserCache userCache) {
+    public AuthenticationSuccessHandler authenticationSuccessHandler(ObjectMapper objectMapper, UserCacheService userCacheService) {
         return (request, response, authentication) -> {
             if (response.isCommitted()) {
                 log.debug("Response has already been committed");
@@ -168,12 +168,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             boolean status = currentUser.getEnabled();
             Assert.requireTrue(status, Results.ACCOUNT_EXCEPTION);
             // 重新刷新缓存
-            String token = userCache.getToken(currentUser.getUsername());
+            String token = userCacheService.getToken(currentUser.getUsername());
             if (token == null) {
                 token = IdUtil.fastSimpleUUID();
-                userCache.putToken(currentUser.getUsername(), token);
+                userCacheService.putToken(currentUser.getUsername(), token);
             }
-            userCache.putUser(token, currentUser);
+            userCacheService.putUser(token, currentUser);
 
             try {
                 Log log = new Log();

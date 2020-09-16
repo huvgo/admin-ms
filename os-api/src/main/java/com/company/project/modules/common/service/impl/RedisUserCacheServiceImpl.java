@@ -1,5 +1,6 @@
-package com.company.project.cache;
+package com.company.project.modules.common.service.impl;
 
+import com.company.project.modules.common.service.UserCacheService;
 import com.company.project.modules.system.entity.User;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -11,11 +12,11 @@ import org.springframework.stereotype.Service;
  * 用户信息缓存接口的Redis缓存实现类
  */
 @Service
-public class RedisUserCache implements UserCache {
+public class RedisUserCacheServiceImpl implements UserCacheService {
 
     private final RedisTemplate<String, String> redisTemplate;
 
-    public RedisUserCache(RedisTemplate<String, String> redisTemplate) {
+    public RedisUserCacheServiceImpl(RedisTemplate<String, String> redisTemplate) {
         this.redisTemplate = redisTemplate;
     }
 

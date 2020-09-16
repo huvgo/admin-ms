@@ -3,7 +3,6 @@ package com.company.project.component.filter;
 import com.company.project.modules.common.service.TokenService;
 import com.company.project.modules.system.entity.User;
 import com.company.project.util.SecurityUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -18,8 +17,6 @@ import java.io.IOException;
 
 /**
  * token过滤器 验证token有效性
- *
- * @author ruoyi
  */
 @Component
 public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {

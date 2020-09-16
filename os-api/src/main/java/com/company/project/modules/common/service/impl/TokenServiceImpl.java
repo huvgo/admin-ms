@@ -1,6 +1,6 @@
 package com.company.project.modules.common.service.impl;
 
-import com.company.project.cache.UserCache;
+import com.company.project.modules.common.service.UserCacheService;
 import com.company.project.modules.common.service.TokenService;
 import com.company.project.modules.system.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 @Service
 public class TokenServiceImpl implements TokenService {
     @Autowired
-    private UserCache userCache;
+    private UserCacheService userCacheService;
 
     @Override
     public User getCurrentLoginUser(HttpServletRequest request) {
@@ -19,7 +19,7 @@ public class TokenServiceImpl implements TokenService {
         if (token == null) {
             return null;
         }
-        User user = userCache.getUser(token);
+        User user = userCacheService.getUser(token);
         return user;
     }
 }
