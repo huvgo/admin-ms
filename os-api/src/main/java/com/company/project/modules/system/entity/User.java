@@ -9,9 +9,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -27,7 +32,7 @@ import java.util.Set;
 @EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
 @TableName(value = "system_user", autoResultMap = true)
-public class User extends BaseEntity<Integer> {
+public class User extends BaseEntity<Integer> implements UserDetails {
 
     /**
      * 手机号
@@ -129,6 +134,51 @@ public class User extends BaseEntity<Integer> {
     @JsonIgnore
     public boolean isSuperAdmin() {
         return 1 == this.getId();
+    }
+
+    /**
+     * 返回用户的所有角色
+     */
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+//        List<SimpleGrantedAuthority> authorities = new ArrayList<SimpleGrantedAuthority>();
+//        for (Role role : roles) {
+//            authorities.add(new SimpleGrantedAuthority(role.getRemark()));
+//        }
+//        return authorities;
+        return null;
+    }
+
+    /**
+     * 账户是否未过期,过期无法验证
+     */
+    @JsonIgnore
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    /**
+     * 指定用户是否解锁,锁定的用户无法进行身份验证
+     */
+    @JsonIgnore
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    /**
+     * 指示是否已过期的用户的凭据(密码),过期的凭据防止认证
+     */
+    @JsonIgnore
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return enabled;
     }
 }
 

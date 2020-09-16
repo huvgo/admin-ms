@@ -19,6 +19,9 @@ import com.company.project.modules.system.service.RoleService;
 import com.company.project.modules.system.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -36,7 +39,7 @@ import java.util.*;
  */
 @Slf4j
 @Service
-public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
+public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService, UserDetailsService {
 
     private final MenuService menuService;
     private final RoleService roleService;
@@ -147,4 +150,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         return domain + relativePath;
     }
 
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = this.getByUsername(username);
+        if (user == null) {
+            throw new UsernameNotFoundException("您输入的用户不存在");
+        }
+        return user;
+    }
 }
