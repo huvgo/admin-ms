@@ -3,7 +3,7 @@
     <el-card class="box-card">
       <el-form :inline="true" :model="queryParam" @keyup.enter.native="fetchData()">
         <el-form-item>
-          <el-input v-model="queryParam.id" placeholder="ID" clearable />
+          <el-input v-model="queryParam.tableName" placeholder="表名" clearable />
         </el-form-item>
         <el-form-item>
           <el-button @click="fetchData()">查询</el-button>

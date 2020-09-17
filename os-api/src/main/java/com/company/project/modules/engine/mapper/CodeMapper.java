@@ -12,6 +12,7 @@ import com.company.project.modules.engine.entity.code.Column;
 import com.company.project.modules.engine.entity.code.Table;
 import com.company.project.modules.engine.util.CodeUtils;
 import com.company.project.modules.engine.util.JDBCUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.sql.Connection;
@@ -19,6 +20,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @Component
 public class CodeMapper {
     public List<Table> page(Integer offset, Integer limit, Map<String, Object> params) throws SQLException {
@@ -28,9 +30,10 @@ public class CodeMapper {
         String condition = "";
         String tableName = (String) params.get("tableName");
         if (StrUtil.isNotBlank(tableName)) {
-            condition = "and table_name like concat('%', " + tableName + ", '%')";
+            condition = "and table_name like \"%" + tableName + "%\"";
         }
         String formatSql = StrUtil.format(sql, condition, offset, limit);
+        log.info(formatSql);
         Connection conn = JDBCUtils.getConnection();
         List<Table> tableList = SqlExecutor.query(conn, formatSql, new BeanListHandler<>(Table.class));
         DbUtil.close(conn);
