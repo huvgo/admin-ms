@@ -2,8 +2,8 @@
   <div :class="{'has-logo':showLogo}">
     <logo v-if="showLogo" :collapse="isCollapse" />
     <el-scrollbar wrap-class="scrollbar-wrapper">
+      <!-- :default-openeds="['/system','/engine']" -->
       <el-menu
-        :default-openeds="['/system','/engine']"
         :default-active="activeMenu"
         :collapse="isCollapse"
         :background-color="variables.menuBg"

@@ -1,10 +1,5 @@
 package com.company.project.component.config;
 
-import cn.hutool.extra.servlet.ServletUtil;
-import com.company.project.cache.UserCacheUtil;
-import com.company.project.core.Result;
-import com.company.project.core.Results;
-import com.company.project.modules.system.entity.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,21 +10,14 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistration;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 /**
  * Spring MVC 配置
  */
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
-
+//    MethodSecurityConfig
     private final Logger logger = LoggerFactory.getLogger(WebMvcConfig.class);
 
     private final ObjectMapper objectMapper;
