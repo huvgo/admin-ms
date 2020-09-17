@@ -23,7 +23,7 @@ export default {
     ])
   },
   created() {
-    this.currentRole = 'adminDashboard'
+    this.currentRole = 'editorDashboard'
   }
 }
 </script>

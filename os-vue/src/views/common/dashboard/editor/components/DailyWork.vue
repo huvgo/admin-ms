@@ -3,42 +3,27 @@
     <el-card class="box-card">
       <el-row>
         <el-button
-          v-for="(item,index) in list"
+          v-for="(item,index) in holidayList"
           :key="index"
           type="primary"
           plain
           round
-          @click="handleAdd()"
+          @click="handleholidayAdd()"
         >{{ item.name }}</el-button>
       </el-row>
     </el-card>
-    <el-card class="box-card">
-      <div class="dashboard-editor-container">
-        <div class="clearfix">
-          <pan-thumb :image="avatar" style="float: left">
-            Your roles:
-            <span v-for="item in roles" :key="item" class="pan-info-roles">{{ item }}</span>
-          </pan-thumb>
-          <github-corner style="position: absolute; top: 0px; border: 0; right: 0;" />
-          <div class="info-container">
-            <span class="display_name">{{ name }}</span>
-          </div>
-        </div>
-      </div>
-    </el-card>
-
-    <el-dialog :visible.sync="dialogVisible" :title="'新增'">
-      <el-form ref="dataForm" :model="dataForm" label-width="80px" label-position="left">
+    <el-dialog :visible.sync="holidayDialogVisible" :title="'新增'">
+      <el-form ref="holidayForm" :model="holidayForm" label-width="80px" label-position="left">
         <el-form-item v-show="false" label="ID" prop="id" />
         <el-form-item label="用户ID" prop="userId">
-          <el-input v-model="dataForm.userId" placeholder="请输入用户ID" />
+          <el-input v-model="holidayForm.userId" placeholder="请输入用户ID" />
         </el-form-item>
         <el-form-item label="备注" prop="remark">
-          <el-input v-model="dataForm.remark" placeholder="请输入备注" />
+          <el-input v-model="holidayForm.remark" placeholder="请输入备注" />
         </el-form-item>
         <el-form-item label="创建时间" prop="createTime">
           <el-date-picker
-            v-model="dataForm.createTime"
+            v-model="holidayForm.createTime"
             style="width:100%"
             type="date"
             format="yyyy-MM-dd"
@@ -47,7 +32,7 @@
         </el-form-item>
         <el-form-item label="更新时间" prop="updateTime">
           <el-date-picker
-            v-model="dataForm.updateTime"
+            v-model="holidayForm.updateTime"
             style="width:100%"
             type="date"
             format="yyyy-MM-dd"
@@ -64,18 +49,14 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-import PanThumb from '@/components/PanThumb'
-import { getList } from '@/api/form/process'
+import { getList as getHolidayList } from '@/api/form/process'
 
 export default {
-  name: 'DashboardEditor',
-  components: { PanThumb },
   data() {
     return {
-      dialogVisible: false,
-      list: [],
-      dataForm: {
+      holidayDialogVisible: false,
+      holidayList: [],
+      holidayForm: {
         id: '',
         userId: '',
         remark: '',
@@ -84,24 +65,17 @@ export default {
       }
     }
   },
-  computed: {
-    ...mapGetters([
-      'name',
-      'avatar',
-      'roles'
-    ])
-  },
   created() {
     this.fetchData()
   },
   methods: {
     fetchData() {
-      getList(this.queryParam).then((response) => {
-        this.list = response.data
+      getHolidayList(this.queryParam).then((response) => {
+        this.holidayList = response.data
       })
     },
-    handleAdd() {
-      this.dialogVisible = true
+    handleholidayAdd() {
+      this.holidayDialogVisible = true
       this.$nextTick(() => {
         this.$refs['dataForm'].resetFields()
       })

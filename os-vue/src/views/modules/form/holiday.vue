@@ -49,7 +49,6 @@
     <el-dialog :visible.sync="dialogVisible" :title="'新增'">
       <el-form ref="dataForm" :model="dataForm" label-width="80px" label-position="left">
         <el-form-item v-show="false" label="ID" prop="id" />
-        <el-form-item v-show="false" label="ID" prop="id" />
         <el-form-item label="用户ID" prop="userId">
           <el-input v-model="dataForm.userId" placeholder="请输入用户ID" />
         </el-form-item>
@@ -158,8 +157,7 @@ export default {
       this.dialogVisible = true
       this.$nextTick(() => {
         this.$refs['dataForm'].resetFields()
-      }
-      )
+      })
     },
     handleDelete({ $index, row }) {
       del([row.id]).then((response) => {
