@@ -1,12 +1,14 @@
 package com.company.project.modules.process.entity;
 
-import com.company.project.modules.base.entity.BaseEntity;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
+import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 import java.util.Date;
+import java.util.Map;
 
 /**
  * <p>
@@ -14,89 +16,72 @@ import java.util.Date;
  * </p>
  *
  * @author codeGenerator
- * @since 2020-09-17
+ * @since 2020-09-18
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
-@TableName(value = "process_instance")
-public class Instance extends BaseEntity<Integer> {
+@TableName(value = "process_instance", autoResultMap = true)
+public class Instance {
+
+    @TableId(type = IdType.ASSIGN_ID)
+    private String id;
 
     /**
-     * 流程实例ID
-     */
-    private String processId;
-
-    /**
-     * 流程标识
-     */
-    private String processKey;
-
-    /**
-     * 流程名称
-     */
-    private String processName;
-
-    /**
-     * 流程定义ID
+     * 流程定义ID（act_re_procdef表主键）
      */
     private String processDefinitionId;
+
+    /**
+     * 申请人ID
+     */
+    private Integer userId;
+
+    /**
+     * 部门ID
+     */
+    private Integer deptId;
+
+    /**
+     * 当前节点审批人ID
+     */
+    private String currNodeUserId;
+
+    /**
+     * 当前节点审批人
+     */
+    private String currNodeUserName;
+
+    /**
+     * 申请内容
+     */
+    @TableField(typeHandler = JacksonTypeHandler.class)
+    private Map<String, Object> data;
 
     /**
      * 流程状态（0已提交；1审批中；2审批
      * 通过；3审批不通过；4撤销）
      */
-    private String processState;
+    private String status;
 
     /**
-     * 申请人ID
+     * 结束时间
      */
-    private String userId;
+    private Date endTime;
 
     /**
-     * 申请人
+     * 创建时间
      */
-    private String username;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    @TableField(fill = FieldFill.INSERT)
+    private Date createTime;
+
 
     /**
-     * 申请时间
+     * 更新时间
      */
-    private Date procApplyTime;
-
-    /**
-     * 当前节点审批人ID
-     */
-    private String procCurrNodeUserId;
-
-    /**
-     * 当前节点审批人
-     */
-    private String procCurrNodeUserName;
-
-    /**
-     * 结束流程时间
-     */
-    private Date procEndTime;
-
-    /**
-     *
-     */
-    private String procData;
-
-    /**
-     *
-     */
-    private String departmentId;
-
-    /**
-     *
-     */
-    private String departmentName;
-
-    /**
-     *
-     */
-    private Date timeOfEntry;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    @TableField(fill = FieldFill.UPDATE)
+    private Date updateTime;
 
 }
 

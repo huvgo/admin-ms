@@ -4,7 +4,7 @@ const url = '/process'
 
 export function add(data) {
   return request({
-    url: url,
+    url: url + '/start',
     method: 'post',
     headers: {
       'Content-Type': 'application/json; charset=utf-8'
