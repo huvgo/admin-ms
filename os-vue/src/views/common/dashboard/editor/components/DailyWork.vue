@@ -13,15 +13,30 @@
       </el-row>
     </el-card>
     <el-dialog :visible.sync="holidayDialogVisible" :title="'新增'">
-      <el-form ref="dataForm" :model="dataForm" label-width="80px" label-position="left">
+      <el-form ref="dataForm" :model="dataForm" label-width="80px">
         <el-form-item v-show="false" label="ID" prop="id" />
-        <el-form-item label="用户ID" prop="userId">
-          <el-input v-model="dataForm.data.userId" placeholder="请输入用户ID" />
+        <el-form-item label="请假类型" prop="leaveType">
+          <el-select v-model="dataForm.data.leaveType" placeholder="请选择请假类型" style="width:100%">
+            <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+              :disabled="item.disabled"
+            />
+          </el-select>
         </el-form-item>
-        <el-form-item label="备注" prop="remark">
-          <el-input v-model="dataForm.data.content" placeholder="请输入备注" />
+        <el-form-item label="申请内容" prop="remark">
+          <el-input
+            v-model="dataForm.data.content"
+            maxlength="140"
+            rows="4"
+            show-word-limit="true"
+            type="textarea"
+            placeholder="请输入申请内容"
+          />
         </el-form-item>
-        <el-form-item label="创建时间" prop="createTime">
+        <el-form-item label="开始时间" prop="createTime">
           <el-date-picker
             v-model="dataForm.data.createTime"
             style="width:100%"
@@ -30,7 +45,7 @@
             placeholder="选择用户操作日期"
           />
         </el-form-item>
-        <el-form-item label="更新时间" prop="updateTime">
+        <el-form-item label="结束时间" prop="updateTime">
           <el-date-picker
             v-model="dataForm.data.updateTime"
             style="width:100%"
@@ -97,7 +112,26 @@ export default {
             picker.$emit('pick', [start, end])
           }
         }]
-      }
+      },
+      options: [{
+        value: '1',
+        label: '事假'
+      }, {
+        value: '2',
+        label: '病假'
+      }, {
+        value: '3',
+        label: '年假'
+      }, {
+        value: '4',
+        label: '婚假'
+      }, {
+        value: '5',
+        label: '丧假'
+      }, {
+        value: '5',
+        label: '产假'
+      }]
     }
   },
   created() {
@@ -120,7 +154,10 @@ export default {
       this.definition = definition
       this.dataForm.processDefinitionId = this.definition.id
 
-      this.holidayDialogVisible = true
+      if (definition.key === 'process_holiday') {
+        this.holidayDialogVisible = true
+      }
+
       this.$nextTick(() => {
         this.$refs['dataForm'].resetFields()
       })

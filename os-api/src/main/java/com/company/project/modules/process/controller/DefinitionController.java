@@ -3,6 +3,7 @@ package com.company.project.modules.process.controller;
 import cn.hutool.core.bean.BeanUtil;
 import com.company.project.core.Result;
 import com.company.project.core.Results;
+import com.company.project.modules.base.controller.BaseController;
 import com.company.project.modules.process.entity.Definition;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.repository.DeploymentBuilder;
@@ -16,7 +17,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/process/definition")
-public class DefinitionController {
+public class DefinitionController  extends BaseController {
 
     private final RepositoryService repositoryService;
 

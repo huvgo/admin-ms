@@ -165,7 +165,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             User currentUser = (User) authentication.getPrincipal();
 
 
-            boolean status = currentUser.getEnabled();
+            boolean status = currentUser.isEnabled();
             Assert.requireTrue(status, Results.ACCOUNT_EXCEPTION);
             // 重新刷新缓存
             String token = userCacheService.getToken(currentUser.getUsername());

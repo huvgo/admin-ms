@@ -6,8 +6,10 @@ import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
 import com.company.project.modules.base.entity.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.experimental.Accessors;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -117,6 +119,7 @@ public class User extends BaseEntity<Integer> implements UserDetails {
      * 是否启用
      */
     @TableField("is_enabled")
+    @Getter(value = AccessLevel.NONE)
     private Boolean enabled;
 
     /**

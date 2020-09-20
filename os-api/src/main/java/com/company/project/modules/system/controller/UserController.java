@@ -89,7 +89,7 @@ public class UserController extends BaseController {
             userService.encodePassword(user);
         }
         // 冻结状态
-        boolean status = user.getEnabled();
+        boolean status = user.isEnabled();
         if (!status) {
             boolean isNotOwn = !user.getId().equals(userCacheService.getCurrentUser().getId());
             Assert.requireTrue(isNotOwn, Results.NOT_FREEZE_SELF);
@@ -128,7 +128,7 @@ public class UserController extends BaseController {
     @PostMapping("/login")
     public Result<Object> login(@RequestBody User user, HttpServletRequest httpRequest) {
         User currentUser = userService.login(user.getUsername(), user.getPassword());
-        boolean status = currentUser.getEnabled();
+        boolean status = currentUser.isEnabled();
         Assert.requireTrue(status, Results.ACCOUNT_EXCEPTION);
         // 重新刷新缓存
         String token = userCacheService.getToken(currentUser.getUsername());
