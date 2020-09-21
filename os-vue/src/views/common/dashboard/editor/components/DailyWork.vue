@@ -19,12 +19,8 @@
     </el-row>
     <el-dialog :visible.sync="holidayDialogVisible" :title="'新增'">
       <el-form ref="dataForm" :model="dataForm" label-width="80px">
-        <el-form-item label="请假类型" prop="apply.ext.leaveType">
-          <el-select
-            v-model="dataForm.apply.ext.leaveType"
-            placeholder="请选择请假类型"
-            style="width:100%"
-          >
+        <el-form-item label="请假类型" prop="data.leaveType">
+          <el-select v-model="dataForm.data.leaveType" placeholder="请选择请假类型" style="width:100%">
             <el-option
               v-for="item in options"
               :key="item.value"
@@ -34,9 +30,9 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item label="申请内容" prop="apply.ext.leaveType">
+        <el-form-item label="申请内容" prop="data.content">
           <el-input
-            v-model="dataForm.apply.ext.content"
+            v-model="dataForm.data.content"
             maxlength="140"
             rows="4"
             :show-word-limit="true"
@@ -44,18 +40,18 @@
             placeholder="请输入申请内容"
           />
         </el-form-item>
-        <el-form-item label="开始时间" prop="apply.ext.leaveType">
+        <el-form-item label="开始时间" prop="data.startTime">
           <el-date-picker
-            v-model="dataForm.apply.ext.startTime"
+            v-model="dataForm.data.startTime"
             style="width:100%"
             type="date"
             format="yyyy-MM-dd"
             placeholder="选择用户操作日期"
           />
         </el-form-item>
-        <el-form-item label="结束时间" prop="apply.ext.leaveType">
+        <el-form-item label="结束时间" prop="data.endTime">
           <el-date-picker
-            v-model="dataForm.apply.ext.endTime"
+            v-model="dataForm.data.endTime"
             style="width:100%"
             type="date"
             format="yyyy-MM-dd"
@@ -72,8 +68,8 @@
 </template>
 
 <script>
-import { getList as getDefinitionList } from '@/api/form/process'
-import { apply } from '@/api/process/instance'
+import { getList as getDefinitionList } from '@/api/audit/process'
+import { apply } from '@/api/audit/instance'
 
 export default {
   data() {
@@ -83,11 +79,7 @@ export default {
       dataForm: {
         id: '',
         processDefinitionId: '',
-        apply: {
-          ext: {
-          },
-          type: ''
-        },
+        data: {},
         status: '',
         endTime: ''
       },
