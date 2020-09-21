@@ -6,9 +6,10 @@ import com.company.project.core.Result;
 import com.company.project.core.Results;
 import com.company.project.modules.base.controller.BaseController;
 import com.company.project.modules.process.entity.Apply;
+import com.company.project.modules.process.entity.Approve;
 import com.company.project.modules.process.entity.Instance;
-import com.company.project.modules.process.entity.TaskInstance;
 import com.company.project.modules.process.service.ApplyService;
+import com.company.project.modules.process.service.ApproveService;
 import com.company.project.modules.process.service.InstanceService;
 import com.company.project.modules.process.service.TaskInstanceService;
 import com.company.project.modules.system.service.UserService;
@@ -49,15 +50,18 @@ public class InstanceController extends BaseController {
 
     private final ApplyService applyService;
 
+    private final ApproveService approveService;
+
     private final UserService userService;
 
-    public InstanceController(InstanceService instanceService, RepositoryService repositoryService, RuntimeService runtimeService, TaskService taskService, TaskInstanceService taskInstanceService, ApplyService applyService, UserService userService) {
+    public InstanceController(InstanceService instanceService, RepositoryService repositoryService, RuntimeService runtimeService, TaskService taskService, TaskInstanceService taskInstanceService, ApplyService applyService, ApproveService approveService, UserService userService) {
         this.instanceService = instanceService;
         this.repositoryService = repositoryService;
         this.runtimeService = runtimeService;
         this.taskService = taskService;
         this.taskInstanceService = taskInstanceService;
         this.applyService = applyService;
+        this.approveService = approveService;
         this.userService = userService;
     }
 
@@ -126,21 +130,17 @@ public class InstanceController extends BaseController {
      * 提交审核
      */
     @PostMapping(value = "/approve")
-    public Result<?> approve(@RequestBody TaskInstance taskInstance) {
+    public Result<?> approve(@RequestBody Instance instance) {
+        Approve approve = instance.getApprove();
         // 保存审批内容
-        taskInstanceService.save(taskInstance);
-        String instanceId = taskInstance.getInstanceId();
-
-        // 查询任务
-        Instance instance = instanceService.getById(instanceId);
-
+        approveService.save(approve);
         // 如果审批结果为2则表示同意
-        if ("2".equals(taskInstance.getHandleType())) {
+        if (approve.getHandleType() == 2) {
             // 完成当前节点任务 开启下一节点
-            Task task = taskService.createTaskQuery().processInstanceId(taskInstance.getProcessId()).singleResult();
+            Task task = taskService.createTaskQuery().processInstanceId(instance.getProcessId()).singleResult();
             taskService.complete(task.getId());
             // 获取下一节点
-            Task nextTask = taskService.createTaskQuery().processInstanceId(taskInstance.getProcessId()).singleResult();
+            Task nextTask = taskService.createTaskQuery().processInstanceId(instance.getProcessId()).singleResult();
             if (nextTask != null) {
                 String assignee = nextTask.getAssignee();
                 instance.setCurrNodeUserId(assignee);
@@ -150,7 +150,7 @@ public class InstanceController extends BaseController {
 
         } else {
             // 审批结果不同意或者撤销
-            runtimeService.deleteProcessInstance(instanceId, taskInstance.getHandleOpinion());
+            runtimeService.deleteProcessInstance(instance.getProcessId(), "审批结果不同意或者撤销");
         }
         instanceService.updateById(instance);
 

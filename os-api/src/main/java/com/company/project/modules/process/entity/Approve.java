@@ -45,6 +45,7 @@ public class Approve extends BaseEntity {
      */
     private Integer type;
 
+    private Integer handleType;
 
 }
 

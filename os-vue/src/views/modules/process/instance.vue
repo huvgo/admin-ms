@@ -106,9 +106,14 @@ export default {
       },
       dataForm: {
         id: '',
-        applyUserId: '',
-        ext: '',
-        type: ''
+        processDefinitionId: '',
+        apply: {
+          ext: {
+          },
+          type: ''
+        },
+        status: '',
+        endTime: ''
       },
       ids: [],
       list: null,

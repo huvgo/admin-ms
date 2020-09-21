@@ -74,5 +74,12 @@ public class Instance {
      */
     @TableField(exist = false)
     private Apply apply;
+
+
+    /**
+     * 审批内容
+     */
+    @TableField(exist = false)
+    private Approve approve;
 }
 
