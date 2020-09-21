@@ -7,20 +7,17 @@
         element-loading-text="Loading"
         fit
         highlight-current-row
-        @selection-change="handleSelectionChange"
       >
-        <el-table-column type="selection" header-align="center" align="center" width="50" />
-        <el-table-column label="ID" prop="id" />
-        <el-table-column label="申请人" prop="other.applicantName" />
-        <el-table-column label="备注" prop="ext.content" />
-        <el-table-column label="申请时间" prop="ext.startTime" />
-        <el-table-column label="类型" prop="ext.leaveType" />
-        <el-table-column label="创建时间" prop="createTime" />
-        <el-table-column label="更新时间" prop="updateTime" />
+        <el-table-column label="ID" prop="apply.id" />
+        <el-table-column label="申请人" prop="apply.other.applicantName" />
+        <el-table-column label="备注" prop="apply.ext.content" />
+        <el-table-column label="申请时间" prop="apply.ext.startTime" />
+        <el-table-column label="类型" prop="apply.ext.leaveType" />
+        <el-table-column label="创建时间" prop="apply.createTime" />
+        <el-table-column label="更新时间" prop="apply.updateTime" />
         <el-table-column align="center" label="操作" width="150">
           <template slot-scope="scope">
-            <el-button size="mini" @click="handleCommit(scope)">通过</el-button>
-            <el-button size="mini" @click="handleCommit(scope)">驳回</el-button>
+            <el-button size="mini" @click="handleAdd(scope)">审批</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -37,45 +34,14 @@
 
     <el-dialog :visible.sync="dialogVisible" :title="'新增'">
       <el-form ref="dataForm" :model="dataForm" label-width="80px" label-position="left">
-        <el-form-item v-show="false" label="ID" prop="id" />
-        <el-form-item v-show="false" label="ID" prop="id" />
-        <el-form-item label="备注" prop="ext.Content">
-          <el-input v-model="dataForm.ext.Content" placeholder="请输入备注" />
-        </el-form-item>
-        <el-form-item label="申请时间" prop="applyTime">
-          <el-date-picker
-            v-model="dataForm.applyTime"
-            style="width:100%"
-            type="date"
-            format="yyyy-MM-dd"
-            placeholder="选择用户操作日期"
-          />
-        </el-form-item>
-        <el-form-item label="类型" prop="type">
-          <el-input v-model="dataForm.type" placeholder="请输入类型" />
-        </el-form-item>
-        <el-form-item label="创建时间" prop="createTime">
-          <el-date-picker
-            v-model="dataForm.createTime"
-            style="width:100%"
-            type="date"
-            format="yyyy-MM-dd"
-            placeholder="选择用户操作日期"
-          />
-        </el-form-item>
-        <el-form-item label="更新时间" prop="updateTime">
-          <el-date-picker
-            v-model="dataForm.updateTime"
-            style="width:100%"
-            type="date"
-            format="yyyy-MM-dd"
-            placeholder="选择用户操作日期"
-          />
+        <el-form-item label="处理意见" prop="id">
+          <el-input v-model="dataForm.id" placeholder="请输入处理意见" />
         </el-form-item>
       </el-form>
       <div style="text-align:right;">
-        <el-button type="danger" @click="dialogVisible=false">取消</el-button>
-        <el-button type="primary" @click="dataFormSubmit()">确定</el-button>
+        <el-button @click="dialogVisible=false">返回</el-button>
+        <el-button type="warning" @click="dataFormSubmit()">驳回</el-button>
+        <el-button type="success" @click="dataFormSubmit()">通过</el-button>
       </div>
     </el-dialog>
   </div>
@@ -109,8 +75,12 @@ export default {
         processDefinitionId: '',
         apply: {
           ext: {
+            content: ''
           },
           type: ''
+        },
+        approve: {
+
         },
         status: '',
         endTime: ''
@@ -155,25 +125,12 @@ export default {
       this.queryParam.currentPage = currentPage
       this.fetchData()
     },
-    handleAdd() {
+    handleAdd(scope) {
+      this.dataForm = scope.row
       this.dialogVisible = true
       this.$nextTick(() => {
         this.$refs['dataForm'].resetFields()
       })
-    },
-    handleEdit(scope) {
-      this.dialogVisible = true
-      this.$nextTick(() => {
-        this.dataForm = JSON.parse(JSON.stringify(scope.row))
-      }
-      )
-    },
-    // 多选
-    handleSelectionChange(ids) {
-      this.ids = ids.map(item => {
-        return item.id
-      }
-      )
     },
     handleCommit(item) {
       console.log(item.row)

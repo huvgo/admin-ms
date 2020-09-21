@@ -1,6 +1,5 @@
 package com.company.project.modules.process.controller;
 
-import cn.hutool.core.lang.Dict;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.company.project.core.Result;
 import com.company.project.core.Results;
@@ -21,11 +20,9 @@ import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -70,23 +67,17 @@ public class InstanceController extends BaseController {
      * 获取我的待办列表
      */
     @GetMapping("/my-to-do")
-    public Result<List<Apply>> myToDo(@RequestParam(defaultValue = "0") Integer currentPage, @RequestParam(defaultValue = "10") Integer pageSize, @RequestParam Map<String, Object> params) {
+    public Result<List<Instance>> myToDo(@RequestParam(defaultValue = "0") Integer currentPage, @RequestParam(defaultValue = "10") Integer pageSize, @RequestParam Map<String, Object> params) {
         QueryWrapper<Instance> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("curr_node_user_id", getCurrentLoginUser().getId());
         queryWrapper.eq("status", 1);
         List<Instance> instanceList = instanceService.list(queryWrapper);
-        List<Integer> applyIds = instanceList.stream().map(Instance::getApplyId).collect(Collectors.toList());
-        List<Apply> applyList;
-        if (!applyIds.isEmpty()) {
-            applyList = applyService.listByIds(applyIds);
-            for (Apply apply : applyList) {
-                String applicantName = userService.getById(apply.getApplyUserId()).getName();
-                apply.setOther(Dict.create().set("applicantName", applicantName));
-            }
-        } else {
-            applyList = new ArrayList<>();
+        for (Instance instance : instanceList) {
+            Integer applyId = instance.getApplyId();
+            Apply apply = applyService.getById(applyId);
+            instance.setApply(apply);
         }
-        return Results.SUCCESS.setData(applyList);
+        return Results.SUCCESS.setData(instanceList);
     }
 
 
