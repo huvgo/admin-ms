@@ -1,4 +1,4 @@
-package com.company.project.modules.system.entity;
+package com.company.project.modules.process.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -7,52 +7,39 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
 import com.company.project.modules.base.entity.BaseEntity;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 import java.util.Map;
 
 /**
  * <p>
- * 系统日志
+ * 请假申请
  * </p>
  *
  * @author codeGenerator
- * @since 2020-09-06
+ * @since 2020-09-21
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
-@TableName(value = "system_log", autoResultMap = true)
-public class Log extends BaseEntity {
-
+@TableName(value = "process_apply", autoResultMap = true)
+public class Apply extends BaseEntity {
 
     @TableId(type = IdType.AUTO)
     private Integer id;
 
     /**
-     * 操作人
+     * 申请人ID
      */
-    private String operator;
+    private Integer applyUserId;
 
     /**
-     * 操作用户ID
-     */
-    private Integer operatorId;
-
-    /**
-     * 日志内容
+     * 扩展内容
      */
     @TableField(typeHandler = JacksonTypeHandler.class)
-    private Map<String, Object> content;
+    private Map<String, Object> ext;
 
     /**
-     * IP地址
-     */
-    private String ip;
-
-    /**
-     * 日志类型
+     * 类型
      */
     private Integer type;
 

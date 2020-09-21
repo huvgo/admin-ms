@@ -26,7 +26,7 @@ public interface DeptService extends IService<Dept> {
                 .apply("JSON_CONTAINS(parent_ids,{0})", String.valueOf(parentId));
         List<Dept> deptList = this.list(queryWrapper);
         if (CollUtil.isNotEmpty(deptList)) {
-            return deptList.stream().map(BaseEntity::getId).collect(Collectors.toList());
+            return deptList.stream().map(Dept::getId).collect(Collectors.toList());
         } else {
             return new ArrayList<>();
         }

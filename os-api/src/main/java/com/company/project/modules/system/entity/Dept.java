@@ -1,6 +1,8 @@
 package com.company.project.modules.system.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.company.project.modules.base.entity.BaseTreeEntity;
 import lombok.Data;
@@ -20,7 +22,6 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @TableName(value = "system_dept", autoResultMap = true)
 public class Dept extends BaseTreeEntity<Dept> {
-
 
     /**
      * 部门名称

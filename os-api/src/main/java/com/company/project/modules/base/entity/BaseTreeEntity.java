@@ -1,6 +1,8 @@
 package com.company.project.modules.base.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
@@ -12,7 +14,10 @@ import java.util.List;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class BaseTreeEntity<E> extends BaseEntity<Integer> {
+public class BaseTreeEntity<E> extends BaseEntity{
+
+    @TableId(type = IdType.AUTO)
+    private Integer id;
 
     /**
      * 上级ID，一级ID为0

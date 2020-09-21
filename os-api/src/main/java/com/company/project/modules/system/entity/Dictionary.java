@@ -1,6 +1,8 @@
 package com.company.project.modules.system.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
 import com.company.project.modules.base.entity.BaseEntity;
@@ -23,7 +25,10 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
 @TableName(value = "system_dictionary", autoResultMap = true)
-public class Dictionary extends BaseEntity<Integer> {
+public class Dictionary extends BaseEntity {
+
+    @TableId(type = IdType.AUTO)
+    private Integer id;
 
     /**
      * 上级节点ID

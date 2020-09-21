@@ -17,7 +17,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/process/definition")
-public class DefinitionController  extends BaseController {
+public class DefinitionController extends BaseController {
 
     private final RepositoryService repositoryService;
 
@@ -31,7 +31,7 @@ public class DefinitionController  extends BaseController {
     @PostMapping
     public Result<?> deploy(@RequestParam("file") MultipartFile file) {
         try {
-            DeploymentBuilder deploymentBuilder = repositoryService.createDeployment().addBytes(file.getOriginalFilename(), file.getBytes()).tenantId("group");
+            DeploymentBuilder deploymentBuilder = repositoryService.createDeployment().addBytes(file.getOriginalFilename(), file.getBytes());
             deploymentBuilder.deploy();
         } catch (IOException e) {
             return Results.Fail;
@@ -44,7 +44,7 @@ public class DefinitionController  extends BaseController {
      */
     @GetMapping
     public Result<?> list() {
-        List<ProcessDefinition> processDefinitionList = repositoryService.createProcessDefinitionQuery().processDefinitionTenantId("group").latestVersion().list();
+        List<ProcessDefinition> processDefinitionList = repositoryService.createProcessDefinitionQuery().latestVersion().list();
         List<Definition> definitionList = new ArrayList<>();
         processDefinitionList.forEach(processDefinition -> {
             Definition definition = new Definition();

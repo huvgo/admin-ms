@@ -14,9 +14,12 @@
     </el-card>
     <el-dialog :visible.sync="holidayDialogVisible" :title="'新增'">
       <el-form ref="dataForm" :model="dataForm" label-width="80px">
-        <el-form-item v-show="false" label="ID" prop="id" />
-        <el-form-item label="请假类型" prop="leaveType">
-          <el-select v-model="dataForm.data.leaveType" placeholder="请选择请假类型" style="width:100%">
+        <el-form-item label="请假类型" prop="apply.ext.leaveType">
+          <el-select
+            v-model="dataForm.apply.ext.leaveType"
+            placeholder="请选择请假类型"
+            style="width:100%"
+          >
             <el-option
               v-for="item in options"
               :key="item.value"
@@ -26,28 +29,28 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item label="申请内容" prop="remark">
+        <el-form-item label="申请内容" prop="apply.ext.leaveType">
           <el-input
-            v-model="dataForm.data.content"
+            v-model="dataForm.apply.ext.content"
             maxlength="140"
             rows="4"
-            show-word-limit="true"
+            :show-word-limit="true"
             type="textarea"
             placeholder="请输入申请内容"
           />
         </el-form-item>
-        <el-form-item label="开始时间" prop="createTime">
+        <el-form-item label="开始时间" prop="apply.ext.leaveType">
           <el-date-picker
-            v-model="dataForm.data.createTime"
+            v-model="dataForm.apply.ext.startTime"
             style="width:100%"
             type="date"
             format="yyyy-MM-dd"
             placeholder="选择用户操作日期"
           />
         </el-form-item>
-        <el-form-item label="结束时间" prop="updateTime">
+        <el-form-item label="结束时间" prop="apply.ext.leaveType">
           <el-date-picker
-            v-model="dataForm.data.updateTime"
+            v-model="dataForm.apply.ext.endTime"
             style="width:100%"
             type="date"
             format="yyyy-MM-dd"
@@ -72,18 +75,15 @@ export default {
     return {
       holidayDialogVisible: false,
       definitionList: [],
-      definition: {},
       dataForm: {
         id: '',
         processDefinitionId: '',
-        userId: '',
-        deptId: '',
-        currNodeUserId: '',
-        currNodeUserName: '',
-        data: {},
+        apply: {
+          ext: {
+          },
+          type: ''
+        },
         status: '',
-        createTime: '',
-        updateTime: '',
         endTime: ''
       },
       pickerOptions: {
@@ -129,7 +129,7 @@ export default {
         value: '5',
         label: '丧假'
       }, {
-        value: '5',
+        value: '6',
         label: '产假'
       }]
     }
@@ -151,13 +151,8 @@ export default {
       })
     },
     handleholidayAdd(definition) {
-      this.definition = definition
-      this.dataForm.processDefinitionId = this.definition.id
-
-      if (definition.key === 'process_holiday') {
-        this.holidayDialogVisible = true
-      }
-
+      this.dataForm.processDefinitionId = definition.id
+      this.holidayDialogVisible = true
       this.$nextTick(() => {
         this.$refs['dataForm'].resetFields()
       })

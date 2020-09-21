@@ -1,6 +1,8 @@
 package com.company.project.modules.system.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
 import com.company.project.modules.base.entity.BaseEntity;
@@ -34,7 +36,11 @@ import java.util.Set;
 @EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
 @TableName(value = "system_user", autoResultMap = true)
-public class User extends BaseEntity<Integer> implements UserDetails {
+public class User extends BaseEntity implements UserDetails {
+
+
+    @TableId(type = IdType.AUTO)
+    private Integer id;
 
     /**
      * 手机号

@@ -1,6 +1,13 @@
 <template>
   <div class="app-container">
     <el-card class="box-card">
+      <el-form :inline="true" :model="queryParam" @keyup.enter.native="fetchData()">
+        <el-form-item>
+          <el-button @click="fetchData()">查询</el-button>
+          <el-button type="danger" :disabled="ids.length <= 0" @click="handleBatchDelete()">批量删除</el-button>
+        </el-form-item>
+      </el-form>
+
       <el-table
         v-loading="listLoading"
         :data="list"
@@ -19,8 +26,8 @@
         <el-table-column label="更新时间" prop="updateTime" />
         <el-table-column align="center" label="操作" width="150">
           <template slot-scope="scope">
-            <el-button size="mini" @click="handleCommit(scope)">通过</el-button>
-            <el-button size="mini" @click="handleCommit(scope)">驳回</el-button>
+            <el-button size="mini" @click="handleEdit(scope)">修改</el-button>
+            <el-button type="danger" size="mini" @click="handleDelete(scope)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -34,7 +41,6 @@
         @current-change="handleCurrentChange"
       />
     </el-card>
-
     <el-dialog :visible.sync="dialogVisible" :title="'新增'">
       <el-form ref="dataForm" :model="dataForm" label-width="80px" label-position="left">
         <el-form-item v-show="false" label="ID" prop="id" />
@@ -82,8 +88,7 @@
 </template>
 
 <script>
-import { add, del, getList, update } from '@/api/process/todo'
-import { commit } from '@/api/process/process'
+import { add, del, getList, update } from '@/api/process/apply'
 
 export default {
   filters: {
@@ -124,7 +129,8 @@ export default {
     fetchData() {
       this.listLoading = true
       getList(this.queryParam).then((response) => {
-        this.list = response.data
+        this.list = response.data.records
+        this.total = response.data.total
         this.listLoading = false
       }
       )
@@ -185,16 +191,6 @@ export default {
         return item.id
       }
       )
-    },
-    handleCommit(item) {
-      console.log(item.row)
-      this.dataForm2.instanceId = item.row.id
-      this.dataForm2.processId = item.row.processId
-      commit(this.dataForm2).then((response) => {
-        this.dialogVisible = false
-        this.fetchData()
-        this.$message({ message: response.message, type: 'success' })
-      })
     }
   }
 }

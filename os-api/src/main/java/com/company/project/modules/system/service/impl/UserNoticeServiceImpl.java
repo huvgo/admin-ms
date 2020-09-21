@@ -71,7 +71,7 @@ public class UserNoticeServiceImpl extends ServiceImpl<UserNoticeMapper, UserNot
         }
         userNotice.setUserId(user.getId());
         userNotice.setUpdateTime(now);
-        List<Integer> noticeIds = list.stream().map(BaseEntity::getId).collect(Collectors.toList());
+        List<Integer> noticeIds = list.stream().map(Notice::getId).collect(Collectors.toList());
         userNotice.setNoticeIds(noticeIds);
         this.saveOrUpdate(userNotice);
 

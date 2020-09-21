@@ -1,4 +1,4 @@
-package com.company.project.modules.form.entity;
+package com.company.project.modules.process.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -8,36 +8,44 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
-import java.util.Date;
-
 /**
  * <p>
  * 请假申请
  * </p>
  *
  * @author codeGenerator
- * @since 2020-09-15
+ * @since 2020-09-21
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
-@TableName(value = "form_holiday")
-public class Holiday extends BaseEntity {
-
+@TableName(value = "process_approve")
+public class Approve extends BaseEntity {
 
     @TableId(type = IdType.AUTO)
     private Integer id;
 
     /**
-     * 用户ID
+     * 审批人ID
      */
-    private Integer userId;
+    private Integer approveUserId;
 
     /**
-     * 备注
+     * 申请ID
      */
-    private String remark;
+    private Integer applyId;
+
+    /**
+     * 扩展内容
+     */
+    private String ext;
+
+    /**
+     * 类型
+     */
+    private Integer type;
 
 
 }
+
 

@@ -25,17 +25,16 @@ import lombok.experimental.Accessors;
 @EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
 @TableName(value = "${table.name}")
-public class ${upperFirstName} extends BaseEntity
-<Integer> {
+public class ${upperFirstName} extends BaseEntity {
+public class ${upperFirstName} extends BaseEntity {
 
     <#list fields as field>
-        <#if field.name != "id">
             /**
             * ${field.comment}
             */
             private ${field.javaType} ${field.name};
 
-        </#if>
     </#list>
     }
+
 
