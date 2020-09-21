@@ -1,10 +1,10 @@
 package com.company.project.modules.system.controller;
 
-import com.company.project.cache.UserCacheUtil;
 import com.company.project.component.plugin.CustomSpringConfigurator;
 import com.company.project.core.Result;
 import com.company.project.core.Results;
 import com.company.project.core.ServiceException;
+import com.company.project.modules.common.service.TokenService;
 import com.company.project.modules.system.entity.Notice;
 import com.company.project.modules.system.entity.User;
 import com.company.project.modules.system.service.UserNoticeService;
@@ -33,20 +33,23 @@ public class UserNoticeServer {
 
     private final UserNoticeService userNoticeService;
 
+    private final TokenService tokenService;
+
     //静态变量，用来记录当前在线连接数。应该把它设计成线程安全的。
-    private static AtomicInteger onlineNum = new AtomicInteger();
+    private static final AtomicInteger onlineNum = new AtomicInteger();
 
     //concurrent包的线程安全Set，用来存放每个客户端对应的WebSocketServer对象。
-    private static ConcurrentHashMap<String, Session> sessionPools = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<String, Session> sessionPools = new ConcurrentHashMap<>();
 
-    public UserNoticeServer(ObjectMapper objectMapper, UserNoticeService userNoticeService) {
+    public UserNoticeServer(ObjectMapper objectMapper, UserNoticeService userNoticeService, TokenService tokenService) {
         this.objectMapper = objectMapper;
         this.userNoticeService = userNoticeService;
+        this.tokenService = tokenService;
     }
 
     void sendNotice() {
         for (String token : sessionPools.keySet()) {
-            User user = UserCacheUtil.getUser(token);
+            User user = tokenService.getUser(token);
             List<Notice> list = userNoticeService.getByUser(user);
             Result<List<Notice>> listResult = Results.SUCCESS.setData(list);
             String message;

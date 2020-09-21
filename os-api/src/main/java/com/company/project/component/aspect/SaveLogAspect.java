@@ -1,7 +1,7 @@
 package com.company.project.component.aspect;
 
 import cn.hutool.extra.servlet.ServletUtil;
-import com.company.project.cache.UserCacheUtil;
+import com.company.project.util.SecurityUtils;
 import com.company.project.modules.system.constant.LogTypeConst;
 import com.company.project.modules.system.entity.Log;
 import com.company.project.modules.system.service.impl.LogServiceImpl;
@@ -56,8 +56,8 @@ public class SaveLogAspect {
 
         Log log = new Log();
         log.setType(LogTypeConst.SYSTEM_LOG)
-                .setOperator(UserCacheUtil.getCurrentUser().getUsername())
-                .setOperatorId(UserCacheUtil.getCurrentUser().getId())
+                .setOperator(SecurityUtils.getCurrentUser().getUsername())
+                .setOperatorId(SecurityUtils.getCurrentUser().getId())
                 .setIp(ServletUtil.getClientIP(request));
         HashMap<String, Object> content = new HashMap<>();
         content.put("method", request.getMethod());

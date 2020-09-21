@@ -3,7 +3,7 @@ package com.company.project.modules.system.controller;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.company.project.cache.UserCacheUtil;
+import com.company.project.util.SecurityUtils;
 import com.company.project.component.annotation.RequirePermission;
 import com.company.project.component.annotation.SaveLog;
 import com.company.project.core.Result;
@@ -41,7 +41,7 @@ public class NoticeController {
     @SaveLog
     @RequirePermission
     public Result<?> post(@RequestBody Notice notice) {
-        User user = UserCacheUtil.getCurrentUser();
+        User user = SecurityUtils.getCurrentUser();
         notice.setSenderId(user.getId());
         notice.setSender(user.getUsername());
         notice.setSenderAvatar(user.getAvatar());

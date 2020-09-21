@@ -1,6 +1,6 @@
 package com.company.project.modules.common.service.impl;
 
-import com.company.project.modules.common.service.UserCacheService;
+import com.company.project.modules.common.service.TokenService;
 import com.company.project.modules.system.entity.User;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -8,15 +8,17 @@ import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * 用户信息缓存接口的Redis缓存实现类
  */
 @Service
-public class RedisUserCacheServiceImpl implements UserCacheService {
+public class RedisTokenServiceImpl implements TokenService {
 
     private final RedisTemplate<String, String> redisTemplate;
 
-    public RedisUserCacheServiceImpl(RedisTemplate<String, String> redisTemplate) {
+    public RedisTokenServiceImpl(RedisTemplate<String, String> redisTemplate) {
         this.redisTemplate = redisTemplate;
     }
 
@@ -53,4 +55,5 @@ public class RedisUserCacheServiceImpl implements UserCacheService {
         HashOperations<String, String, String> stringObjectObjectHashOperations = redisTemplate.opsForHash();
         return stringObjectObjectHashOperations.get("token", key);
     }
+
 }

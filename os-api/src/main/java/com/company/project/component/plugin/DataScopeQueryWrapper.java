@@ -1,7 +1,7 @@
 package com.company.project.component.plugin;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.company.project.cache.UserCacheUtil;
+import com.company.project.util.SecurityUtils;
 import com.company.project.core.Assert;
 import com.company.project.core.Results;
 import com.company.project.modules.system.constant.DataScopeConst;
@@ -29,7 +29,7 @@ public class DataScopeQueryWrapper<T> extends QueryWrapper<T> {
     }
 
     private void addScope(QueryWrapper<T> queryWrapper) {
-        User currentUser = UserCacheUtil.getCurrentUser();
+        User currentUser = SecurityUtils.getCurrentUser();
         Assert.requireNonNull(currentUser, Results.LOGIN_EXPIRED);
         // 如果是超级管理员，则不过滤数据
         if (currentUser.isSuperAdmin()) {

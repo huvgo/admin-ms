@@ -1,6 +1,6 @@
 package com.company.project.component.aspect;
 
-import com.company.project.modules.common.service.UserCacheService;
+import com.company.project.modules.common.service.TokenService;
 import com.company.project.core.Assert;
 import com.company.project.core.Results;
 import com.company.project.modules.system.entity.Menu;
@@ -34,7 +34,7 @@ import java.util.Set;
 public class PermissionAspect {
 
     @Autowired
-    private UserCacheService userCacheService;
+    private TokenService tokenService;
 
 
     @Pointcut("@annotation(com.company.project.component.annotation.RequirePermission)")
@@ -49,7 +49,7 @@ public class PermissionAspect {
         // 获取用户信息，获取用户拥有的菜单
         HttpServletRequest request = Objects.requireNonNull((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         String token = request.getHeader("X-Token");
-        User user = userCacheService.getUser(token);
+        User user = tokenService.getUser(token);
         Assert.requireNonNull(user, Results.LOGIN_EXPIRED);
         Set<Menu> menuList = user.getMenus();
 
