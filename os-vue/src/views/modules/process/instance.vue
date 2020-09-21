@@ -82,8 +82,7 @@
 </template>
 
 <script>
-import { add, del, getList, update } from '@/api/process/todo'
-import { commit } from '@/api/process/process'
+import { getMyToDo, apply, approve } from '@/api/process/instance'
 
 export default {
   filters: {
@@ -123,7 +122,7 @@ export default {
   methods: {
     fetchData() {
       this.listLoading = true
-      getList(this.queryParam).then((response) => {
+      getMyToDo(this.queryParam).then((response) => {
         this.list = response.data
         this.listLoading = false
       }
@@ -132,9 +131,9 @@ export default {
     dataFormSubmit() {
       let request
       if (this.dataForm.id) {
-        request = update(this.dataForm)
+        request = approve(this.dataForm)
       } else {
-        request = add(this.dataForm)
+        request = apply(this.dataForm)
       }
       request.then((response) => {
         this.dialogVisible = false
@@ -155,22 +154,7 @@ export default {
       this.dialogVisible = true
       this.$nextTick(() => {
         this.$refs['dataForm'].resetFields()
-      }
-      )
-    },
-    handleDelete({ $index, row }) {
-      del([row.id]).then((response) => {
-        this.fetchData()
-        this.$message({ message: response.message, type: 'success' })
-      }
-      )
-    },
-    handleBatchDelete() {
-      del(this.ids).then((response) => {
-        this.fetchData()
-        this.$message({ message: response.message, type: 'success' })
-      }
-      )
+      })
     },
     handleEdit(scope) {
       this.dialogVisible = true
@@ -190,7 +174,7 @@ export default {
       console.log(item.row)
       this.dataForm2.instanceId = item.row.id
       this.dataForm2.processId = item.row.processId
-      commit(this.dataForm2).then((response) => {
+      approve(this.dataForm2).then((response) => {
         this.dialogVisible = false
         this.fetchData()
         this.$message({ message: response.message, type: 'success' })

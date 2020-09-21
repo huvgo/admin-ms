@@ -1,17 +1,22 @@
 <template>
   <div class="app-container">
-    <el-card class="box-card">
-      <el-row>
-        <el-button
-          v-for="(item,index) in definitionList"
-          :key="index"
-          type="primary"
-          plain
-          round
-          @click="handleholidayAdd(item)"
-        >{{ item.name }}</el-button>
-      </el-row>
-    </el-card>
+    <el-row>
+      <el-col :span="8">
+        <el-card class="box-card">
+          <div slot="header" class="clearfix">
+            <span>Daily</span>
+          </div>
+          <el-button
+            v-for="(item,index) in definitionList"
+            :key="index"
+            type="primary"
+            plain
+            round
+            @click="handleholidayAdd(item)"
+          >{{ item.name }}</el-button>
+        </el-card>
+      </el-col>
+    </el-row>
     <el-dialog :visible.sync="holidayDialogVisible" :title="'新增'">
       <el-form ref="dataForm" :model="dataForm" label-width="80px">
         <el-form-item label="请假类型" prop="apply.ext.leaveType">
@@ -68,7 +73,7 @@
 
 <script>
 import { getList as getDefinitionList } from '@/api/form/process'
-import { add } from '@/api/process/process'
+import { apply } from '@/api/process/instance'
 
 export default {
   data() {
@@ -144,7 +149,7 @@ export default {
       })
     },
     dataFormSubmit() {
-      add(this.dataForm).then((response) => {
+      apply(this.dataForm).then((response) => {
         this.dialogVisible = false
         this.fetchData()
         this.$message({ message: response.userTips, type: 'success' })

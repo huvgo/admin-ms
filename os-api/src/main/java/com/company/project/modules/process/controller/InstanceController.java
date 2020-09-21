@@ -64,8 +64,6 @@ public class InstanceController extends BaseController {
 
     /**
      * 获取我的待办列表
-     *
-     * @return
      */
     @GetMapping("/my-to-do")
     public Result<List<Apply>> myToDo(@RequestParam(defaultValue = "0") Integer currentPage, @RequestParam(defaultValue = "10") Integer pageSize, @RequestParam Map<String, Object> params) {
@@ -91,7 +89,7 @@ public class InstanceController extends BaseController {
     /**
      * 流程申请
      */
-    @PostMapping(value = "/start")
+    @PostMapping(value = "/apply")
     public Result<?> startProcess(@RequestBody Instance instance) {
         Apply apply = instance.getApply().setApplyUserId(getCurrentLoginUser().getId());
         applyService.save(apply);
@@ -127,8 +125,8 @@ public class InstanceController extends BaseController {
     /**
      * 提交审核
      */
-    @PostMapping(value = "/commit")
-    public Result<?> commit(@RequestBody TaskInstance taskInstance) {
+    @PostMapping(value = "/approve")
+    public Result<?> approve(@RequestBody TaskInstance taskInstance) {
         // 保存审批内容
         taskInstanceService.save(taskInstance);
         String instanceId = taskInstance.getInstanceId();
