@@ -1,76 +1,80 @@
 <template>
   <div class="app-container">
-    <el-card class="box-card">
-      <el-form :inline="true" :model="queryParam" @keyup.enter.native="fetchData()">
-        <el-form-item>
-          <el-input v-model="queryParam.userId" placeholder="用户ID" clearable />
-        </el-form-item>
-        <el-form-item>
-          <el-input v-model="queryParam.remark" placeholder="备注" clearable />
-        </el-form-item>
-        <el-form-item>
-          <el-button @click="fetchData()">查询</el-button>
-          <el-button type="primary" @click="handleAdd()">新增</el-button>
-          <el-button type="danger" :disabled="ids.length <= 0" @click="handleBatchDelete()">批量删除</el-button>
-        </el-form-item>
-      </el-form>
+    <div v-if="!designVisible">
+      <el-card class="box-card">
+        <el-form :inline="true" :model="queryParam" @keyup.enter.native="fetchData()">
+          <el-form-item>
+            <el-input v-model="queryParam.userId" placeholder="用户ID" clearable />
+          </el-form-item>
+          <el-form-item>
+            <el-input v-model="queryParam.remark" placeholder="备注" clearable />
+          </el-form-item>
+          <el-form-item>
+            <el-button @click="fetchData()">查询</el-button>
+            <el-button type="primary" @click="handleAdd()">新增</el-button>
+            <el-button type="primary" @click="handleDesign()">流程设计</el-button>
+            <el-button type="danger" :disabled="ids.length <= 0" @click="handleBatchDelete()">批量删除</el-button>
+          </el-form-item>
+        </el-form>
 
-      <el-table
-        v-loading="listLoading"
-        :data="list"
-        element-loading-text="Loading"
-        fit
-        highlight-current-row
-        @selection-change="handleSelectionChange"
-      >
-        <el-table-column type="selection" header-align="center" align="center" width="50" />
-        <el-table-column label="名称" prop="name" />
-        <el-table-column label="流程文件" prop="resourceName" />
-        <el-table-column label="分组" prop="tenantId" />
-        <el-table-column label="激活/挂起" align="center" prop="suspensionState" width="150">
-          <template slot-scope="{row}">
-            <el-switch
-              v-model="row.suspensionState"
-              :active-icon-class="row.suspensionState?'el-icon-success':'el-icon-error'"
-              @change="handleSwitchChange(row)"
-            />
-          </template>
-        </el-table-column>
-        <el-table-column align="center" label="操作" width="150">
-          <template slot-scope="scope">
-            <el-button type="danger" size="mini" @click="handleDelete(scope)">删除</el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-      <el-pagination
-        :current-page="queryParam.currentPage"
-        :page-sizes="[10, 20, 50, 100]"
-        :page-size="queryParam.pageSize"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="total"
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-      />
-    </el-card>
-    <el-dialog :visible.sync="dialogVisible" :title="'新增'">
-      <el-form ref="dataForm" :model="dataForm" label-width="80px" label-position="left">
-        <el-form-item label="上传" prop="userId">
-          <el-upload
-            :headers="{'X-Token':token}"
-            :action="uploadUrl"
-            :show-file-list="false"
-            multiple
-            :on-success="handleAvatarSuccess"
-          >
-            <i class="el-icon-plus avatar-uploader-icon"></i>
-          </el-upload>
-        </el-form-item>
-      </el-form>
-      <div style="text-align:right;">
-        <el-button type="danger" @click="dialogVisible=false">取消</el-button>
-        <el-button type="primary" @click="dataFormSubmit()">确定</el-button>
-      </div>
-    </el-dialog>
+        <el-table
+          v-loading="listLoading"
+          :data="list"
+          element-loading-text="Loading"
+          fit
+          highlight-current-row
+          @selection-change="handleSelectionChange"
+        >
+          <el-table-column type="selection" header-align="center" align="center" width="50" />
+          <el-table-column label="名称" prop="name" />
+          <el-table-column label="流程文件" prop="resourceName" />
+          <el-table-column label="分组" prop="tenantId" />
+          <el-table-column label="激活/挂起" align="center" prop="suspensionState" width="150">
+            <template slot-scope="{row}">
+              <el-switch
+                v-model="row.suspensionState"
+                :active-icon-class="row.suspensionState?'el-icon-success':'el-icon-error'"
+                @change="handleSwitchChange(row)"
+              />
+            </template>
+          </el-table-column>
+          <el-table-column align="center" label="操作" width="150">
+            <template slot-scope="scope">
+              <el-button type="danger" size="mini" @click="handleDelete(scope)">删除</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+        <el-pagination
+          :current-page="queryParam.currentPage"
+          :page-sizes="[10, 20, 50, 100]"
+          :page-size="queryParam.pageSize"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="total"
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+        />
+      </el-card>
+
+      <el-dialog :visible.sync="dialogVisible" :title="'新增'">
+        <el-form ref="dataForm" :model="dataForm" label-width="80px" label-position="left">
+          <el-form-item label="上传" prop="userId">
+            <el-upload
+              :headers="{'X-Token':token}"
+              :action="uploadUrl"
+              :show-file-list="false"
+              multiple
+              :on-success="handleAvatarSuccess"
+            >
+              <i class="el-icon-plus avatar-uploader-icon"></i>
+            </el-upload>
+          </el-form-item>
+        </el-form>
+        <div style="text-align:right;">
+          <el-button type="danger" @click="dialogVisible=false">取消</el-button>
+          <el-button type="primary" @click="dataFormSubmit()">确定</el-button>
+        </div>
+      </el-dialog>
+    </div>
   </div>
 </template>
 
@@ -80,21 +84,12 @@ import { getList, activate, suspend, del } from '@/api/audit/process'
 import { getToken } from '@/utils/auth'
 
 export default {
-  filters: {
-    statusFilter(status) {
-      const statusMap = {
-        published: 'success',
-        draft: 'gray',
-        deleted: 'danger'
-      }
-      return statusMap[status]
-    }
-  },
   data() {
     return {
       uploadUrl: `http://localhost:9090/dev-api/process/definition`,
       token: getToken(),
       dialogVisible: false,
+      designVisible: false,
       queryParam: {
         userId: '',
         remark: '',
