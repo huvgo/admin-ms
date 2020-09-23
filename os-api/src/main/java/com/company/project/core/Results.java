@@ -4,7 +4,7 @@ import java.util.List;
 
 public class Results {
 
-    public static Result<?> SUCCESS = new Result<>(true, "操作成功", "00000", null, null);
+    public static Result<?> SUCCESS = new Result<>(true, "操作成功", null, null, null);
     public static Result<?> Fail = new Result<>(false, "操作失败", "B0000", null, null);
 
 

@@ -11,8 +11,8 @@
           </el-form-item>
           <el-form-item>
             <el-button @click="fetchData()">查询</el-button>
-            <el-button type="primary" @click="handleAdd()">新增</el-button>
             <el-button type="primary" @click="handleDesign()">流程设计</el-button>
+            <el-button type="success" @click="handleAdd()">上传流程</el-button>
             <el-button type="danger" :disabled="ids.length <= 0" @click="handleBatchDelete()">批量删除</el-button>
           </el-form-item>
         </el-form>
@@ -57,22 +57,23 @@
 
       <el-dialog :visible.sync="dialogVisible" :title="'新增'">
         <el-form ref="dataForm" :model="dataForm" label-width="80px" label-position="left">
-          <el-form-item label="上传" prop="userId">
+          <el-form-item label="上传流程" prop="userId">
             <el-upload
+              ref="upload"
+              class="upload-demo"
               :headers="{'X-Token':token}"
               :action="uploadUrl"
-              :show-file-list="false"
-              multiple
-              :on-success="handleAvatarSuccess"
+              :on-preview="handlePreview"
+              :on-remove="handleRemove"
+              :file-list="fileList"
+              :auto-upload="false"
             >
-              <i class="el-icon-plus avatar-uploader-icon"></i>
+              <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+              <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
+              <div slot="tip" class="el-upload__tip">只能上传流程文件，且不超过20M</div>
             </el-upload>
           </el-form-item>
         </el-form>
-        <div style="text-align:right;">
-          <el-button type="danger" @click="dialogVisible=false">取消</el-button>
-          <el-button type="primary" @click="dataFormSubmit()">确定</el-button>
-        </div>
       </el-dialog>
     </div>
   </div>
@@ -86,7 +87,7 @@ import { getToken } from '@/utils/auth'
 export default {
   data() {
     return {
-      uploadUrl: `http://localhost:9090/dev-api/process/definition`,
+      uploadUrl: `http://localhost:9090/dev-api/audit/process`,
       token: getToken(),
       dialogVisible: false,
       designVisible: false,
@@ -167,6 +168,15 @@ export default {
       }
       )
     },
+    submitUpload() {
+      this.$refs.upload.submit()
+    },
+    handleRemove(file, fileList) {
+      console.log(file, fileList)
+    },
+    handlePreview(file) {
+      console.log(file)
+    },
     handleEdit(scope) {
       this.dialogVisible = true
       this.$nextTick(() => {
@@ -183,10 +193,10 @@ export default {
     },
     // 文件上传
     handleAvatarSuccess(response) {
-      if (response && response.code === 20000) {
-        this.$message.success(response.userTips)
-      } else {
+      if (response.errorCode) {
         this.$message.error(response.userTips)
+      } else {
+        this.$message.success(response.userTips)
       }
     }
   }

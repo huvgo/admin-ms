@@ -1,6 +1,7 @@
 <template>
   <div v-loading="isView" class="flow-containers" :class="{ 'view-mode': isView }">
     <el-container style="height: 100%">
+      <!-- 工具栏 -->
       <el-header style="border-bottom: 1px solid rgb(218 218 218);height: auto;padding:0">
         <div style="display: flex; padding: 10px 0px; justify-content: space-between;">
           <div>
@@ -34,6 +35,7 @@
           </div>
         </div>
       </el-header>
+      <!-- 流程图绘制界面 -->
       <el-container style="align-items: stretch">
         <el-main style="padding: 0;">
           <div ref="canvas" class="canvas"></div>

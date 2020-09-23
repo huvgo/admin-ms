@@ -19,12 +19,18 @@
     </properties>
 
     <dependencies>
-        <!-- activiti工作流 -->
         <dependency>
-            <groupId>org.activiti</groupId>
-            <artifactId>activiti-spring-boot-starter</artifactId>
-            <version>7.1.0.M6</version>
+            <groupId>org.flowable</groupId>
+            <artifactId>flowable-spring-boot-starter</artifactId>
+            <version>6.5.0</version>
         </dependency>
+
+        <!-- activiti工作流 -->
+<!--        <dependency>-->
+<!--            <groupId>org.activiti</groupId>-->
+<!--            <artifactId>activiti-spring-boot-starter</artifactId>-->
+<!--            <version>7.1.0.M6</version>-->
+<!--        </dependency>-->
         <!-- 模板引擎 -->
         <dependency>
             <groupId>mysql</groupId>

@@ -1,9 +1,10 @@
 package com.company.project.modules.audit.vo;
 
 import lombok.Data;
-import org.activiti.engine.ProcessEngineConfiguration;
-import org.activiti.engine.impl.bpmn.data.IOSpecification;
-import org.activiti.engine.impl.persistence.entity.SuspensionState;
+import org.flowable.bpmn.model.IOSpecification;
+import org.flowable.common.engine.impl.db.SuspensionState;
+import org.flowable.engine.ProcessEngineConfiguration;
+
 
 import java.util.Map;
 
